@@ -1,0 +1,1088 @@
+/* ── Native notes (0.17): entry actions, dialogs and Layout Studio → Native note ─────
+   UI only; the look of the notes themselves lives in src/notes-css/native-note.css. */
+
+/* Entry header: the note button shows when the entry's note is native, or needs a look. */
+.worldsmith .has-native-note {
+	position: relative;
+}
+.worldsmith .has-native-note::after {
+	position: absolute;
+	right: 3px;
+	bottom: 3px;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--color-green, #4caf7d);
+	box-shadow: 0 0 0 2px var(--ws-bg);
+	content: '';
+}
+.worldsmith .has-native-note.has-note-issue::after {
+	background: var(--color-orange, #e0a34a);
+}
+
+/* The note button's menu: the main choice stands out (0.17.1). */
+.menu .ws-menu-primary .menu-item-title {
+	font-weight: 600;
+}
+.menu .ws-menu-primary .menu-item-icon {
+	color: var(--interactive-accent);
+}
+
+/* Shared bits (pages and dialogs) */
+.worldsmith .ws-nn-label,
+.worldsmith-modal .ws-nn-label {
+	margin-bottom: 6px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-nn-muted,
+.worldsmith-modal .ws-nn-muted {
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+.worldsmith .ws-nn-faint,
+.worldsmith-modal .ws-nn-faint {
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.45;
+}
+.worldsmith-modal .ws-nn-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-nn-eyebrow.is-warning {
+	color: var(--color-orange, #e0a34a);
+}
+.worldsmith-modal .ws-nn-eyebrow svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-nn-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+.worldsmith-modal .ws-nn-pill {
+	padding: 1px 9px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-muted) 14%, transparent);
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-nn-pill.is-ok {
+	background: color-mix(in srgb, var(--color-green, #4caf7d) 16%, transparent);
+	color: var(--color-green, #4caf7d);
+}
+.worldsmith-modal .ws-nn-pill.is-warning {
+	background: color-mix(in srgb, var(--color-orange, #e0a34a) 16%, transparent);
+	color: var(--color-orange, #e0a34a);
+}
+.worldsmith-modal .ws-nn-pill.is-error {
+	background: color-mix(in srgb, var(--color-red, #d0574f) 16%, transparent);
+	color: var(--color-red, #d0574f);
+}
+.worldsmith-modal .ws-nn-list {
+	margin: 6px 0 12px;
+	padding-left: 18px;
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.6;
+}
+.worldsmith-modal .ws-nn-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: flex-end;
+}
+.worldsmith-modal .ws-nn-actions__left {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-right: auto;
+}
+
+/* Template picker */
+.worldsmith-modal .ws-nn-tpl-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 6px 0 12px;
+}
+.worldsmith-modal button.ws-nn-tpl {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	padding: 9px 11px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith-modal button.ws-nn-tpl:hover {
+	border-color: var(--ws-border-strong);
+}
+.worldsmith-modal button.ws-nn-tpl.is-on {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 1px var(--ws-accent);
+}
+.worldsmith-modal .ws-nn-tpl__icon {
+	display: flex;
+	flex: none;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-nn-tpl__icon svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith-modal .ws-nn-tpl__text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-nn-tpl__name {
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-nn-tpl__sub {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+
+/* Conflicts */
+.worldsmith-modal.ws-note-conflicts {
+	width: min(820px, 94vw);
+	max-width: 94vw;
+}
+.worldsmith-modal .ws-nn-table {
+	width: 100%;
+	margin: 8px 0 14px;
+	border-collapse: separate;
+	border-spacing: 0 8px;
+}
+.worldsmith-modal .ws-nn-table th {
+	padding: 0 6px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-align: left;
+	text-transform: uppercase;
+}
+.worldsmith-modal .ws-nn-table td {
+	padding: 0 6px;
+	vertical-align: top;
+}
+.worldsmith-modal .ws-nn-table td:first-child {
+	width: 26%;
+	font-size: 13px;
+}
+.worldsmith-modal button.ws-nn-choice {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 6px;
+	width: 100%;
+	height: auto;
+	padding: 8px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith-modal button.ws-nn-choice.is-picked {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 1px var(--ws-accent);
+}
+.worldsmith-modal .ws-nn-choice__text {
+	display: -webkit-box;
+	overflow: hidden;
+	font-size: 12.5px;
+	line-height: 1.45;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 6;
+}
+.worldsmith-modal .ws-nn-choice__label {
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-nn-choice.is-picked .ws-nn-choice__label {
+	color: var(--ws-accent);
+}
+
+/* Layout Studio: Worldsmith page | Native note */
+.worldsmith .ws-nn-target {
+	display: inline-flex;
+	gap: 2px;
+	margin: 0 0 14px;
+	padding: 3px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+}
+.worldsmith button.ws-nn-target__tab {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 13px;
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.worldsmith button.ws-nn-target__tab:hover {
+	color: var(--ws-text);
+}
+.worldsmith button.ws-nn-target__tab.is-active {
+	background: var(--ws-surface-raised);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+	color: var(--ws-text);
+}
+.worldsmith .ws-nn-target__tab svg {
+	width: 14px;
+	height: 14px;
+}
+
+.worldsmith .ws-nns {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	container-type: inline-size;
+}
+.worldsmith .ws-nns__intro p {
+	max-width: 70ch;
+	margin: 0;
+}
+.worldsmith .ws-nns__tpls {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 10px;
+}
+.worldsmith button.ws-nns__tpl {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 5px;
+	height: auto;
+	padding: 11px 12px 12px;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition:
+		border-color var(--ws-dur-fast) var(--ws-ease),
+		box-shadow var(--ws-dur-fast) var(--ws-ease),
+		transform var(--ws-dur-fast) var(--ws-ease);
+}
+.worldsmith button.ws-nns__tpl:hover {
+	border-color: var(--ws-border-strong);
+	box-shadow: var(--ws-lift);
+	transform: translateY(-1px);
+}
+.worldsmith button.ws-nns__tpl.is-active {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 1px var(--ws-accent);
+}
+.worldsmith button.ws-nns__tpl--add {
+	border-style: dashed;
+	background: transparent;
+}
+.worldsmith .ws-nns__tpl-name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-nns__tpl-name > .ws-icon {
+	display: flex;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-nns__tpl-name svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-nns__tpl-desc {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	line-height: 1.45;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+.worldsmith .ws-nns__swatch {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: var(--sw);
+}
+.worldsmith .ws-nns__bar {
+	margin-top: 4px;
+}
+.worldsmith .ws-nns__cols {
+	display: grid;
+	grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+	gap: 18px;
+	align-items: start;
+	margin-top: 6px;
+}
+@container (max-width: 680px) {
+	.worldsmith .ws-nns__cols {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+.worldsmith .ws-nns__edit {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+.worldsmith .ws-nns__locked {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 9px 11px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-muted) 9%, transparent);
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+.worldsmith .ws-nns__locked svg {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	margin-top: 2px;
+}
+.worldsmith .ws-nns__group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-nns__sections {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-nns__section {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	min-height: 40px;
+	padding: 5px 6px 5px 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface-raised);
+}
+.worldsmith .ws-nns__section.is-hidden {
+	opacity: 0.55;
+}
+.worldsmith .ws-nns__section-icon {
+	display: flex;
+	flex: none;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-nns__section-icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-nns__section-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-nns__section-name {
+	overflow: hidden;
+	font-size: 13px;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-nns__section-hint {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-nns__section-tools {
+	display: flex;
+	flex: none;
+	gap: 0;
+}
+.worldsmith .ws-nns__add {
+	align-self: flex-start;
+	margin-top: 2px;
+}
+.worldsmith .ws-nns__tray {
+	margin-top: 8px;
+	padding-top: 10px;
+	border-top: 1px dashed var(--ws-border);
+}
+.worldsmith .ws-nns__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 8px;
+}
+.worldsmith .ws-nns__note {
+	margin-top: 4px;
+}
+.worldsmith .ws-nns__accents {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 2px 0 6px;
+}
+.worldsmith button.ws-nns__accent {
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: 2px solid var(--ws-bg);
+	border-radius: 50%;
+	background: var(--sw);
+	box-shadow: 0 0 0 1px var(--ws-border);
+	cursor: pointer;
+}
+.worldsmith button.ws-nns__accent.is-active {
+	box-shadow: 0 0 0 2px var(--ws-text);
+}
+.worldsmith button.ws-nns__accent:disabled,
+.worldsmith .ws-nns__look .ws-segmented__item:disabled {
+	cursor: default;
+	opacity: 0.7;
+}
+.worldsmith .ws-nns__look-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px 10px;
+}
+.worldsmith .ws-nns__look-label {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-nns__look .ws-segmented--sm .ws-segmented__item {
+	width: auto;
+	height: 24px;
+	padding: 0 9px;
+	font-size: 12px;
+}
+.worldsmith .ws-nns__preview {
+	min-width: 0;
+}
+.worldsmith .ws-nns__frame {
+	max-height: 760px;
+	overflow: auto;
+	overscroll-behavior: contain;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+}
+.worldsmith .ws-nns__frame.is-phone {
+	width: 390px;
+	max-width: 100%;
+	margin: 0 auto;
+}
+.worldsmith .ws-nns__frame .ws-nns__note {
+	height: auto;
+	padding: 0;
+	overflow: visible;
+	user-select: none;
+}
+.worldsmith .ws-nns__frame .markdown-preview-sizer {
+	min-height: 0;
+	padding: 18px 22px 22px;
+}
+.worldsmith .ws-nns__frame.is-phone .markdown-preview-sizer {
+	padding: 14px;
+}
+.worldsmith .ws-nns__foot {
+	margin-top: 8px;
+}
+
+/* Migration (dry run, progress, waiting for Confirm) */
+.worldsmith-modal.ws-nn-migrate {
+	width: min(860px, 94vw);
+	max-width: 94vw;
+}
+.worldsmith-modal .ws-nn-tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	gap: 8px;
+	margin: 4px 0 12px;
+}
+.worldsmith-modal .ws-nn-tile {
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith-modal .ws-nn-tile__n {
+	font-size: 20px;
+	font-weight: 650;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith-modal .ws-nn-tile__label {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-nn-tile.is-warning .ws-nn-tile__n {
+	color: var(--color-orange, #e0a34a);
+}
+.worldsmith-modal .ws-nn-rows {
+	max-height: min(46vh, 420px);
+	margin: 6px 0 12px;
+	overflow: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-nn-table--plan {
+	margin: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+.worldsmith-modal .ws-nn-table--plan th {
+	position: sticky;
+	top: 0;
+	padding: 7px 10px;
+	background: var(--ws-bg);
+}
+.worldsmith-modal .ws-nn-table--plan td {
+	padding: 7px 10px;
+	border-top: 1px solid var(--ws-border);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-nn-table--plan tr.is-skip td {
+	opacity: 0.7;
+}
+.worldsmith-modal .ws-nn-path {
+	color: var(--ws-muted);
+	font-family: var(--font-monospace);
+	font-size: 11.5px;
+	overflow-wrap: anywhere;
+}
+.worldsmith-modal .ws-nn-progress {
+	height: 6px;
+	margin: 12px 0 4px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-border);
+}
+.worldsmith-modal .ws-nn-progress__bar {
+	width: 0;
+	height: 100%;
+	background: var(--ws-accent);
+	transition: width var(--ws-dur) var(--ws-ease);
+}
+@media (max-width: 560px) {
+	.worldsmith-modal .ws-nn-table--plan .ws-nn-path {
+		display: none;
+	}
+}
+.worldsmith .ws-nn-pending {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 10px;
+}
+.worldsmith .ws-nn-pending:empty {
+	display: none;
+}
+.worldsmith .ws-nn-pending__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-nn-pending__text {
+	flex: 1;
+	min-width: 180px;
+}
+.worldsmith .ws-nn-pending__title {
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-nns__migrate {
+	float: right;
+	margin: 0 0 6px 12px;
+}
+.worldsmith .ws-xact--native-type {
+	grid-template-columns: 30px minmax(0, 1fr) minmax(0, 160px) auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-xact--native-type {
+	grid-template-columns: 30px minmax(0, 1fr);
+}
+
+/* ── The Note popover (0.17.3). Appended to body, so not inside .worldsmith. Every row is a
+   left-aligned two-column grid; Obsidian's own button look is fully reset. ── */
+.ws-nnpop {
+	position: fixed;
+	z-index: var(--layer-menu, 65);
+	box-sizing: border-box;
+	width: min(340px, calc(100vw - 16px));
+	overflow-y: auto;
+	padding: 12px 8px 10px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 12px;
+	box-shadow: var(--shadow-l, 0 12px 32px rgba(0, 0, 0, 0.3));
+	color: var(--text-normal);
+	font-size: var(--font-ui-small);
+	line-height: 1.35;
+	text-align: left;
+}
+.ws-nnpop__head { padding: 0 8px 10px; margin-bottom: 6px; border-bottom: 1px solid var(--background-modifier-border); min-width: 0; }
+.ws-nnpop__eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.ws-nnpop__name-row { display: flex; align-items: center; gap: 8px; margin-top: 3px; min-width: 0; }
+.ws-nnpop__name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: var(--font-ui-medium); }
+.ws-nnpop__pill { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 18px; background: var(--background-modifier-hover); color: var(--text-muted); white-space: nowrap; }
+.ws-nnpop__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ws-nnpop__pill.is-ok { color: var(--color-green); background: color-mix(in srgb, var(--color-green) 12%, transparent); }
+.ws-nnpop__pill.is-warn { color: var(--color-orange); background: color-mix(in srgb, var(--color-orange) 12%, transparent); }
+.ws-nnpop__path { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-muted); font-size: 11px; }
+.ws-nnpop__meta { margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-muted); font-size: 11px; }
+.ws-nnpop__tpl { color: var(--text-accent); }
+.ws-nnpop__desc { margin-top: 3px; color: var(--text-muted); font-size: 11px; line-height: 1.4; }
+.ws-nnpop__list, .ws-nnpop__more { display: flex; flex-direction: column; gap: 1px; }
+.ws-nnpop__more:not(.is-open) { display: none; }
+.ws-nnpop__more { margin: 0 0 2px 18px; padding-left: 4px; border-left: 1px solid var(--background-modifier-border); }
+.ws-nnpop button.ws-nnpop__item {
+	margin: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	font: inherit;
+	appearance: none;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr);
+	align-items: start;
+	justify-items: start;
+	width: 100%;
+	padding: 7px 8px;
+	border-radius: 8px;
+	text-align: left;
+	color: var(--text-normal);
+	cursor: pointer;
+	white-space: normal;
+	gap: 0 10px;
+}
+.ws-nnpop button.ws-nnpop__item:hover, .ws-nnpop button.ws-nnpop__item:focus-visible { background: var(--background-modifier-hover); }
+.ws-nnpop button.ws-nnpop__item:focus-visible { box-shadow: inset 0 0 0 2px var(--background-modifier-border-focus); }
+.ws-nnpop__icon { display: flex; align-items: center; justify-content: center; width: 20px; height: 18px; color: var(--text-muted); }
+.ws-nnpop__icon .ws-icon, .ws-nnpop__icon svg { width: 16px; height: 16px; display: flex; }
+.ws-nnpop__text { display: flex; flex-direction: column; gap: 1px; min-width: 0; width: 100%; }
+.ws-nnpop__title { font-weight: 500; line-height: 18px; overflow-wrap: anywhere; }
+.ws-nnpop__sub { color: var(--text-muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-nnpop button.ws-nnpop__item.is-primary { background: color-mix(in srgb, var(--interactive-accent) 12%, transparent); }
+.ws-nnpop button.ws-nnpop__item.is-primary:hover { background: color-mix(in srgb, var(--interactive-accent) 20%, transparent); }
+.ws-nnpop button.ws-nnpop__item.is-primary :is(.ws-nnpop__icon, .ws-nnpop__title) { color: var(--text-accent); }
+.ws-nnpop button.ws-nnpop__item.is-warn :is(.ws-nnpop__icon, .ws-nnpop__title) { color: var(--color-orange); }
+.ws-nnpop__sep { height: 1px; margin: 5px 8px; background: var(--background-modifier-border); }
+.ws-nnpop__hint { margin-top: 6px; padding: 8px 8px 0; border-top: 1px solid var(--background-modifier-border); color: var(--text-faint); font-size: 11px; line-height: 1.4; }
+
+/* ── "Choose a note template" (0.17.3): equal cards, one thumbnail frame for all. ── */
+.modal.ws-nnpick { width: min(980px, calc(100vw - 24px)); max-width: none; }
+.ws-nnpick .ws-nnpick__eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.ws-nnpick .ws-nnpick__title { margin: 4px 0 4px; }
+.ws-nnpick .ws-nnpick__lede { margin: 0 0 14px; color: var(--text-muted); font-size: var(--font-ui-small); }
+.ws-nnpick .ws-nnpick__grid {
+	--cols: 4;
+	--gap: 12px;
+	container-type: inline-size;
+	display: grid;
+	grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+	grid-auto-rows: auto;
+	align-items: stretch;
+	gap: var(--gap);
+}
+@media (max-width: 760px) { .ws-nnpick .ws-nnpick__grid { --cols: 3; } }
+@media (max-width: 560px) { .ws-nnpick .ws-nnpick__grid { --cols: 2; --gap: 8px; } }
+.ws-nnpick .ws-nnpick__grid button.ws-nnpick__card {
+	margin: 0;
+	box-shadow: none;
+	font: inherit;
+	appearance: none;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	align-content: start;
+	row-gap: 8px;
+	min-width: 0;
+	padding: 8px 8px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	background: var(--background-secondary);
+	color: var(--text-normal);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	position: relative;
+}
+.ws-nnpick .ws-nnpick__grid button.ws-nnpick__card:hover { border-color: var(--background-modifier-border-hover, var(--text-faint)); }
+.ws-nnpick .ws-nnpick__grid button.ws-nnpick__card:focus-visible { box-shadow: 0 0 0 2px var(--background-modifier-border-focus); }
+.ws-nnpick .ws-nnpick__grid button.ws-nnpick__card.is-chosen {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 1px var(--interactive-accent);
+	background: color-mix(in srgb, var(--interactive-accent) 7%, var(--background-secondary));
+}
+.ws-nnpick .ws-nnpick__grid button.ws-nnpick__card--new { grid-column: span var(--span-4, 1); }
+@media (max-width: 760px) { .ws-nnpick .ws-nnpick__grid button.ws-nnpick__card--new { grid-column: span var(--span-3, 1); } }
+@media (max-width: 560px) { .ws-nnpick .ws-nnpick__grid button.ws-nnpick__card--new { grid-column: span var(--span-2, 1); } }
+
+/* The thumbnail: the same height on every card (16:9 of one column), whatever it spans. */
+.ws-nnpick .ws-nnpick__mini {
+	--mini: var(--interactive-accent);
+	--thumb-w: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols) - 18px);
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+	height: calc(var(--thumb-w) * 9 / 16);
+	overflow: hidden;
+	border-radius: 6px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+}
+.ws-nnpick__m-banner { position: absolute; inset: 0 0 auto 0; height: 24%; background: color-mix(in srgb, var(--mini) 45%, var(--background-primary)); }
+.ws-nnpick__m-body { position: absolute; top: 12%; bottom: 10%; left: 7%; width: 54%; display: flex; flex-direction: column; justify-content: flex-start; gap: 6%; }
+.ws-nnpick__mini.has-banner .ws-nnpick__m-body { top: 33%; }
+.ws-nnpick__mini.is-card-left .ws-nnpick__m-body { left: auto; right: 7%; }
+.ws-nnpick__mini.is-centred .ws-nnpick__m-body, .ws-nnpick__mini.is-plain .ws-nnpick__m-body { width: 86%; }
+.ws-nnpick__mini.is-centred .ws-nnpick__m-body { align-items: center; }
+.ws-nnpick__m-kicker { flex: none; width: 22%; height: 3px; border-radius: 2px; background: var(--mini); }
+.ws-nnpick__m-name { flex: none; width: 72%; height: 7px; border-radius: 2px; background: var(--text-muted); opacity: 0.85; }
+.ws-nnpick__m-line { flex: none; width: 100%; height: 3px; border-radius: 2px; background: var(--background-modifier-border); }
+.ws-nnpick__m-line.is-short { width: 70%; }
+.ws-nnpick__mini.is-centred :is(.ws-nnpick__m-name, .ws-nnpick__m-line) { width: 60%; }
+.ws-nnpick__mini.is-centred .ws-nnpick__m-line.is-short { width: 40%; }
+.ws-nnpick__m-box { flex: 1 1 auto; min-height: 8px; max-height: 26%; margin-top: auto; width: 100%; box-sizing: border-box; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--mini) 55%, transparent); }
+.ws-nnpick__m-card { position: absolute; top: 33%; bottom: 10%; right: 7%; width: 27%; box-sizing: border-box; border-radius: 4px; background: var(--background-secondary); border: 1px solid var(--background-modifier-border); overflow: hidden; }
+.ws-nnpick__mini:not(.has-banner) .ws-nnpick__m-card { top: 12%; }
+.ws-nnpick__mini.is-card-left .ws-nnpick__m-card { right: auto; left: 7%; }
+.ws-nnpick__m-portrait { height: 55%; background: color-mix(in srgb, var(--mini) 50%, var(--background-secondary)); }
+.ws-nnpick__mini.is-blank { display: flex; align-items: center; justify-content: center; background: transparent; border: 1px dashed var(--background-modifier-border-hover, var(--text-faint)); color: var(--text-muted); }
+.ws-nnpick__plus, .ws-nnpick__plus svg { width: 22px; height: 22px; }
+
+.ws-nnpick .ws-nnpick__name { display: flex; align-items: center; gap: 6px; min-width: 0; min-height: 20px; }
+.ws-nnpick .ws-nnpick__name-text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: var(--font-ui-small); }
+.ws-nnpick .ws-nnpick__badge { flex: none; padding: 0 7px; border: 1px solid var(--background-modifier-border); border-radius: 999px; font-size: 10px; line-height: 16px; color: var(--text-muted); white-space: nowrap; }
+.ws-nnpick .ws-nnpick__badge.is-default { color: var(--text-accent); border-color: color-mix(in srgb, var(--interactive-accent) 45%, transparent); }
+.ws-nnpick .ws-nnpick__tick { position: absolute; top: 14px; right: 14px; display: none; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--interactive-accent); color: var(--text-on-accent); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
+.ws-nnpick .ws-nnpick__tick svg { width: 13px; height: 13px; stroke-width: 3; }
+.ws-nnpick .is-chosen .ws-nnpick__tick { display: flex; }
+.ws-nnpick .ws-nnpick__desc { color: var(--text-muted); font-size: var(--font-ui-smaller); line-height: 1.4; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+
+.ws-nnpick .ws-nnpick__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--background-modifier-border); }
+.ws-nnpick .ws-nnpick__scope { display: flex; align-items: center; gap: 8px; margin-right: auto; min-width: 0; }
+.ws-nnpick .ws-nnpick__scope-label { flex: none; color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.ws-nnpick .ws-nnpick__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ws-nnpick .ws-nnpick__safe { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.ws-nnpick .ws-nnpick__safe .ws-icon, .ws-nnpick .ws-nnpick__safe svg { flex: none; width: 13px; height: 13px; }
+@media (max-width: 560px) {
+	.ws-nnpick .ws-nnpick__name { flex-direction: column; align-items: flex-start; gap: 3px; }
+	.ws-nnpick .ws-nnpick__name-text { width: 100%; }
+	.ws-nnpick .ws-nnpick__desc { -webkit-line-clamp: 2; }
+	.ws-nnpick .ws-nnpick__scope, .ws-nnpick .ws-nnpick__actions { width: 100%; }
+	.ws-nnpick .ws-nnpick__scope .ws-segmented { flex: 1; min-width: 0; }
+	.ws-nnpick .ws-nnpick__actions > button { flex: 1 1 0; min-width: 0; }
+	.ws-nnpick .ws-nnpick__actions > .ws-nnpick__use { flex: 1 1 100%; order: -1; }
+}
+
+/* ── 0.18: an entry's own note inside Worldsmith (Note tab, editable widget) ───────── */
+
+/* Page | Note switch above the entry page. */
+.worldsmith .ws-entity-switch {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	margin: 0 0 12px;
+}
+.worldsmith .ws-entity-switch__seg {
+	display: inline-flex;
+	flex: none;
+	gap: 2px;
+	padding: 2px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-entity-switch__seg .ws-btn.ws-entity-switch__tab {
+	height: 26px;
+	padding: 0 10px;
+	border: none;
+	box-shadow: none;
+	background: transparent;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-entity-switch__seg .ws-btn.ws-entity-switch__tab:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-entity-switch__seg .ws-btn.ws-entity-switch__tab.is-active {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-entity-switch__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-entity-switch__name.is-missing {
+	color: var(--color-orange);
+}
+
+/* The note pane: Obsidian's own editor, framed like a Worldsmith card. */
+.worldsmith .ws-note-pane {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith .ws-note-pane__editor {
+	position: relative;
+	display: flex;
+	height: var(--ws-note-pane-h, 420px);
+	min-height: 220px;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--background-primary);
+}
+.worldsmith .ws-note-pane.is-fill .ws-note-pane__editor {
+	height: max(420px, calc(100vh - 240px));
+}
+.worldsmith .ws-note-pane__editor > .workspace-split {
+	position: relative;
+	display: flex;
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+	background: none;
+}
+.worldsmith .ws-note-pane__editor .workspace-leaf {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+	height: 100%;
+	background: none;
+}
+.worldsmith .ws-note-pane__editor .workspace-leaf-resize-handle,
+.worldsmith .ws-note-pane__editor .view-header,
+.worldsmith .ws-note-pane__editor .workspace-tab-header-container {
+	display: none;
+}
+.worldsmith .ws-note-pane__editor .workspace-leaf-content,
+.worldsmith .ws-note-pane__editor .view-content {
+	height: 100%;
+	padding: 0;
+	background: transparent;
+}
+/* Inside a widget card the card is the frame. */
+.worldsmith .ws-embed.is-editable .ws-note-pane__editor {
+	border: none;
+	border-radius: 0;
+	background: transparent;
+}
+.worldsmith .ws-note-pane__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-note-pane__read {
+	max-height: var(--ws-note-pane-h, none);
+	overflow: auto;
+}
+.worldsmith .ws-note-pane.is-fill .ws-note-pane__read {
+	max-height: none;
+}
+.worldsmith .ws-note-pane__found {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 4px;
+	width: 100%;
+	max-width: 520px;
+	margin-top: 10px;
+}
+.worldsmith .ws-note-pane__found-head {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-note-pane__found .ws-btn.ws-note-pane__candidate {
+	justify-content: flex-start;
+	height: auto;
+	min-height: 28px;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-note-pane__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 6px;
+	margin-top: 10px;
+}
+
+/* Notes dragged onto a type page. */
+.worldsmith .ws-page.is-note-drop {
+	position: relative;
+	outline: 2px dashed var(--interactive-accent);
+	outline-offset: -6px;
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-page.is-note-drop::after {
+	content: attr(data-drop-label);
+	position: sticky;
+	bottom: 16px;
+	display: block;
+	width: max-content;
+	max-width: calc(100% - 32px);
+	margin: 16px auto 0;
+	padding: 6px 14px;
+	border-radius: 999px;
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	font-size: 13px;
+	font-weight: 600;
+	pointer-events: none;
+}
+
+/* Add notes as entries. */
+.worldsmith-modal .ws-adopt__lead {
+	margin: 0 0 12px;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-adopt__list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-height: min(50vh, 420px);
+	overflow-y: auto;
+	margin-bottom: 14px;
+}
+.worldsmith-modal .ws-adopt__row {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr) auto;
+	align-items: start;
+	gap: 10px;
+	padding: 8px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-adopt__row.is-skip {
+	opacity: 0.75;
+}
+.worldsmith-modal .ws-adopt__icon {
+	margin-top: 5px;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-adopt__main {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-adopt__name {
+	width: 100%;
+}
+.worldsmith-modal .ws-adopt__name-text {
+	padding: 4px 0;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-adopt__path {
+	overflow-wrap: anywhere;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-adopt__why {
+	margin-top: 5px;
+	color: var(--color-orange);
+	font-size: 12px;
+	text-align: right;
+}
+.worldsmith-modal .ws-adopt__check {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-adopt__check input {
+	flex: none;
+	margin-top: 3px;
+}
+.worldsmith-modal .ws-adopt__check-title {
+	font-weight: 600;
+}
+.worldsmith-modal .ws-adopt__check-sub,
+.worldsmith-modal .ws-adopt__note {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+@media (max-width: 520px) {
+	.worldsmith-modal .ws-adopt__row {
+		grid-template-columns: 18px minmax(0, 1fr);
+	}
+	.worldsmith-modal .ws-adopt__why {
+		grid-column: 2;
+		text-align: left;
+	}
+}
+.worldsmith-modal .ws-adopt .ws-modal-actions {
+	margin-top: 16px;
+}

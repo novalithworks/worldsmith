@@ -1,0 +1,820 @@
+/* ── Milestone 6: page layout editor + entry widgets ─────────────────────────── */
+
+/* Customize mode on entry pages */
+.worldsmith .ws-page--entity.is-editing .ws-entity-edit {
+	grid-template-columns: minmax(0, 1fr) 270px;
+}
+.worldsmith .ws-entity-edit .ws-tasks-drawer {
+	top: 8px;
+}
+.worldsmith .ws-entity-edit .ws-widget-drawer {
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 150px);
+}
+.worldsmith .ws-widget-drawer__list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-height: 0;
+	overflow-y: auto;
+	margin: 0 -6px;
+	padding: 0 6px 2px;
+}
+.worldsmith .ws-widget-drawer__search {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.worldsmith .ws-widget-drawer__group {
+	margin: 10px 0 2px;
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-widget-drawer__group:first-child {
+	margin-top: 0;
+}
+.worldsmith .ws-widget-drawer__none {
+	padding: 12px 4px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer {
+	display: block;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer__list,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	max-height: 280px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer__group,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer__group {
+	grid-column: 1 / -1;
+}
+.worldsmith[data-ws-size='narrow'] .ws-page--entity.is-editing .ws-entity-edit,
+.worldsmith[data-ws-size='medium'] .ws-page--entity.is-editing .ws-entity-edit {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-entity-edit .ws-widget-drawer,
+.worldsmith[data-ws-size='medium'] .ws-entity-edit .ws-widget-drawer {
+	max-height: none;
+}
+.worldsmith .ws-editbar__scope {
+	margin-left: auto;
+}
+.worldsmith .ws-editbar--entity .ws-editbar__text {
+	flex: 1 1 280px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-editbar__scope {
+	order: 5;
+	width: 100%;
+	margin-left: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-editbar__scope .ws-segmented__item {
+	flex: 1;
+}
+/* Blocks that hide themselves when empty (Unused data, an empty Details subset) stay
+   visible while customizing, so they can be moved or removed. */
+.worldsmith .ws-layout.is-editing .ws-block.is-block-hidden,
+.worldsmith .is-editing .ws-block.is-block-hidden,
+.worldsmith .is-editing .ws-layout-grid__cell.is-block-hidden {
+	display: block;
+}
+.worldsmith .is-editing .ws-block.is-block-hidden {
+	position: relative;
+	min-height: 64px;
+	opacity: 0.6;
+}
+.worldsmith .is-editing .ws-block.is-block-hidden::after {
+	content: 'Hidden on pages while it has nothing to show';
+	position: absolute;
+	inset: auto 12px 10px 12px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-align: center;
+	pointer-events: none;
+}
+
+/* ── Key facts ──────────────────────────────────────────────────────────────── */
+.worldsmith .ws-facts {
+	display: grid;
+	grid-template-columns: repeat(var(--ws-facts, 4), minmax(0, 1fr));
+	gap: var(--ws-gap);
+}
+.worldsmith .ws-fact {
+	min-width: 0;
+	padding: 12px 16px 14px;
+	border: 1px solid var(--ws-border);
+	border-top: 2px solid color-mix(in srgb, var(--ws-tint) 70%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	cursor: pointer;
+	transition: border-color var(--ws-dur), background var(--ws-dur);
+}
+.worldsmith .ws-fact:hover {
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	border-top-color: var(--ws-tint);
+}
+.worldsmith .ws-fact:focus-visible {
+	outline: 2px solid var(--ws-accent);
+	outline-offset: 1px;
+}
+.worldsmith .ws-fact__label {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.worldsmith .ws-fact__value {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+	min-height: 30px;
+	margin-top: 6px;
+	overflow: hidden;
+	font-family: var(--ws-font-display);
+	font-size: 1.25rem;
+	line-height: 1.25;
+}
+.worldsmith .ws-fact__value:not(.has-children) {
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-fact.is-empty .ws-fact__value {
+	color: var(--ws-faint);
+}
+.worldsmith[data-ws-size='narrow'] .ws-facts,
+.worldsmith[data-ws-size='medium'] .ws-facts {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+
+/* ── Quote ──────────────────────────────────────────────────────────────────── */
+.worldsmith .ws-quote {
+	position: relative;
+	padding: 20px 26px 20px 30px;
+	border-left: 3px solid var(--ws-tint);
+	border-radius: 0 var(--ws-radius-l) var(--ws-radius-l) 0;
+	background: color-mix(in srgb, var(--ws-tint) 7%, var(--ws-surface));
+}
+.worldsmith .ws-quote__mark {
+	position: absolute;
+	top: 12px;
+	right: 16px;
+	display: flex;
+	color: color-mix(in srgb, var(--ws-tint) 35%, transparent);
+}
+.worldsmith .ws-quote__mark svg {
+	width: 30px;
+	height: 30px;
+}
+.worldsmith .ws-quote__text {
+	padding-right: 30px;
+	font-family: var(--ws-font-display);
+	font-size: 1.3rem;
+	font-style: italic;
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+.worldsmith .ws-quote__text.is-empty {
+	color: var(--ws-faint);
+	font-size: 1rem;
+}
+.worldsmith .ws-quote__text.is-link {
+	cursor: pointer;
+}
+.worldsmith .ws-quote__by {
+	margin-top: 10px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+
+/* ── Stat block ─────────────────────────────────────────────────────────────── */
+.worldsmith .ws-statblock {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-stat-row {
+	display: grid;
+	grid-template-columns: minmax(70px, 34%) minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 12px;
+	padding: 5px 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+}
+.worldsmith .ws-stat-row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-stat-row:focus-visible {
+	outline: 2px solid var(--ws-accent);
+}
+.worldsmith .ws-stat-row__label {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-stat-row__bar {
+	height: 8px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-stat-row__fill {
+	height: 100%;
+	border-radius: 999px;
+	background: linear-gradient(to right, color-mix(in srgb, var(--ws-tint) 65%, transparent), var(--ws-tint));
+	transition: width 300ms var(--ws-ease);
+}
+.worldsmith .ws-stat-row__value {
+	min-width: 42px;
+	font-size: 12.5px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith .ws-stat-row.is-empty .ws-stat-row__value {
+	color: var(--ws-faint);
+}
+
+/* ── Image spotlight ────────────────────────────────────────────────────────── */
+.worldsmith .ws-spot__frame {
+	display: block;
+	width: 100%;
+	height: auto;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-hover);
+	box-shadow: none;
+	cursor: zoom-in;
+}
+.worldsmith .ws-spot--landscape .ws-spot__frame { aspect-ratio: 3 / 2; }
+.worldsmith .ws-spot--wide .ws-spot__frame { aspect-ratio: 16 / 9; }
+.worldsmith .ws-spot--square .ws-spot__frame { aspect-ratio: 1; }
+.worldsmith .ws-spot--portrait .ws-spot__frame { aspect-ratio: 3 / 4; }
+.worldsmith .ws-spot__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	transition: transform 500ms var(--ws-ease);
+}
+.worldsmith .ws-spot--original .ws-spot__img {
+	height: auto;
+}
+.worldsmith .ws-spot__frame:hover .ws-spot__img:not(.ws-img-missing) {
+	transform: scale(1.015);
+}
+.worldsmith .ws-spot__caption {
+	margin-top: 8px;
+	color: var(--ws-muted);
+	font-size: 13px;
+	font-style: italic;
+	text-align: center;
+}
+.worldsmith .ws-spot__empty {
+	padding: 26px 16px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+
+/* ── Single field ───────────────────────────────────────────────────────────── */
+.worldsmith .ws-single-field .ws-prop {
+	margin: 0;
+}
+.worldsmith .ws-single-field__desc {
+	margin-bottom: 6px;
+}
+
+/* ── Heading & divider ──────────────────────────────────────────────────────── */
+.worldsmith .ws-heading {
+	display: flex;
+	align-items: flex-end;
+	gap: 18px;
+	padding: 10px 2px 4px;
+}
+.worldsmith .ws-heading__title {
+	margin: 0;
+	font-family: var(--ws-font-display);
+	font-size: 1.45rem;
+	font-weight: 500;
+	line-height: 1.2;
+}
+.worldsmith .ws-heading__sub {
+	margin-top: 3px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-heading__rule {
+	flex: 1;
+	height: 1px;
+	margin-bottom: 8px;
+	background: linear-gradient(to right, color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border)), transparent);
+}
+.worldsmith .ws-heading--centered {
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	text-align: center;
+}
+.worldsmith .ws-heading--centered .ws-heading__rule {
+	flex: none;
+	width: min(320px, 70%);
+	margin: 0;
+	background: linear-gradient(to right, transparent, color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border)), transparent);
+}
+.worldsmith .ws-heading--divider {
+	padding: 8px 0;
+}
+.worldsmith .ws-heading--divider .ws-heading__rule {
+	margin: 0;
+	background: linear-gradient(to right, transparent, var(--ws-border-strong) 15%, var(--ws-border-strong) 85%, transparent);
+}
+
+/* ── Relationship web ───────────────────────────────────────────────────────── */
+.worldsmith .ws-web {
+	position: relative;
+	height: 360px;
+	margin: 4px 0;
+}
+.worldsmith .ws-web--small { height: 280px; }
+.worldsmith .ws-web--large { height: 480px; }
+.worldsmith .ws-web.is-empty {
+	height: auto;
+}
+.worldsmith .ws-web__lines {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+.worldsmith .ws-web__line {
+	stroke: color-mix(in srgb, var(--ws-border-strong) 85%, transparent);
+	stroke-width: 1.25px;
+	transition: stroke var(--ws-dur), stroke-width var(--ws-dur);
+}
+.worldsmith .ws-web__line.is-hostile {
+	stroke: color-mix(in srgb, var(--color-red) 55%, transparent);
+}
+.worldsmith .ws-web__line.is-secret {
+	stroke-dasharray: 4 4;
+}
+.worldsmith .ws-web__line.is-ended {
+	opacity: 0.45;
+}
+.worldsmith .ws-web__line.is-hot {
+	stroke: var(--ws-accent);
+	stroke-width: 2px;
+}
+.worldsmith .ws-web__node {
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	max-width: 170px;
+	height: auto;
+	padding: 4px 10px 4px 4px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-bg);
+	box-shadow: var(--shadow-s);
+	color: var(--ws-text);
+	text-align: left;
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+	transition: border-color var(--ws-dur), box-shadow var(--ws-dur);
+}
+.worldsmith .ws-web__node:hover,
+.worldsmith .ws-web__node:focus-visible {
+	z-index: 2;
+	border-color: var(--ws-tint);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-tint) 18%, transparent), var(--shadow-s);
+	outline: none;
+}
+.worldsmith .ws-web__node.is-hostile {
+	border-color: color-mix(in srgb, var(--color-red) 40%, var(--ws-border));
+}
+.worldsmith .ws-web__node.is-ended {
+	opacity: 0.65;
+}
+.worldsmith .ws-web__node .ws-avatar {
+	flex: none;
+}
+.worldsmith .ws-web__text {
+	min-width: 0;
+}
+.worldsmith .ws-web__name {
+	overflow: hidden;
+	font-size: 12.5px;
+	font-weight: 500;
+	line-height: 1.2;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-web__label {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	line-height: 1.2;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-web__center {
+	z-index: 3;
+	flex-direction: column;
+	gap: 6px;
+	max-width: 150px;
+	padding: 10px 16px 9px;
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	box-shadow: 0 0 0 5px color-mix(in srgb, var(--ws-tint) 10%, transparent), var(--shadow-s);
+	cursor: default;
+}
+.worldsmith .ws-web__center .ws-web__name {
+	font-family: var(--ws-font-display);
+	font-size: 14px;
+	text-align: center;
+	white-space: normal;
+}
+.worldsmith .ws-web__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 4px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-web__legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+.worldsmith .ws-web__key {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-web__swatch {
+	width: 18px;
+	height: 0;
+	border-top: 2px solid var(--ws-border-strong);
+}
+.worldsmith .ws-web__swatch.is-hostile {
+	border-top-color: color-mix(in srgb, var(--color-red) 60%, transparent);
+}
+.worldsmith .ws-web__swatch.is-secret {
+	border-top-style: dashed;
+}
+/* Phones: the diagram becomes a tidy wrap of chips around the entry. */
+.worldsmith[data-ws-size='narrow'] .ws-web {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	height: auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-web__lines {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-web__node {
+	position: static;
+	max-width: 100%;
+	transform: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-web__center {
+	order: -1;
+	flex-direction: row;
+	width: 100%;
+	max-width: none;
+}
+
+/* ── Roster table ───────────────────────────────────────────────────────────── */
+.worldsmith .ws-roster__table .ws-table__name {
+	font-size: 0.92rem;
+}
+.worldsmith .ws-roster__flag {
+	display: inline-flex;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-roster__flag svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-roster__status {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+}
+.worldsmith .ws-roster__status::before {
+	content: '';
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-roster__foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 8px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-roster .ws-table th:first-child {
+	width: auto;
+}
+
+/* ── Shared connections / backlinks (list rows) ─────────────────────────────── */
+.worldsmith :is(.ws-shared, .ws-backlinks) {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.worldsmith :is(.ws-shared__row, .ws-backlink) {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	padding: 6px 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith :is(.ws-shared__row, .ws-backlink):hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-shared__text,
+.worldsmith .ws-backlink__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-shared__name,
+.worldsmith .ws-backlink__name {
+	overflow: hidden;
+	font-size: 13px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-shared__via,
+.worldsmith .ws-backlink__path {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-shared__count {
+	min-width: 22px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+.worldsmith :is(.ws-shared__more, .ws-backlinks__more) {
+	padding: 4px 8px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-backlink {
+	align-items: flex-start;
+}
+.worldsmith .ws-backlink__icon {
+	display: flex;
+	margin-top: 2px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-backlink__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-backlink__head {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+.worldsmith .ws-backlink__name {
+	flex: 1;
+	font-weight: 500;
+}
+.worldsmith .ws-backlink__when {
+	flex: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-backlink__line {
+	display: -webkit-box;
+	margin-top: 2px;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.45;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+/* ── Embedded note ──────────────────────────────────────────────────────────── */
+.worldsmith .ws-embed__body {
+	position: relative;
+	overflow: hidden;
+	font-family: var(--ws-font-body);
+	line-height: 1.6;
+}
+.worldsmith .ws-embed__body > :first-child {
+	margin-top: 0;
+}
+.worldsmith .ws-embed__body.is-clamped::after {
+	content: '';
+	position: absolute;
+	inset: auto 0 0 0;
+	height: 64px;
+	background: linear-gradient(to bottom, transparent, var(--ws-surface-raised, var(--ws-bg)));
+	pointer-events: none;
+}
+.worldsmith .ws-block--card .ws-embed__body.is-clamped::after {
+	background: linear-gradient(to bottom, transparent, var(--ws-block-bg, var(--ws-surface)));
+}
+.worldsmith .ws-embed__more {
+	margin-top: 8px;
+}
+.worldsmith .ws-embed__actions {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+/* ── Type Studio → Page layout ──────────────────────────────────────────────── */
+.worldsmith .ws-lt__intro {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 18px;
+	margin-bottom: 18px;
+}
+.worldsmith .ws-lt__text {
+	flex: 1 1 320px;
+	min-width: 0;
+}
+.worldsmith .ws-lt__status {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 4px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-lt__status.is-custom {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-lt__status svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-lt__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-lt__pick {
+	max-width: 200px;
+}
+.worldsmith .ws-lt {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 280px;
+	gap: 24px;
+	align-items: start;
+}
+.worldsmith .ws-lt__mini {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	grid-auto-rows: minmax(44px, auto);
+	gap: 8px;
+	padding: 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-lt__cell {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	padding: 8px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-lt__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-lt__cell.is-unknown {
+	border-style: dashed;
+}
+.worldsmith .ws-lt__cell--hero {
+	min-height: 84px;
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	background: linear-gradient(135deg, color-mix(in srgb, var(--ws-tint) 18%, var(--ws-bg)), var(--ws-bg));
+	color: var(--ws-text);
+}
+.worldsmith .ws-lt__cell--properties {
+	min-height: 96px;
+}
+.worldsmith .ws-lt__icon {
+	display: flex;
+	flex: none;
+}
+.worldsmith .ws-lt__icon svg {
+	width: 15px;
+	height: 15px;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-lt__side {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.worldsmith .ws-lt__h {
+	color: var(--ws-muted);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-lt__own {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-lt__own-who,
+.worldsmith .ws-lt__own-acts {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-lt__own-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith[data-ws-size='narrow'] .ws-lt,
+.worldsmith[data-ws-size='medium'] .ws-lt {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-lt__mini {
+	gap: 4px;
+	padding: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-lt__cell {
+	padding: 6px;
+	font-size: 11px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-lt__label {
+	display: none;
+}
+
+/* Wide content (tables, diagrams) scrolls inside its card instead of widening the page. */
+.worldsmith :is(.ws-layout-grid__cell, .ws-block__body) {
+	min-width: 0;
+}
+.worldsmith .ws-roster__wrap {
+	max-width: 100%;
+	overflow-x: auto;
+}

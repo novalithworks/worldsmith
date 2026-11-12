@@ -1,0 +1,10 @@
+{
+	"id": "worldsmith",
+	"name": "Worldsmith",
+	"version": "0.30.11",
+	"minAppVersion": "1.13.0",
+	"description": "A structured, visual worldbuilding studio: entries, connections, tasks, dashboards and layouts. Worldsmith Pro (sold separately) adds a Writing Studio, maps, timeline, trees, graph and calendars.",
+	"author": "Novalith",
+	"isDesktopOnly": false,
+	"fundingUrl": "https://buymeacoffee.com/novalith"
+}

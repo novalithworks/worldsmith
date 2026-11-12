@@ -1,0 +1,64 @@
+Worldsmith Source-Available License
+
+Copyright (c) 2026 Novalith. All rights reserved.
+
+This license covers Worldsmith and Worldsmith Pro (together, "the Software"): the source code
+in this repository and the plugin files built from it. It is a source-available license, not an
+open-source license.
+
+1. What you may do
+
+   a. Use. You may install and use the free edition of Worldsmith, and Worldsmith Pro if you
+      obtained it from Novalith, for any personal or professional purpose, including writing
+      and publishing books and other work that you sell.
+
+   b. Read. You may read and study the source code.
+
+   c. Change it for yourself. You may modify the Software for your own private use on your own
+      devices. You may not share those modified versions with anyone else.
+
+   d. Contribute. You may suggest changes through this repository (issues, pull requests). By
+      submitting a contribution, you allow Novalith to use, change and distribute it as part of
+      the Software, in either edition, without payment.
+
+2. What you may not do (without Novalith's written permission)
+
+   a. Redistribute, publish, sell, rent, lend or sublicense the Software or any part of it, in
+      original or modified form, including copies of the plugin files. (Linking to the official
+      download locations is fine.)
+
+   b. Build, share or offer Worldsmith Pro, or any version of the free edition with its Pro
+      features unlocked or restored, or remove or work around the free edition's edition
+      locks for anyone else.
+
+   c. Publish a fork or a derivative of the Software, including in the Obsidian community
+      directory or any other plugin store.
+
+   d. Remove or change this license or the copyright notices.
+
+3. Your work is yours
+
+   The worlds, notes, entries, images and books you create with the Software belong to you. This
+   license makes no claim on them.
+
+4. Other people's work included in the Software
+
+   The Software includes third-party components under their own licenses, which this license
+   does not change: pdf-lib (MIT License) and the Cormorant Garamond typeface (SIL Open Font
+   License 1.1). See THIRD_PARTY_NOTICES.md and fonts/OFL.txt.
+
+5. Ending
+
+   If you break the terms of this license, your permission to use the Software ends
+   automatically. Novalith may restore it in writing.
+
+6. No warranty
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT. IN NO EVENT SHALL NOVALITH BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. Keep backups of
+   your work.
+
+For permission to do anything this license doesn't allow, contact Novalith.

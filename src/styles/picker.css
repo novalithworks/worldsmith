@@ -1,0 +1,163 @@
+/* ── Property picker (Group by, Add a filter / sort, board columns) ─────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-popover.ws-picklist {
+	display: flex;
+	flex-direction: column;
+	padding: 6px;
+	max-height: min(440px, calc(100vh - 120px));
+}
+.worldsmith .ws-picklist__head {
+	padding: 4px 8px 6px;
+}
+.worldsmith .ws-picklist__title {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-picklist__search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	margin: 0 2px 6px;
+}
+.worldsmith .ws-picklist__search > .ws-icon {
+	position: absolute;
+	left: 9px;
+	display: flex;
+	color: var(--ws-faint);
+	pointer-events: none;
+}
+.worldsmith .ws-picklist__search svg {
+	width: 14px;
+	height: 14px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-picklist .ws-picklist__input {
+	width: 100%;
+	height: 30px;
+	padding: 0 10px 0 30px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	font-size: 13px;
+	transition: border-color var(--ws-dur-fast) ease, background-color var(--ws-dur-fast) ease;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-picklist .ws-picklist__input:focus {
+	border-color: color-mix(in srgb, var(--ws-accent) 55%, var(--ws-border));
+	background: var(--background-primary);
+}
+.worldsmith .ws-picklist__list {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	padding: 0 2px;
+}
+.worldsmith .ws-picklist__section + .ws-picklist__section {
+	margin-top: 4px;
+	padding-top: 4px;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-picklist__group {
+	padding: 6px 8px 3px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-picklist .ws-picklist__item {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr) auto 16px;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: 30px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color var(--ws-dur-fast) ease, color var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-picklist__item.is-active {
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+}
+.worldsmith .ws-picklist__item.is-selected {
+	color: var(--ws-accent);
+	font-weight: 500;
+}
+.worldsmith .ws-picklist__icon,
+.worldsmith .ws-picklist__check {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ws-faint);
+	transition: color var(--ws-dur-fast) ease, transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-picklist__icon svg,
+.worldsmith .ws-picklist__check svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-picklist__item.is-active .ws-picklist__icon,
+.worldsmith .ws-picklist__item.is-selected .ws-picklist__icon,
+.worldsmith .ws-picklist__check {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-picklist__item.is-active .ws-picklist__icon {
+	transform: scale(1.08);
+}
+.worldsmith .ws-picklist__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-picklist__hint {
+	max-width: 110px;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-picklist__empty {
+	padding: 16px 8px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+	text-align: center;
+}
+.worldsmith .ws-picklist__foot {
+	display: flex;
+	gap: 6px;
+	margin-top: 6px;
+	padding: 6px 2px 0;
+	border-top: 1px solid var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-picklist .ws-picklist__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 26px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-picklist .ws-picklist__link:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-picklist__link svg {
+	width: 13px;
+	height: 13px;
+}

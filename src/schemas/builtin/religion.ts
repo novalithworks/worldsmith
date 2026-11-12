@@ -1,0 +1,55 @@
+import { defineType, f, opts, section, tasks } from '../dsl';
+
+export const religionType = defineType(
+	{
+		id: 'religion',
+		singular: 'Religion',
+		plural: 'Religions',
+		icon: 'church',
+		description: 'Faiths, cults, philosophies and their institutions.',
+		group: 'society',
+		color: 'yellow',
+		order: 100,
+		subtitle: ['religionType', 'followerCount'],
+		card: ['religionType', 'followerCount', 'influence'],
+		parentTypes: ['religion'],
+		childTypes: ['religion'],
+		tasks: tasks(
+			'Define core beliefs|Beliefs',
+			'Define deities or the divine|Beliefs',
+			'Write the creation myth|Myth',
+			'Define practices and rituals|Practice',
+			'Define clergy and hierarchy|Institutions',
+			'Define holy places|Places',
+			'Define afterlife beliefs|Beliefs',
+			'Define schisms and heresies|History|optional',
+			'Define political influence|Influence',
+		),
+	},
+	section('identity', 'Identity', 'church', [
+		f.select('religionType', 'Type', opts('Monotheistic:yellow', 'Polytheistic:orange', 'Animistic:green', 'Ancestral:cyan', 'Philosophical:blue', 'Cult:red', 'Dualistic:purple')),
+		f.text('followerCount', 'Followers', { width: 'third' }),
+		f.select('influence', 'Influence', opts('Fringe:gray', 'Minor:green', 'Significant:cyan', 'Dominant:blue', 'State religion:purple')),
+		f.text('symbol', 'Holy symbol'),
+	]),
+	section('beliefs', 'Beliefs', 'sparkles', [
+		f.rich('beliefs', 'Core beliefs', { recommended: true }),
+		f.rel('deities', 'Deities', { via: 'worships', targets: ['deity'] }),
+		f.rich('creationMyth', 'Creation myth'),
+		f.long('afterlife', 'Afterlife', { width: 'half' }),
+		f.long('morality', 'Morality & sins', { width: 'half' }),
+		f.list('texts', 'Holy texts', { advanced: true }),
+	]),
+	section('practice', 'Practice', 'flame', [
+		f.long('practices', 'Practices & rituals', { recommended: true }),
+		f.list('holidays', 'Holy days'),
+		f.long('clergy', 'Clergy & hierarchy'),
+		f.rel('holyPlaces', 'Holy places', { via: 'practiced-in', targets: ['location'] }),
+	]),
+	section('society', 'Followers & influence', 'users', [
+		f.rel('followers', 'Followers', { via: 'follows-religion', direction: 'reverse', targets: ['character', 'culture', 'nation', 'faction'] }),
+		f.long('politics', 'Political influence'),
+		f.long('schisms', 'Schisms & heresies', { advanced: true }),
+		f.rich('history', 'History'),
+	]),
+);

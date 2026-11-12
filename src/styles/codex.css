@@ -1,0 +1,480 @@
+/*
+ * Modern Codex: the 2026 design. Everything here is scoped to body.ws-look-codex, so the
+ * Classic design (Settings › Design) is exactly the earlier look. Colors still come from
+ * variables (palette.css or the Obsidian theme); this file is type, shape and layout.
+ *
+ * The ideas: a book serif for names and titles, small spaced capitals for labels, a fine
+ * rule under each page's running head, and the arch as the one signature shape.
+ */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) {
+	--ws-radius-s: 4px;
+	--ws-radius: 8px;
+	--ws-radius-l: 14px;
+	--ws-arch: 999px 999px 4px 4px;
+	--ws-rule: color-mix(in srgb, var(--ws-accent) 55%, var(--ws-border));
+	--ws-caps-size: 10.5px;
+	--ws-caps-track: 0.13em;
+	--ws-title-weight: 600;
+	--ws-surface: color-mix(in srgb, var(--background-secondary) 55%, var(--background-primary));
+	--ws-lift: 0 1px 0 rgb(0 0 0 / 0.04), 0 10px 26px -14px rgb(0 0 0 / 0.45);
+}
+body.ws-font-codex :is(.worldsmith, .worldsmith-modal) {
+	--ws-font-display: 'Worldsmith Codex', 'Cormorant Garamond', 'Iowan Old Style', Palatino, Georgia, serif;
+}
+/* The serif is drawn small for its size; titles set in it are scaled up a touch. */
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) {
+	--ws-title-scale: 1;
+}
+body.ws-font-codex :is(.worldsmith, .worldsmith-modal) {
+	--ws-title-scale: 1.16;
+}
+
+/* Small spaced capitals: eyebrows, group labels, field labels, counts. */
+body.ws-look-codex .worldsmith :is(.ws-nav-group__label, .ws-world-switch__eyebrow, .ws-db-header__count, .ws-hero__kind, .ws-prop__label-text, .ws-vgroup__label, .ws-widget-drawer__group, .ws-vis-home__label),
+body.ws-look-codex .worldsmith-modal :is(.ws-field-label, .ws-dash-modal__label) {
+	font-family: var(--ws-font-ui);
+	font-size: var(--ws-caps-size);
+	font-weight: 600;
+	letter-spacing: var(--ws-caps-track);
+	text-transform: uppercase;
+}
+
+/* ── Titles in the book serif ───────────────────────────────────────────── */
+body.ws-look-codex .worldsmith :is(.ws-db-header__title, .ws-hero__name, .ws-world-hero__name, .ws-world-switch__name, .ws-empty__title, .ws-onboard__title),
+body.ws-look-codex .worldsmith-modal .modal-title {
+	font-family: var(--ws-font-display);
+	font-weight: var(--ws-title-weight);
+	letter-spacing: -0.005em;
+}
+body.ws-look-codex .worldsmith .ws-db-header__title {
+	font-size: calc(30px * var(--ws-title-scale));
+	line-height: 1.05;
+}
+body.ws-look-codex .worldsmith-modal .modal-title {
+	font-size: calc(22px * var(--ws-title-scale));
+	line-height: 1.15;
+}
+body.ws-look-codex .worldsmith .ws-empty__title {
+	font-size: calc(20px * var(--ws-title-scale));
+}
+body.ws-look-codex .worldsmith :is(.ws-block__title, .ws-card__name, .ws-vtile__name, .ws-bcard__name, .ws-vis-card__name, .ws-cal-card__name, .ws-section__label, .ws-feature__name, .ws-spotlight__name) {
+	font-family: var(--ws-font-display);
+	font-weight: var(--ws-title-weight);
+	letter-spacing: 0;
+}
+body.ws-look-codex .worldsmith .ws-block__title {
+	font-size: calc(17px * var(--ws-title-scale));
+}
+body.ws-look-codex .worldsmith :is(.ws-card__name, .ws-vtile__name) {
+	font-size: calc(17px * var(--ws-title-scale));
+}
+body.ws-look-codex .worldsmith .ws-section__label {
+	font-size: calc(15px * var(--ws-title-scale));
+}
+
+/* ── Frame: sidebar and top bar ─────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-sidebar {
+	border-right: 1px solid var(--ws-border);
+}
+body.ws-look-codex .worldsmith .ws-world-switch__seal {
+	border-radius: var(--ws-arch);
+	width: 30px;
+	height: 36px;
+	background: transparent;
+	border: 1.5px solid var(--ws-accent);
+	color: var(--ws-accent);
+}
+body.ws-look-codex .worldsmith .ws-world-switch__name {
+	font-size: calc(18px * var(--ws-title-scale));
+	line-height: 1.1;
+}
+body.ws-look-codex .worldsmith .ws-world-switch__eyebrow {
+	color: var(--ws-accent);
+	font-size: 9.5px;
+}
+body.ws-look-codex .worldsmith .ws-nav-group__label {
+	color: var(--ws-faint);
+}
+body.ws-look-codex .worldsmith .ws-nav-item {
+	position: relative;
+	border-radius: var(--ws-radius-s);
+}
+body.ws-look-codex .worldsmith .ws-nav-item.is-active {
+	background: color-mix(in srgb, var(--ws-accent) 13%, transparent);
+	color: var(--ws-text);
+}
+/* The active page carries a small arch, like a ribbon marker in a book. */
+body.ws-look-codex .worldsmith .ws-nav-item.is-active::before {
+	content: '';
+	position: absolute;
+	left: -8px;
+	top: 50%;
+	width: 4px;
+	height: 18px;
+	margin-top: -9px;
+	border-radius: 0 3px 3px 0;
+	background: var(--ws-accent);
+}
+body.ws-look-codex .worldsmith .ws-sidebar__create {
+	border-radius: var(--ws-radius-s);
+}
+
+body.ws-look-codex .worldsmith .ws-topbar {
+	border-bottom: 1px solid var(--ws-border);
+}
+body.ws-look-codex .worldsmith .ws-topbar__icon {
+	color: var(--ws-accent);
+}
+body.ws-look-codex .worldsmith .ws-trail__step {
+	color: var(--ws-muted);
+}
+body.ws-look-codex .worldsmith .ws-trail__here {
+	font-family: var(--ws-font-display);
+	font-size: calc(15px * var(--ws-title-scale));
+	font-weight: var(--ws-title-weight);
+	color: var(--ws-text);
+}
+
+/* ── Running heads: every page header looks the same ───────────────────── */
+body.ws-look-codex .worldsmith :is(.ws-db-header, .ws-studio-head) {
+	position: relative;
+	padding-bottom: 18px;
+	margin-bottom: 18px;
+	border-bottom: 1px solid var(--ws-border);
+	/* The arch starts level with the title on every page, however long the description. */
+	align-items: flex-start;
+}
+body.ws-look-codex .worldsmith :is(.ws-db-header, .ws-studio-head)::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -1px;
+	width: 56px;
+	height: 1px;
+	background: var(--ws-accent);
+}
+body.ws-look-codex .worldsmith :is(.ws-db-header, .ws-studio-head) .ws-db-header__mark {
+	border-radius: var(--ws-arch);
+	width: 46px;
+	height: 56px;
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	color: var(--ws-tint);
+}
+/*
+ * One grid for every page head, so the arch lines up the same on every page:
+ *   [arch]  count                         [buttons]
+ *   [arch]  Title                         [buttons]
+ *           A description that may run the full width, under the buttons too.
+ * The arch starts level with the title, whether or not the page shows a count.
+ */
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto auto;
+	gap: 0;
+	align-items: start;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) > .ws-db-header__mark {
+	grid-column: 1;
+	grid-row: 2 / span 2;
+	margin-right: 16px;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) > .ws-db-header__text {
+	/* Shares the head's grid (subgrid): count, title and description sit in its columns and rows. */
+	display: grid;
+	grid-column: 2 / -1;
+	grid-row: 1 / span 3;
+	grid-template-columns: subgrid;
+	grid-template-rows: subgrid;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) .ws-db-header__count {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) .ws-db-header__title {
+	grid-column: 1;
+	grid-row: 2;
+	align-self: start;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) .ws-db-header__desc {
+	grid-column: 1 / -1;
+	grid-row: 3;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) > .ws-db-header__actions {
+	grid-row: 2;
+	grid-column: 4;
+	/* Start-aligned, not centred, so an arch taller than the title row never shifts them. */
+	align-self: start;
+	margin-top: 4px;
+	margin-left: 6px;
+}
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) :is(.ws-db-header, .ws-studio-head):not(.has-page-banner) > .ws-db-header__actions.ws-page-banner__slot {
+	grid-column: 3;
+}
+body.ws-look-codex .worldsmith .ws-db-header__count {
+	order: -1;
+	color: var(--ws-tint, var(--ws-accent));
+	margin-bottom: 2px;
+}
+body.ws-look-codex .worldsmith .ws-db-header__text {
+	display: flex;
+	flex-direction: column;
+}
+body.ws-look-codex .worldsmith .ws-db-header__desc {
+	font-size: 14px;
+	color: var(--ws-muted);
+	max-width: none;
+}
+/* View tabs sit on the header's rule, like the tabs of a ledger. */
+body.ws-look-codex .worldsmith .ws-db-header + .ws-visually-hidden + .ws-vtabs,
+body.ws-look-codex .worldsmith .ws-db-header + .ws-vtabs {
+	margin-top: -18px;
+}
+body.ws-look-codex .worldsmith .ws-vtabs {
+	border-bottom: none;
+}
+body.ws-look-codex .worldsmith .ws-vtab.is-active::after {
+	background: var(--ws-accent);
+	height: 2px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn {
+	border-radius: var(--ws-radius-s);
+}
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn--primary {
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn--ghost {
+	border-color: var(--ws-border);
+}
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn--ghost:hover {
+	border-color: var(--ws-border-strong);
+}
+/* Delete reads as delete: solid, never a pale tint. */
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn--danger {
+	background: var(--color-red);
+	border-color: var(--color-red);
+	color: #fff;
+}
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) .ws-btn--danger:hover {
+	background: color-mix(in srgb, var(--color-red) 86%, #000);
+}
+
+/* ── Blocks and widgets ─────────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-block--card {
+	background: var(--ws-surface);
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	box-shadow: none;
+}
+body.ws-look-codex .worldsmith .ws-block__header {
+	border-bottom: none;
+}
+
+/* ── Entry title page ──────────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-hero__name {
+	font-size: calc(clamp(34px, 4.4cqi, 50px) * var(--ws-title-scale));
+	line-height: 1;
+}
+body.ws-look-codex .worldsmith .ws-hero__kind {
+	gap: 6px;
+}
+body.ws-look-codex .worldsmith .ws-hero__subtitle {
+	font-family: var(--ws-font-display);
+	font-style: italic;
+	font-size: calc(17px * var(--ws-title-scale));
+	color: var(--ws-muted);
+}
+body.ws-look-codex .worldsmith .ws-hero__portrait-btn .ws-avatar--arch:not(.ws-portrait-placeholder) {
+	box-shadow: 0 0 0 4px var(--ws-bg), 0 0 0 5px color-mix(in srgb, var(--ws-accent) 60%, var(--ws-border)), 0 18px 30px -18px rgb(0 0 0 / 0.6);
+}
+/* With a banner, its tools live on the banner itself; without one, the title page keeps its Banner button (to add one). */
+body.ws-look-codex .worldsmith .ws-hero.has-banner .ws-hero__banner-btn {
+	display: none;
+}
+body.ws-look-codex .worldsmith .ws-hero__banner {
+	border-radius: var(--ws-radius-l);
+}
+body.ws-look-codex .worldsmith .ws-hero {
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--ws-border);
+	margin-bottom: 4px;
+}
+
+/* Empty fields: a quiet line to write on, not a hidden editor. */
+body.ws-look-codex .worldsmith .ws-props .ws-prop.is-empty:not(:hover):not(:focus-within) .ws-prop__value::after {
+	content: '';
+	top: 21px;
+	height: 0;
+	width: min(70%, 220px);
+	border-bottom: 1px dashed var(--ws-border-strong);
+}
+
+/* ── Home: the world's cover ───────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-world-hero__name {
+	font-size: calc(clamp(38px, 5cqi, 58px) * var(--ws-title-scale));
+	line-height: 1;
+}
+body.ws-look-codex .worldsmith .ws-world-hero__desc {
+	font-family: var(--ws-font-display);
+	font-style: italic;
+	font-size: calc(17px * var(--ws-title-scale));
+	line-height: 1.35;
+}
+body.ws-look-codex .worldsmith .ws-world-hero__seal {
+	border-radius: var(--ws-arch);
+}
+/* The counts under the cover read as one ledger row. */
+body.ws-look-codex .worldsmith .ws-layout-row--tiles {
+	gap: 0;
+	border-top: 1px solid var(--ws-border);
+	border-bottom: 1px solid var(--ws-border);
+}
+body.ws-look-codex .worldsmith .ws-layout-row--tiles > .ws-layout-col + .ws-layout-col {
+	border-left: 1px solid var(--ws-border);
+}
+body.ws-look-codex .worldsmith .ws-layout-row--tiles .ws-stat {
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+}
+body.ws-look-codex .worldsmith .ws-stat__value {
+	font-family: var(--ws-font-display);
+	font-weight: var(--ws-title-weight);
+	font-size: calc(30px * var(--ws-title-scale));
+	font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* ── Cards in type pages ───────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith :is(.ws-card, .ws-vtile, .ws-bcard) {
+	background: var(--ws-surface);
+	border-color: var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+body.ws-look-codex .worldsmith .ws-card .ws-avatar--arch {
+	box-shadow: 0 0 0 3px var(--ws-surface), 0 0 0 4px color-mix(in srgb, var(--ws-tint) 40%, var(--ws-border));
+}
+
+/* ── Dialogs ───────────────────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith-modal {
+	border-radius: var(--ws-radius-l);
+}
+body.ws-look-codex .worldsmith-modal .modal-title {
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--ws-border);
+	margin-bottom: 14px;
+}
+
+/* ── Empty states ──────────────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-empty__mark {
+	border-radius: var(--ws-arch);
+}
+
+/* ── Type pages: named view kinds, quieter toolbar ─────────────────────── */
+body.ws-look-codex .worldsmith[data-ws-size='wide'] .ws-vbar__kinds .ws-segmented__item {
+	width: auto;
+	gap: 6px;
+	padding: 0 10px;
+}
+body.ws-look-codex .worldsmith[data-ws-size='wide'] .ws-vbar__kinds .ws-segmented__label {
+	display: inline;
+	font-size: 12px;
+}
+body.ws-look-codex .worldsmith :is(.ws-card__subtitle, .ws-vtile__sub, .ws-bcard__sub) {
+	font-family: var(--ws-font-display);
+	font-style: italic;
+	font-size: calc(14px * var(--ws-title-scale));
+}
+
+/* The top bar's trail already shows where an entry sits; the title page doesn't repeat it. */
+body.ws-look-codex .worldsmith:not([data-ws-size='narrow']) .ws-hero__crumbs {
+	display: none;
+}
+
+/* ── Phones: pop-ups rise from the bottom as sheets ────────────────────── */
+body.ws-look-codex .worldsmith[data-ws-size='narrow'] :is(.ws-popover, .ws-picker):not(#ws-none) {
+	position: fixed;
+	top: auto;
+	right: var(--ws-sheet-r, 8px);
+	bottom: var(--ws-sheet-b, 8px);
+	left: var(--ws-sheet-l, 8px);
+	width: auto;
+	max-width: none;
+	max-height: 72%;
+	overflow: auto;
+	border-radius: var(--ws-radius-l) var(--ws-radius-l) var(--ws-radius) var(--ws-radius);
+	box-shadow: 0 -12px 40px -12px rgb(0 0 0 / 0.55);
+}
+body.ws-look-codex .worldsmith[data-ws-size='narrow'] .ws-popover::before {
+	content: '';
+	display: block;
+	width: 36px;
+	height: 4px;
+	margin: -2px auto 8px;
+	border-radius: 2px;
+	background: var(--ws-border-strong);
+}
+/* Bigger tap targets on touch screens. */
+@media (hover: none) {
+	body.ws-look-codex .worldsmith :is(.ws-btn, .ws-nav-item) {
+		min-height: 38px;
+	}
+	body.ws-look-codex .worldsmith .ws-btn--icon-only {
+		min-width: 38px;
+	}
+}
+
+/* ── Pop-ups and panels ────────────────────────────────────────────────── */
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) :is(.ws-popover, .ws-picker) {
+	border-color: var(--ws-border);
+	box-shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 44px -18px rgb(0 0 0 / 0.6);
+}
+body.ws-look-codex :is(.worldsmith, .worldsmith-modal) :is(.ws-vpanel__title, .ws-vis-panel__title, .ws-picklist__title) {
+	/* A title now, not a faint caps label (0.30.5): the text colour, like the other titles. */
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-weight: var(--ws-title-weight);
+	font-size: calc(16px * var(--ws-title-scale));
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+/* ── Studios: the list beside the editor ───────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-rlist {
+	border-color: var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+body.ws-look-codex .worldsmith :is(.ws-rlist__item, .ws-rlist__row).is-active {
+	background: color-mix(in srgb, var(--ws-accent) 13%, transparent);
+	box-shadow: inset 2px 0 0 var(--ws-accent);
+}
+
+/* ── Visual tools: start cards and the canvas tools ────────────────────── */
+body.ws-look-codex .worldsmith :is(.ws-vis-start, .ws-vis-card) {
+	border-radius: var(--ws-radius-l);
+}
+body.ws-look-codex .worldsmith .ws-vis-start__title {
+	font-family: var(--ws-font-display);
+	font-weight: var(--ws-title-weight);
+	font-size: calc(17px * var(--ws-title-scale));
+}
+body.ws-look-codex .worldsmith .ws-canvas__hud {
+	border-radius: var(--ws-radius);
+	border: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--background-primary) 88%, transparent);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 10px 28px -14px rgb(0 0 0 / 0.55);
+}
+
+/* Ledger row: no colored caps on the counts. */
+body.ws-look-codex .worldsmith .ws-layout-row--tiles .ws-stat::before {
+	display: none;
+}
+body.ws-look-codex .worldsmith[data-ws-size='narrow'] :is(.ws-db-header, .ws-studio-head) {
+	align-items: flex-start;
+}

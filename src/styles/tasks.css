@@ -1,0 +1,1626 @@
+/* ── Tasks: rows, chips, check boxes ───────────────────────────────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-task-list {
+	display: flex;
+	flex-direction: column;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-list__more {
+	padding: 6px 6px 2px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 44px;
+	padding: 5px 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task + .ws-task {
+	box-shadow: 0 -1px 0 color-mix(in srgb, var(--ws-border) 60%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task__text {
+	flex: 1;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task__title {
+	overflow: hidden;
+	font-size: 0.94rem;
+	line-height: 1.35;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task.is-done .ws-task__title {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task.is-optional:not(.is-done) .ws-task__title {
+	color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task__meta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task__cat {
+	padding: 0 7px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11px;
+	line-height: 18px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task__status {
+	color: var(--ws-tint);
+	font-size: 11px;
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	flex: none;
+	padding: 0;
+	border: 1.5px solid var(--ws-border-strong);
+	border-radius: 5px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-on-accent);
+	cursor: pointer;
+	transition: background var(--ws-dur), border-color var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check:hover {
+	border-color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check svg {
+	width: 12px;
+	height: 12px;
+	stroke-width: 3;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check.is-done {
+	border-color: var(--ws-accent);
+	background: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check.is-progress {
+	border-color: var(--color-blue);
+	background: linear-gradient(to right, color-mix(in srgb, var(--color-blue) 35%, transparent) 50%, transparent 50%);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check.is-blocked {
+	border-color: var(--color-orange);
+	border-style: dashed;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-check--lg {
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-ent {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	min-width: 0;
+	max-width: 100%;
+	height: auto;
+	padding: 0;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-ent span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-ent:hover span {
+	color: var(--ws-text);
+	text-decoration: underline;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-ent .ws-avatar--xs {
+	width: 16px;
+	height: 16px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-task-ent--pick {
+	height: 30px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	flex: none;
+	height: 22px;
+	padding: 0 8px;
+	border: none;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due svg {
+	width: 12px;
+	height: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due.is-empty {
+	background: transparent;
+	color: var(--ws-faint);
+	opacity: 0;
+}
+:is(.worldsmith, .worldsmith-modal) :is(.ws-task, .ws-trow):hover .ws-due.is-empty,
+:is(.worldsmith, .worldsmith-modal) .ws-due.is-empty:focus-visible {
+	opacity: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due.is-today {
+	background: color-mix(in srgb, var(--ws-accent) 18%, transparent);
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due.is-over {
+	background: color-mix(in srgb, var(--color-red) 16%, transparent);
+	color: var(--color-red);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due.is-done {
+	opacity: 0.6;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due__repeat {
+	display: inline-flex;
+	opacity: 0.7;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-due__repeat svg {
+	width: 10px;
+	height: 10px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prio {
+	display: inline-flex;
+	flex: none;
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prio svg {
+	width: 13px;
+	height: 13px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prio--2 {
+	color: var(--color-yellow);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prio--3 {
+	color: var(--color-orange);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prio--4 {
+	color: var(--color-red);
+}
+@media (hover: none) {
+	:is(.worldsmith, .worldsmith-modal) .ws-due.is-empty {
+		opacity: 0.8;
+	}
+}
+
+/* ── Popover & date picker ─────────────────────────────────────────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-popover {
+	position: absolute;
+	z-index: var(--layer-popover, 30);
+	max-width: calc(100% - 16px);
+	padding: 10px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+	box-shadow: var(--shadow-l);
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-popover.is-capped {
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp {
+	user-select: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__head {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	margin-bottom: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__month {
+	flex: 1;
+	font-size: 13px;
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__nav {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__nav:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__nav svg {
+	width: 15px;
+	height: 15px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 2px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__dow {
+	padding: 3px 0;
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	text-align: center;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day {
+	position: relative;
+	height: 30px;
+	padding: 0;
+	border: none;
+	border-radius: 7px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day.is-out {
+	color: var(--ws-faint);
+	opacity: 0.55;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day.is-today {
+	box-shadow: inset 0 0 0 1px var(--ws-accent);
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day.is-selected {
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+	font-weight: 700;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day.has-mark::after {
+	content: '';
+	position: absolute;
+	bottom: 3px;
+	left: 50%;
+	width: 4px;
+	height: 4px;
+	margin-left: -2px;
+	border-radius: 999px;
+	background: currentColor;
+	opacity: 0.55;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__quick {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	margin-top: 8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__q {
+	height: 24px;
+	padding: 0 9px;
+	border: none;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__q:hover {
+	color: var(--ws-text);
+}
+
+/* ── Task dialog ───────────────────────────────────────────────────────────── */
+
+.worldsmith-modal.ws-task-modal {
+	width: min(560px, 94vw);
+}
+.worldsmith-modal .ws-tm__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+.worldsmith-modal .ws-tm__title {
+	flex: 1;
+	font-family: var(--ws-font-display);
+	font-size: 1.25rem;
+}
+.worldsmith-modal .ws-tm__entity {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 14px 32px;
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-tm__muted {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-tm__grid {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.worldsmith-modal .ws-tm__row {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	min-height: 34px;
+}
+.worldsmith-modal .ws-tm__label {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-tm__control {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-tm__control .ws-segmented {
+	flex-wrap: wrap;
+}
+.worldsmith-modal .ws-tm__due {
+	font-size: 13px;
+}
+.worldsmith-modal .ws-tm__picker {
+	margin-left: 106px;
+	max-width: 300px;
+	padding: 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-tm__notes {
+	margin-top: 12px;
+}
+.worldsmith-modal .ws-tm__notes .ws-tm__label {
+	margin-bottom: 6px;
+}
+.worldsmith-modal .ws-tm__notes-input {
+	width: 100%;
+	min-height: 80px;
+}
+.worldsmith-modal .ws-tm__foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith-modal .ws-tm__new-title {
+	width: 100%;
+	margin-bottom: 12px;
+	font-size: 1rem;
+}
+@media (max-width: 560px) {
+	.worldsmith-modal .ws-tm__row {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 4px;
+	}
+	.worldsmith-modal .ws-tm__picker {
+		margin-left: 0;
+	}
+}
+
+/* ── Entity checklist block ────────────────────────────────────────────────── */
+
+.worldsmith .ws-checklist__bar {
+	margin: 2px 0 10px;
+}
+.worldsmith .ws-checklist__cat {
+	margin: 10px 6px 2px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-checklist__cat:first-child {
+	margin-top: 0;
+}
+.worldsmith .ws-checklist__list.is-done {
+	margin-top: 4px;
+}
+.worldsmith .ws-checklist__all-done {
+	padding: 8px 6px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-checklist__add {
+	margin-top: 6px;
+}
+.worldsmith .ws-checklist .ws-checklist__input {
+	width: 100%;
+	height: 34px;
+	padding: 0 8px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	font-size: 13px;
+}
+.worldsmith .ws-checklist .ws-checklist__input:focus {
+	border-style: solid;
+	border-color: var(--ws-accent);
+}
+.worldsmith .ws-checklist__done-toggle {
+	margin-top: 8px;
+	padding: 0;
+	height: auto;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-checklist__done-toggle:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-checklist-sync {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px 12px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 40%, var(--ws-border));
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 7%, transparent);
+	font-size: 13px;
+}
+
+/* ── Tasks page ────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-page--tasks {
+	max-width: max(var(--ws-max-width, 1180px), 1180px);
+}
+.worldsmith .ws-tasks-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--ws-gap);
+	align-items: start;
+}
+.worldsmith .ws-page--tasks.is-editing .ws-tasks-body {
+	grid-template-columns: minmax(0, 1fr) 260px;
+}
+.worldsmith .ws-tasks-drawer:empty {
+	display: none;
+}
+.worldsmith .ws-tasks-drawer {
+	position: sticky;
+	top: 8px;
+}
+.worldsmith .ws-editbar:empty {
+	display: none;
+}
+.worldsmith .ws-editbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px 12px;
+	margin-bottom: 16px;
+	padding: 10px 14px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-accent) 8%, var(--ws-surface));
+}
+.worldsmith .ws-editbar__icon {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-editbar__icon svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-editbar__text {
+	flex: 1;
+	min-width: 220px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-editbar__text b {
+	color: var(--ws-text);
+	font-weight: 600;
+}
+.worldsmith[data-ws-size='narrow'] .ws-page--tasks.is-editing .ws-tasks-body,
+.worldsmith[data-ws-size='medium'] .ws-page--tasks.is-editing .ws-tasks-body {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-tasks-drawer,
+.worldsmith[data-ws-size='medium'] .ws-tasks-drawer {
+	position: static;
+	order: -1;
+}
+
+/* Widget drawer */
+.worldsmith .ws-widget-drawer {
+	padding: 14px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+	box-shadow: var(--shadow-s);
+}
+.worldsmith .ws-widget-drawer__title {
+	font-family: var(--ws-font-display);
+	font-size: 1.05rem;
+}
+.worldsmith .ws-widget-drawer__hint {
+	margin: 2px 0 10px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-widget {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	margin-bottom: 6px;
+	padding: 7px 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-widget:hover:not(:disabled) {
+	border-color: var(--ws-accent);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-widget.is-added {
+	opacity: 0.5;
+	cursor: default;
+}
+.worldsmith .ws-widget__icon {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-widget__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-widget__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-widget__name {
+	font-size: 13px;
+}
+.worldsmith .ws-widget__hint,
+.worldsmith .ws-widget__count {
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	gap: 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer__title,
+.worldsmith[data-ws-size='narrow'] .ws-widget-drawer__hint,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer__title,
+.worldsmith[data-ws-size='medium'] .ws-widget-drawer__hint {
+	grid-column: 1 / -1;
+}
+.worldsmith[data-ws-size='narrow'] .ws-widget,
+.worldsmith[data-ws-size='medium'] .ws-widget {
+	margin: 0;
+}
+
+/* Edit chrome on widgets */
+.worldsmith .ws-editable {
+	position: relative;
+	outline: 1.5px dashed color-mix(in srgb, var(--ws-accent) 60%, transparent);
+	outline-offset: 4px;
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith .ws-editable.is-dragging {
+	opacity: 0.45;
+}
+.worldsmith .ws-edit-chrome {
+	position: absolute;
+	top: -14px;
+	left: 50%;
+	z-index: 4;
+	display: flex;
+	gap: 2px;
+	padding: 2px 4px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: 999px;
+	background: var(--background-primary);
+	box-shadow: var(--shadow-s);
+	transform: translateX(-50%);
+}
+.worldsmith .ws-edit-chrome__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-edit-chrome__btn:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-edit-chrome__btn.is-danger:hover {
+	color: var(--color-red);
+}
+.worldsmith .ws-edit-chrome__btn svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-edit-chrome__drag {
+	cursor: grab;
+	touch-action: none;
+}
+.worldsmith .ws-edit-resize {
+	position: absolute;
+	top: 50%;
+	right: -9px;
+	z-index: 4;
+	width: 10px;
+	height: 44px;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	opacity: 0.75;
+	transform: translateY(-50%);
+	cursor: ew-resize;
+	touch-action: none;
+}
+.worldsmith .ws-edit-resize:hover,
+.worldsmith .ws-editable.is-resizing .ws-edit-resize {
+	opacity: 1;
+}
+.worldsmith .ws-edit-width {
+	position: absolute;
+	right: 6px;
+	bottom: -10px;
+	z-index: 4;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+	font-size: 10.5px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-editable:hover .ws-edit-width,
+.worldsmith .ws-editable.is-resizing .ws-edit-width {
+	opacity: 1;
+}
+.worldsmith .ws-resize-outline {
+	position: absolute;
+	top: -4px;
+	bottom: -4px;
+	left: -4px;
+	z-index: 3;
+	border: 2px solid var(--ws-accent);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+	pointer-events: none;
+}
+.worldsmith .ws-page__layout {
+	position: relative;
+}
+.worldsmith .ws-drop-marker {
+	position: absolute;
+	z-index: 5;
+	display: none;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	pointer-events: none;
+}
+.worldsmith .ws-drop-marker.is-on {
+	display: block;
+}
+.worldsmith .ws-drag-ghost {
+	position: fixed;
+	z-index: 50;
+	display: none;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+	font-size: 12px;
+	font-weight: 600;
+	pointer-events: none;
+}
+.worldsmith .is-editing .ws-layout .ws-block {
+	margin-top: 8px;
+}
+
+/* Widget card for widgets with their own toolbar */
+.worldsmith .ws-tcard {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	min-width: 0;
+}
+.worldsmith .ws-tcard__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	padding: 14px 18px 0;
+}
+.worldsmith .ws-tcard__title {
+	flex: 1;
+	font-family: var(--ws-font-display);
+	font-size: 1.12rem;
+}
+.worldsmith .ws-tool-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith .ws-tool-btn:hover,
+.worldsmith .ws-tool-btn.is-on {
+	color: var(--ws-text);
+	border-color: var(--ws-border-strong);
+}
+.worldsmith .ws-tool-btn svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ── Stat tiles ────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-stats {
+	display: grid;
+	/* One row when there's room; tiles wrap when the widget (or the pane) is narrow. */
+	grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+	gap: var(--ws-gap);
+}
+.worldsmith .ws-stat {
+	position: relative;
+	min-width: 0;
+	padding: 14px 16px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-stat.has-ring {
+	padding-right: 70px;
+}
+.worldsmith .ws-stat__label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.worldsmith .ws-stat__label svg {
+	width: 13px;
+	height: 13px;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-stat__value {
+	margin-top: 6px;
+	font-family: var(--ws-font-display);
+	font-size: 1.9rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.1;
+}
+.worldsmith .ws-stat.is-alert .ws-stat__value {
+	color: var(--color-red);
+}
+.worldsmith .ws-stat__sub {
+	margin-top: 3px;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-stat__ring {
+	position: absolute;
+	top: 50%;
+	right: 14px;
+	transform: translateY(-50%);
+	--ws-accent: var(--ws-tint);
+}
+/* The ring already sits next to the big number, so its own label would repeat it. */
+.worldsmith .ws-stat__ring .ws-ring__label {
+	display: none;
+}
+/* Tile tools sit in a row at the foot of each tile (in flow), so they never cover the
+   tile's text or the block's own chrome, which is centred on the block's top edge. */
+.worldsmith .ws-stat__edit {
+	display: inline-flex;
+	gap: 1px;
+	margin-top: 8px;
+	padding: 1px 3px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: 999px;
+	background: var(--background-primary);
+	box-shadow: var(--shadow-s);
+}
+.worldsmith .ws-stat__edit .ws-edit-chrome__btn {
+	width: 22px;
+	height: 22px;
+}
+.worldsmith .ws-stat--add {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	height: auto;
+	border-style: dashed;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith .ws-stat--add:hover {
+	border-color: var(--ws-accent);
+	color: var(--ws-text);
+}
+.worldsmith .ws-stat--add svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-stats__empty {
+	color: var(--ws-faint);
+	font-size: 13px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-stats {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-stat__value {
+	font-size: 1.5rem;
+}
+.worldsmith-modal .ws-stat-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+.worldsmith-modal .ws-stat-chips .ws-chip {
+	border: 1px solid transparent;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith-modal .ws-stat-chips .ws-chip.is-on {
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, transparent);
+	background: color-mix(in srgb, var(--ws-tint) 15%, transparent);
+	color: var(--ws-text);
+}
+.worldsmith-modal .ws-stat-preview {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin-top: 12px;
+	padding: 10px 12px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-stat-preview__value {
+	color: var(--ws-tint);
+	font-family: var(--ws-font-display);
+	font-size: 1.4rem;
+}
+
+/* ── Calendar ──────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-cal__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 6px;
+	padding: 14px 18px 0;
+}
+.worldsmith .ws-cal__title {
+	margin-right: 6px;
+	font-family: var(--ws-font-display);
+	font-size: 1.12rem;
+}
+.worldsmith .ws-cal__spacer {
+	flex: 1;
+}
+.worldsmith .ws-cal__nav {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-cal__nav:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-cal__nav svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-cal__body {
+	padding: 12px 18px 0;
+}
+.worldsmith .ws-cal__legend {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 14px;
+	padding: 10px 18px 14px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith :is(.ws-cal__key, .ws-chart__legend .ws-cal__key) {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-cal__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 999px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-cal__hint {
+	margin-left: auto;
+}
+.worldsmith .ws-cal-month {
+	/* One outer frame drawn by the grid; cells draw only the lines between them, so no
+	   line is doubled, the corners stay round and every row and column meets exactly. */
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-cal-month > :is(.ws-cal-month__dow, .ws-cal-day) {
+	border-right: 1px solid var(--ws-border);
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith .ws-cal-month > :nth-child(7n) {
+	border-right: none;
+}
+.worldsmith .ws-cal-month > :nth-last-child(-n + 7) {
+	border-bottom: none;
+}
+.worldsmith .ws-cal-month__dow {
+	/* Lined up with the day numbers below (cell padding + the number's own padding). */
+	padding: 7px 10px 6px;
+	background: color-mix(in srgb, var(--ws-hover) 35%, transparent);
+	color: var(--ws-faint);
+	font-size: 11px;
+	letter-spacing: 0.05em;
+	line-height: 14px;
+	overflow: hidden;
+	text-overflow: clip;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-day {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+	min-height: 92px;
+	padding: 5px 5px 6px;
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-cal-day:hover {
+	background: color-mix(in srgb, var(--ws-hover) 60%, transparent);
+}
+.worldsmith .ws-cal-day.is-weekend:not(.is-out) {
+	background: color-mix(in srgb, var(--ws-hover) 22%, transparent);
+}
+.worldsmith .ws-cal-day.is-out {
+	background: color-mix(in srgb, var(--ws-hover) 45%, transparent);
+}
+.worldsmith .ws-cal-day.is-out .ws-cal-day__n {
+	opacity: 0.55;
+}
+/* Today and drop targets: a frame laid over the cell's own lines, not a second line inside them. */
+.worldsmith .ws-cal-day.is-today::after,
+.worldsmith .ws-cal-day.is-drop::after {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	z-index: 1;
+	border: 1px solid var(--ws-accent);
+	pointer-events: none;
+}
+.worldsmith .ws-cal-day.is-drop::after {
+	border-width: 2px;
+}
+.worldsmith .ws-cal-day.is-drop {
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+.worldsmith .ws-cal-wday.is-drop {
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	box-shadow: inset 0 0 0 2px var(--ws-accent);
+}
+.worldsmith .ws-cal-day__n {
+	align-self: flex-start;
+	min-width: 22px;
+	height: 22px;
+	padding: 0 5px;
+	border-radius: 999px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	line-height: 22px;
+	text-align: center;
+}
+.worldsmith .ws-cal-day.is-today .ws-cal-day__n {
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+	font-weight: 700;
+}
+.worldsmith .ws-cal-ev {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	min-width: 0;
+	min-height: 20px;
+	padding: 1px 6px;
+	border-radius: 5px;
+	background: color-mix(in srgb, var(--ws-tint) 15%, transparent);
+	color: var(--ws-text);
+	font-size: 11.5px;
+	cursor: grab;
+}
+.worldsmith .ws-cal-ev::before {
+	content: '';
+	width: 6px;
+	height: 6px;
+	flex: none;
+	border-radius: 999px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-cal-ev:hover {
+	background: color-mix(in srgb, var(--ws-tint) 26%, transparent);
+}
+.worldsmith .ws-cal-ev__title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-ev__ent {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-ev.is-done {
+	opacity: 0.55;
+}
+.worldsmith .ws-cal-ev.is-done .ws-cal-ev__title {
+	text-decoration: line-through;
+}
+.worldsmith .ws-cal-ev.is-over {
+	box-shadow: inset 0 0 0 1px var(--color-red);
+}
+.worldsmith .ws-cal-ev.is-dragging {
+	opacity: 0.4;
+}
+.worldsmith .ws-cal-more {
+	align-self: flex-start;
+	height: auto;
+	padding: 0 6px;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+	cursor: pointer;
+}
+.worldsmith .ws-cal-more:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-cal-week {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 6px;
+}
+.worldsmith .ws-cal-wday {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+	min-height: 260px;
+	padding: 6px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-cal-wday.is-today {
+	border-color: color-mix(in srgb, var(--ws-accent) 55%, var(--ws-border));
+}
+.worldsmith .ws-cal-wday__head {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	margin-bottom: 4px;
+}
+.worldsmith .ws-cal-wday__dow {
+	color: var(--ws-faint);
+	font-size: 11px;
+	text-transform: uppercase;
+}
+.worldsmith .ws-cal-wday__n {
+	font-family: var(--ws-font-display);
+	font-size: 1.1rem;
+}
+.worldsmith .ws-cal-wday.is-today .ws-cal-wday__n {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-cal-wday__list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
+}
+.worldsmith .ws-cal-wday .ws-cal-ev {
+	flex-wrap: wrap;
+	padding: 3px 6px;
+}
+.worldsmith .ws-cal-wday .ws-cal-ev__title {
+	white-space: normal;
+}
+.worldsmith .ws-cal-wday__add {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 24px;
+	padding: 0;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	opacity: 0;
+	cursor: pointer;
+}
+.worldsmith .ws-cal-wday:hover .ws-cal-wday__add {
+	opacity: 1;
+}
+.worldsmith .ws-cal-wday__add svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-cal-agenda__group {
+	margin-bottom: 10px;
+}
+.worldsmith .ws-cal-agenda__date {
+	padding: 6px 6px 2px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-agenda__group.is-over .ws-cal-agenda__date {
+	color: var(--color-red);
+}
+.worldsmith .ws-cal-agenda__empty {
+	padding: 26px 0;
+	color: var(--ws-faint);
+	font-size: 13px;
+	text-align: center;
+}
+.worldsmith .ws-cal-pop__title {
+	margin: 2px 4px 6px;
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-pop .ws-link-btn {
+	margin: 6px 4px 2px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-month__dow {
+	padding: 6px 0;
+	letter-spacing: 0.02em;
+	text-align: center;
+}
+/* On phones a day is its number over a row of dots, both centred under the weekday. */
+.worldsmith[data-ws-size='narrow'] .ws-cal-day {
+	flex-flow: row wrap;
+	align-content: flex-start;
+	justify-content: center;
+	gap: 3px;
+	min-height: 54px;
+	padding: 3px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-day__n {
+	flex-basis: 100%;
+	align-self: auto;
+	min-width: 0;
+	padding: 0;
+	background: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-day.is-today .ws-cal-day__n {
+	flex-basis: auto;
+	min-width: 22px;
+	margin: 0 calc(50% - 11px);
+	background: var(--ws-accent);
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-ev {
+	padding: 0;
+	min-height: 8px;
+	background: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-ev.is-over {
+	box-shadow: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-ev.is-over::before {
+	box-shadow: 0 0 0 1.5px var(--color-red);
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-more {
+	flex-basis: 100%;
+	align-self: auto;
+	padding: 0;
+	text-align: center;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-more__word {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-ev .ws-cal-ev__title {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-ev::before {
+	width: 7px;
+	height: 7px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-week {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-wday {
+	min-height: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal__hint {
+	display: none;
+}
+
+/* ── Progress by type ──────────────────────────────────────────────────────── */
+
+.worldsmith .ws-ptype {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 4px 10px;
+	width: 100%;
+	height: auto;
+	padding: 7px 4px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-ptype:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-ptype__icon {
+	color: var(--ws-tint);
+}
+.worldsmith .ws-ptype__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-ptype__name {
+	font-size: 13px;
+}
+.worldsmith .ws-ptype__num {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-ptype__bar {
+	grid-column: 2 / 4;
+	height: 6px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-ptype__fill {
+	height: 100%;
+	border-radius: 999px;
+	background: var(--ws-tint);
+	transition: width 400ms var(--ws-ease);
+}
+
+/* ── All tasks table ───────────────────────────────────────────────────────── */
+
+.worldsmith .ws-ttable__tabs {
+	margin: 10px 18px 0;
+}
+.worldsmith .ws-ttable__body {
+	padding: 4px 18px 14px;
+}
+.worldsmith .ws-trow {
+	display: grid;
+	grid-template-columns: 22px minmax(0, 2.4fr) minmax(0, 1.5fr) minmax(0, 1fr) 24px 92px;
+	align-items: center;
+	gap: 10px;
+	min-height: 42px;
+	padding: 0 6px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 60%, transparent);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-trow:hover:not(.is-head) {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-trow.is-head {
+	min-height: 32px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	cursor: default;
+}
+.worldsmith .ws-trow__title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-trow.is-done .ws-trow__title {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+.worldsmith .ws-trow__ent {
+	min-width: 0;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-trow__muted {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-trow__group {
+	padding: 12px 6px 4px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith .ws-ttable__more {
+	width: 100%;
+	height: 34px;
+	margin-top: 6px;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--text-accent);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith[data-ws-size='narrow'] .ws-trow,
+.worldsmith[data-ws-size='medium'] .ws-trow {
+	grid-template-columns: 22px minmax(0, 1fr) auto auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-trow > :nth-child(3),
+.worldsmith[data-ws-size='narrow'] .ws-trow > :nth-child(4),
+.worldsmith[data-ws-size='medium'] .ws-trow > :nth-child(4) {
+	display: none;
+}
+.worldsmith[data-ws-size='medium'] .ws-trow {
+	grid-template-columns: 22px minmax(0, 2fr) minmax(0, 1.2fr) 24px 92px;
+}
+
+/* ── Board ─────────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-board {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+}
+.worldsmith .ws-board__col {
+	min-width: 0;
+	padding: 8px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-tint) 6%, transparent);
+	transition: box-shadow var(--ws-dur);
+}
+.worldsmith .ws-board__col.is-drop {
+	box-shadow: inset 0 0 0 2px var(--ws-tint);
+}
+.worldsmith .ws-board__head {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	padding: 2px 4px 8px;
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-board__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 999px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-board__count {
+	margin-left: auto;
+	color: var(--ws-faint);
+	font-weight: 400;
+}
+.worldsmith .ws-board .ws-task {
+	margin-bottom: 4px;
+	border: 1px solid var(--ws-border);
+	background: var(--background-primary);
+	box-shadow: none;
+	cursor: grab;
+}
+.worldsmith[data-ws-size='narrow'] .ws-board,
+.worldsmith[data-ws-size='medium'] .ws-board {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ── Chart ─────────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-chart__cols {
+	display: flex;
+	align-items: stretch;
+	gap: 6px;
+	height: 150px;
+}
+.worldsmith .ws-chart__col {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 4px;
+	min-width: 0;
+}
+.worldsmith .ws-chart__bar {
+	width: 70%;
+	max-width: 36px;
+	border-radius: 5px 5px 2px 2px;
+	background: color-mix(in srgb, var(--ws-accent) 55%, transparent);
+	transition: height 400ms var(--ws-ease);
+}
+.worldsmith .ws-chart__col.is-current .ws-chart__bar {
+	background: var(--ws-accent);
+}
+.worldsmith .ws-chart__val,
+.worldsmith .ws-chart__label {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-chart__stack {
+	display: flex;
+	height: 14px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-chart__seg {
+	height: 100%;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-chart__legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 14px;
+	margin-top: 10px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-chart__row {
+	display: grid;
+	grid-template-columns: minmax(0, 120px) minmax(0, 1fr) 48px;
+	align-items: center;
+	gap: 10px;
+	padding: 5px 0;
+	font-size: 12.5px;
+}
+.worldsmith .ws-chart__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-chart__track {
+	display: flex;
+	height: 10px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-chart__done {
+	background: var(--ws-tint);
+}
+.worldsmith .ws-chart__open {
+	background: color-mix(in srgb, var(--ws-tint) 30%, transparent);
+}
+.worldsmith .ws-chart__num {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+
+/* Notes widget */
+.worldsmith .ws-notes-widget__input {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	min-height: 140px;
+	overflow: hidden;
+	resize: none;
+	font-family: var(--font-text);
+	line-height: 1.55;
+}
+.worldsmith .ws-notes-widget {
+	min-width: 0;
+}
+
+/* Sidebar badge for tasks due soon */
+.worldsmith .ws-nav-item__count.is-badge {
+	padding: 0 6px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 22%, transparent);
+	color: var(--ws-text);
+	font-weight: 600;
+}

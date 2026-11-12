@@ -1,0 +1,1524 @@
+/* ── Media: image browser, adjust dialog, lightbox, galleries, media library ──── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-visually-hidden:not(#ws-none) {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* Zoomed images scale inside their frame; frames clip. */
+:is(.worldsmith, .worldsmith-modal) .ws-img {
+	transform-origin: 50% 50%;
+}
+
+/* ── Drop targets ──────────────────────────────────────────────────────────── */
+:is(.worldsmith, .worldsmith-modal) .is-drop-target,
+.worldsmith-modal.is-drop-target {
+	position: relative;
+}
+:is(.worldsmith, .worldsmith-modal) .is-drop-target::before,
+.worldsmith-modal.is-drop-target::before {
+	content: attr(data-drop-label);
+	position: absolute;
+	inset: 0;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px;
+	border: 2px dashed var(--ws-accent);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-accent) 14%, color-mix(in srgb, var(--ws-bg) 82%, transparent));
+	color: var(--ws-text);
+	font-family: var(--ws-font-ui);
+	font-size: 13px;
+	font-weight: 600;
+	text-align: center;
+	pointer-events: none;
+	backdrop-filter: blur(2px);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-hero__portrait.is-drop-target::before {
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	font-size: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .is-importing {
+	cursor: progress;
+	opacity: 0.7;
+}
+
+/* ── Image browser ─────────────────────────────────────────────────────────── */
+.worldsmith-modal.ws-ib-modal {
+	width: min(980px, 94vw);
+	max-width: 94vw;
+	height: min(780px, 88vh);
+	max-height: 88vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.worldsmith-modal.ws-ib-modal .modal-content {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	flex: 1;
+}
+.worldsmith-modal .ws-ib {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-height: 0;
+	flex: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	flex: 1 1 220px;
+	min-width: 160px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__search > .ws-icon,
+:is(.worldsmith, .worldsmith-modal) .ws-ib__search > span:first-child {
+	position: absolute;
+	left: 10px;
+	display: flex;
+	color: var(--ws-faint);
+	pointer-events: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__search svg {
+	width: 15px;
+	height: 15px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__search input {
+	width: 100%;
+	padding-left: 32px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__filters {
+	display: flex;
+	gap: 8px;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__filter-btn {
+	display: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__filter-btn.is-active {
+	color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__folder {
+	max-width: 220px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__spacer {
+	flex: 1 0 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__link {
+	display: none;
+	gap: 8px;
+	align-items: center;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__link.is-open {
+	display: flex;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__link input {
+	flex: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+	border-bottom: 1px solid var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tab {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: auto;
+	margin-bottom: -1px;
+	padding: 6px 12px 8px;
+	border: none;
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tab:hover {
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tab.is-active {
+	border-bottom-color: var(--ws-accent);
+	color: var(--ws-text);
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tab-count {
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tab.is-alert .ws-ib__tab-count {
+	background: color-mix(in srgb, var(--color-red) 18%, transparent);
+	color: var(--color-red);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+	align-content: start;
+	gap: 12px;
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 2px 4px 8px 2px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__grid.is-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 6px;
+	height: auto;
+	min-width: 0;
+	padding: 6px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius-l);
+	background: transparent;
+	box-shadow: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile:focus-visible {
+	outline: 2px solid var(--ws-accent);
+	outline-offset: 1px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile.is-selected,
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile.is-current {
+	border-color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 9%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__thumb {
+	position: relative;
+	aspect-ratio: 1;
+	overflow: hidden;
+	border-radius: var(--ws-radius);
+	background:
+		repeating-conic-gradient(var(--ws-hover) 0% 25%, transparent 0% 50%) 50% / 16px 16px,
+		var(--ws-surface);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 300ms var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile:hover .ws-ib__thumb img {
+	transform: scale(1.04);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__check {
+	position: absolute;
+	top: 7px;
+	left: 7px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border: 2px solid #fff;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.25);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+	color: transparent;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__check svg {
+	width: 13px;
+	height: 13px;
+	stroke-width: 3;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__tile.is-selected .ws-ib__check {
+	border-color: var(--ws-accent);
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__badge {
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.58);
+	color: #fff;
+	font-size: 10.5px;
+	font-weight: 600;
+	backdrop-filter: blur(4px);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__badge--current {
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__meta {
+	min-width: 0;
+	padding: 0 2px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__name {
+	overflow: hidden;
+	font-size: 12.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__path {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__more {
+	grid-column: 1 / -1;
+	justify-self: center;
+	margin-top: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__foot {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding-top: 10px;
+	border-top: 1px solid var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__hint {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__hint svg {
+	width: 14px;
+	height: 14px;
+	flex: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-ib__count {
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+@media (max-width: 600px) {
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__filters {
+		display: none;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__filter-btn {
+		display: inline-flex;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__search {
+		flex: 1 1 100%;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__spacer {
+		display: none;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__grid {
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		gap: 6px;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__hint {
+		display: none;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__foot {
+		justify-content: flex-end;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-ib__count {
+		margin-right: auto;
+	}
+}
+
+/* ── Adjust dialog ─────────────────────────────────────────────────────────── */
+.worldsmith-modal.ws-adjust-modal {
+	width: min(940px, 94vw);
+	max-width: 94vw;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__main {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 220px;
+	gap: 20px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__left {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__stage {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 220px;
+	padding: 14px;
+	border-radius: var(--ws-radius-l);
+	background:
+		repeating-conic-gradient(var(--ws-hover) 0% 25%, transparent 0% 50%) 50% / 18px 18px,
+		var(--ws-surface);
+	outline: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__stage:focus-visible {
+	box-shadow: 0 0 0 2px var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__box {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+	overflow: hidden;
+	border-radius: var(--ws-radius-s);
+	line-height: 0;
+	cursor: crosshair;
+	touch-action: none;
+	user-select: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__img {
+	display: block;
+	max-width: 100%;
+	max-height: min(52vh, 460px);
+	pointer-events: none;
+}
+/* The frame's view of the image; everything outside is dimmed. */
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__rect {
+	position: absolute;
+	border: 2px solid #fff;
+	border-radius: 2px;
+	box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.35);
+	pointer-events: none;
+	transition: left 60ms linear, top 60ms linear, width 120ms var(--ws-ease), height 120ms var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__box.is-dragging .ws-adjust__rect {
+	transition: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__rect.is-arch {
+	border-radius: 999px 999px 4px 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__rect.is-circle {
+	border-radius: 999px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__dot {
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	margin: -11px 0 0 -11px;
+	border: 2px solid #fff;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 60%, transparent);
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__dot::after {
+	content: '';
+	position: absolute;
+	inset: 7px;
+	border-radius: 999px;
+	background: #fff;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__missing {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-muted);
+	font-size: 13px;
+	text-align: center;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__file {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 12px;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__controls {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__row {
+	display: grid;
+	grid-template-columns: 72px minmax(0, 1fr);
+	align-items: center;
+	gap: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__label {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__ctl {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-range {
+	flex: 1 1 140px;
+	min-width: 100px;
+	accent-color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__val {
+	min-width: 44px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__tip {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__tip svg {
+	width: 14px;
+	height: 14px;
+	flex: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__previews {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding-left: 20px;
+	border-left: 1px solid var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__previews-title {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv-frame {
+	width: 100%;
+	overflow: hidden;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+	box-shadow: 0 0 0 1px var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv-frame.is-arch {
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv-frame.is-circle {
+	border-radius: 999px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv--arch .ws-adjust__pv-frame { width: 116px; }
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv--arch-sm .ws-adjust__pv-frame { width: 72px; }
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv--circle .ws-adjust__pv-frame { width: 40px; }
+:is(.worldsmith, .worldsmith-modal) :is(.ws-adjust__pv--square, .ws-adjust__pv--portrait) .ws-adjust__pv-frame { width: 120px; }
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv--landscape .ws-adjust__pv-frame { width: 150px; }
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv-frame img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv-label {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-adjust__foot .ws-adjust__spacer {
+	flex: 1;
+}
+@media (max-width: 700px) {
+	:is(.worldsmith, .worldsmith-modal) .ws-adjust__main {
+		grid-template-columns: 1fr;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-adjust__previews {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		padding: 12px 0 0;
+		border-left: none;
+		border-top: 1px solid var(--ws-border);
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-adjust__previews-title {
+		width: 100%;
+	}
+	:is(.worldsmith, .worldsmith-modal) .ws-adjust__pv--banner {
+		width: 100%;
+	}
+}
+
+/* ── Lightbox ──────────────────────────────────────────────────────────────── */
+.modal-container.ws-lightbox-container .modal-bg {
+	background-color: rgba(6, 6, 8, 0.96);
+	opacity: 1;
+	backdrop-filter: blur(6px);
+}
+.modal-container.ws-lightbox-container {
+	padding: 0;
+}
+.worldsmith-modal.ws-lightbox-modal {
+	position: fixed;
+	inset: 0;
+	width: auto;
+	max-width: none;
+	height: auto;
+	max-height: none;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	transform: none;
+	border: none;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+}
+/* The viewer has its own close button; Obsidian's (wherever its version puts it) is hidden. */
+.modal-container.ws-lightbox-container .modal-close-button.modal-close-button.modal-close-button, .modal-container.ws-lightbox-container .modal-header-button.modal-header-button.modal-header-button, .worldsmith-modal.ws-lightbox-modal .modal-close-button.modal-close-button.modal-close-button, .worldsmith-modal.ws-lightbox-modal > .modal-header.modal-header.modal-header, .worldsmith-modal.ws-lightbox-modal > .modal-title.modal-title.modal-title {
+
+
+
+
+	display: none;
+}
+.worldsmith-modal.ws-lightbox-modal .modal-content {
+	height: 100%;
+}
+.worldsmith-modal .ws-lightbox {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	color: #f4f2ee;
+}
+.worldsmith-modal .ws-lightbox__top {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 12px 16px;
+}
+.worldsmith-modal .ws-lightbox__counter {
+	min-width: 48px;
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith-modal .ws-lightbox__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 13px;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-lightbox__tools {
+	display: flex;
+	gap: 4px;
+}
+.worldsmith-modal :is(.ws-lightbox__btn, .ws-lightbox__nav) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.08);
+	box-shadow: none;
+	color: #fff;
+	cursor: pointer;
+}
+.worldsmith-modal :is(.ws-lightbox__btn, .ws-lightbox__nav):hover {
+	background: rgba(255, 255, 255, 0.18);
+}
+.worldsmith-modal .ws-lightbox__body {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1;
+	min-height: 0;
+	padding: 0 12px;
+}
+.worldsmith-modal .ws-lightbox__nav {
+	flex: none;
+	width: 44px;
+	height: 44px;
+}
+.worldsmith-modal.ws-lightbox-modal.is-single .ws-lightbox__nav {
+	visibility: hidden;
+}
+.worldsmith-modal .ws-lightbox__stage {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+}
+.worldsmith-modal .ws-lightbox__img {
+	max-width: 100%;
+	max-height: 100%;
+	border-radius: 4px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+	object-fit: contain;
+}
+.worldsmith-modal .ws-lightbox__missing {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	color: rgba(255, 255, 255, 0.7);
+}
+.worldsmith-modal .ws-lightbox__caption {
+	display: flex;
+	justify-content: center;
+	padding: 12px 16px 20px;
+}
+.worldsmith-modal .ws-lightbox__caption-input {
+	width: min(560px, 90vw);
+	padding: 6px 10px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	color: #fff;
+	font-size: 14px;
+	text-align: center;
+}
+.worldsmith-modal .ws-lightbox__caption-input:hover,
+.worldsmith-modal .ws-lightbox__caption-input:focus {
+	border-color: rgba(255, 255, 255, 0.25);
+	background: rgba(255, 255, 255, 0.06);
+	box-shadow: none;
+}
+.worldsmith-modal .ws-lightbox__caption-input::placeholder {
+	color: rgba(255, 255, 255, 0.4);
+}
+.worldsmith-modal .ws-lightbox__caption-text {
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 14px;
+}
+@media (max-width: 600px) {
+	.worldsmith-modal .ws-lightbox__nav {
+		position: absolute;
+		z-index: 2;
+	}
+	.worldsmith-modal .ws-lightbox__nav--prev { left: 6px; }
+	.worldsmith-modal .ws-lightbox__nav--next { right: 6px; }
+	.worldsmith-modal .ws-lightbox__body {
+		position: relative;
+		padding: 0;
+	}
+}
+
+/* ── Gallery (block + field) ───────────────────────────────────────────────── */
+:is(.worldsmith, .worldsmith-modal) .ws-gal {
+	display: grid;
+	grid-template-columns: repeat(var(--ws-gal-cols, 3), minmax(0, 1fr));
+	gap: 8px;
+	border-radius: var(--ws-radius);
+	outline: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal:focus-visible {
+	box-shadow: 0 0 0 2px var(--ws-focus);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal.is-empty {
+	display: block;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--masonry {
+	display: grid;
+	grid-template-columns: repeat(var(--ws-gal-cols, 3), minmax(0, 1fr));
+	grid-auto-rows: 4px;
+	align-items: start;
+	gap: 0 8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--masonry > * {
+	margin-bottom: 8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--strip {
+	display: flex;
+	gap: 8px;
+	overflow-x: auto;
+	padding-bottom: 4px;
+	scroll-snap-type: x proximity;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--strip > * {
+	flex: 0 0 auto;
+	width: calc((100% - 8px * (var(--ws-gal-cols, 3) - 1)) / var(--ws-gal-cols, 3) * 0.92);
+	scroll-snap-align: start;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile {
+	position: relative;
+	min-width: 0;
+	border-radius: var(--ws-radius);
+	outline: none;
+	cursor: zoom-in;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile:focus-visible {
+	box-shadow: 0 0 0 2px var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__frame {
+	position: relative;
+	aspect-ratio: 1;
+	overflow: hidden;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--landscape .ws-gal__frame { aspect-ratio: 4 / 3; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal--portrait .ws-gal__frame { aspect-ratio: 3 / 4; }
+:is(.worldsmith, .worldsmith-modal) :is(.ws-gal--original, .ws-gal--masonry) .ws-gal__frame { aspect-ratio: auto; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal--original.ws-gal--grid .ws-gal__frame { aspect-ratio: 1; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	transition: filter var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) :is(.ws-gal--original, .ws-gal--masonry) .ws-gal__img {
+	height: auto;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--original.ws-gal--grid .ws-gal__img.ws-gal__img.ws-gal__img {
+	height: 100%;
+	object-fit: contain;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--contain .ws-gal__frame {
+	background:
+		repeating-conic-gradient(var(--ws-hover) 0% 25%, transparent 0% 50%) 50% / 14px 14px,
+		var(--ws-surface);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile:hover .ws-gal__img {
+	filter: brightness(1.06);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__img.ws-img-missing {
+	aspect-ratio: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__caption {
+	padding: 5px 2px 0;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.35;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__menu {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.5);
+	box-shadow: none;
+	color: #fff;
+	opacity: 0;
+	cursor: pointer;
+	transition: opacity var(--ws-dur);
+	backdrop-filter: blur(4px);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__menu svg {
+	width: 15px;
+	height: 15px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile:hover .ws-gal__menu,
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile:focus-within .ws-gal__menu {
+	opacity: 1;
+}
+@media (hover: none) {
+	:is(.worldsmith, .worldsmith-modal) .ws-gal__menu {
+		opacity: 1;
+	}
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__more {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.5);
+	color: #fff;
+	font-family: var(--ws-font-display);
+	font-size: 1.5rem;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile.is-dragging {
+	opacity: 0.4;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile.is-drop-before::after,
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile.is-drop-after::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 3px;
+	border-radius: 2px;
+	background: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile.is-drop-before::after { left: -6px; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal__tile.is-drop-after::after { right: -6px; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal__add {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	aspect-ratio: 1;
+	height: auto;
+	min-height: 64px;
+	padding: 0;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 12px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal--landscape .ws-gal__add { aspect-ratio: 4 / 3; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal--portrait .ws-gal__add { aspect-ratio: 3 / 4; }
+:is(.worldsmith, .worldsmith-modal) .ws-gal__add:hover {
+	border-color: var(--ws-muted);
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__add svg {
+	width: 18px;
+	height: 18px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-gal__empty {
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+
+/* Gallery & image fields */
+:is(.worldsmith, .worldsmith-modal) .ws-gallery-field {
+	display: block;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__frame {
+	overflow: hidden;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__frame .ws-img-missing {
+	aspect-ratio: 4 / 3;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-thumb-frame {
+	display: inline-flex;
+	width: 40px;
+	height: 40px;
+	overflow: hidden;
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-thumb-frame .ws-field-thumb {
+	width: 100%;
+	height: 100%;
+	border-radius: 0;
+}
+
+/* World banner tools (dashboard + world form) */
+.worldsmith .ws-world-hero__banner {
+	position: relative;
+}
+.worldsmith .ws-world-hero.has-banner .ws-world-hero__body {
+	position: relative;
+	z-index: 1;
+}
+.worldsmith .ws-media-card__thumb {
+	position: relative;
+}
+.worldsmith .ws-media-card__thumb > .ws-img-missing {
+	position: absolute;
+	inset: 0;
+}
+.worldsmith .ws-media-card__img.ws-img-missing svg {
+	width: 28px;
+	height: 28px;
+}
+.worldsmith .ws-world-hero__banner:hover .ws-hero__banner-tools,
+.worldsmith .ws-world-hero__banner .ws-hero__banner-tools:focus-within {
+	opacity: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-tools {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	display: flex;
+	gap: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-tool {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-bg) 82%, transparent);
+	box-shadow: var(--shadow-s);
+	color: var(--ws-text);
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-tool svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* Banner reposition */
+.worldsmith .ws-hero__banner.is-repositioning .ws-hero__banner-img {
+	transition: none;
+}
+.worldsmith .ws-hero__banner.is-grabbing {
+	cursor: grabbing;
+}
+.worldsmith .ws-hero__reposition svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ── Media library ─────────────────────────────────────────────────────────── */
+.worldsmith .ws-media-repair__box {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: var(--ws-gap);
+	padding: 12px 14px;
+	border: 1px solid color-mix(in srgb, var(--color-orange) 40%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--color-orange) 8%, var(--ws-bg));
+}
+.worldsmith .ws-media-repair__icon {
+	display: flex;
+	color: var(--color-orange);
+}
+.worldsmith .ws-media-repair__text {
+	flex: 1 1 260px;
+	min-width: 0;
+	font-size: 13.5px;
+}
+.worldsmith .ws-media-repair__actions {
+	display: flex;
+	gap: 6px;
+}
+.worldsmith .ws-media-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 12px;
+	margin-bottom: 14px;
+}
+.worldsmith .ws-media-bar .ws-ib__tabs {
+	flex: 1 1 auto;
+}
+.worldsmith .ws-media-bar .ws-ib__search {
+	flex: 0 1 260px;
+	margin-bottom: 6px;
+}
+.worldsmith .ws-media-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: var(--ws-gap);
+}
+.worldsmith .ws-media-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-media-card.is-missing {
+	border-color: color-mix(in srgb, var(--color-orange) 45%, var(--ws-border));
+}
+.worldsmith .ws-media-card__thumb {
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-start;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	padding: 0;
+	overflow: hidden;
+	border: none;
+	border-radius: 0;
+	background: var(--ws-hover);
+	box-shadow: none;
+	cursor: zoom-in;
+}
+.worldsmith .ws-media-card__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	transition: transform 400ms var(--ws-ease);
+}
+.worldsmith .ws-media-card__thumb:hover .ws-media-card__img:not(.ws-img-missing) {
+	transform: scale(1.03);
+}
+.worldsmith .ws-media-card__img.ws-img-missing {
+	color: var(--color-orange);
+}
+.worldsmith .ws-media-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 10px 12px 12px;
+}
+.worldsmith .ws-media-card__head {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-media-card__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	font-weight: 600;
+	font-size: 13px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-media-card__more {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-media-card__more:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-media-card__path {
+	margin-top: -4px;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-media-card.is-missing .ws-media-card__path {
+	color: var(--color-orange);
+}
+.worldsmith .ws-media-card__uses {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.worldsmith .ws-media-use {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 7px;
+	width: 100%;
+	height: auto;
+	min-width: 0;
+	padding: 3px 4px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12.5px;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-media-use:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-media-use .ws-avatar {
+	flex: none;
+}
+.worldsmith .ws-media-use__world {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	flex: none;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-media-use__world svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-media-use__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-media-use__role {
+	flex: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-media-card__more-uses {
+	padding-left: 4px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-media-card__fix {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 2px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-media-grid {
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 10px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-media-bar .ws-ib__search {
+	flex: 1 1 100%;
+}
+
+/* Missing-image placeholders keep their centred layout whatever frame class they carry. */
+:is(.worldsmith, .worldsmith-modal) .ws-img-missing.ws-img-missing {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ── Media library views ───────────────────────────────────────────────────────── */
+
+.worldsmith .ws-mbar__size {
+	margin-left: auto;
+}
+.worldsmith .ws-mlib {
+	--ws-mtile: 200px;
+}
+.worldsmith .ws-mlib--s {
+	--ws-mtile: 140px;
+}
+.worldsmith .ws-mlib--l {
+	--ws-mtile: 300px;
+}
+.worldsmith .ws-mlib .ws-media-grid {
+	grid-template-columns: repeat(auto-fill, minmax(calc(var(--ws-mtile) + 20px), 1fr));
+}
+.worldsmith .ws-mlib .ws-vgroup + .ws-vgroup {
+	margin-top: 18px;
+}
+.worldsmith .ws-mlib__gicon {
+	display: flex;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-mlib__gicon svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* Wall: images at their own shape, in columns. */
+.worldsmith .ws-mwall {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(var(--ws-mtile), 1fr));
+	grid-auto-rows: 4px;
+	align-items: start;
+	gap: 0 10px;
+}
+.worldsmith .ws-mlib .ws-mtile {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 0 0 10px;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	cursor: zoom-in;
+	transform: translateZ(0);
+	transition: transform var(--ws-dur) var(--ws-ease-out), border-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-mtile__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	min-height: 60px;
+	transition: transform var(--ws-dur-slow) var(--ws-ease-out);
+}
+.worldsmith .ws-mtile__missing {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 4 / 3;
+	color: var(--color-red);
+	background: color-mix(in srgb, var(--color-red) 8%, transparent);
+}
+.worldsmith .ws-mtile__cap {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	padding: 22px 10px 8px;
+	background: linear-gradient(to top, rgb(0 0 0 / 0.72), transparent);
+	color: #fff;
+	text-align: left;
+	opacity: 0;
+	transform: translateY(6px);
+	transition: opacity var(--ws-dur) var(--ws-ease-out), transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-mtile__name {
+	overflow: hidden;
+	font-size: 12px;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-mtile__meta {
+	font-size: 11px;
+	opacity: 0.8;
+}
+.worldsmith .ws-mtile.is-unused::after {
+	content: 'Not used';
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: rgb(0 0 0 / 0.55);
+	color: #fff;
+	font-size: 10.5px;
+}
+.worldsmith .ws-mtile.is-missing {
+	border-color: color-mix(in srgb, var(--color-red) 40%, var(--ws-border));
+}
+.worldsmith .ws-mtile:focus-visible .ws-mtile__cap,
+.worldsmith .ws-mtile.is-missing .ws-mtile__cap {
+	opacity: 1;
+	transform: none;
+}
+@media (hover: hover) {
+	.worldsmith .ws-mlib .ws-mtile:hover {
+		border-color: var(--ws-border-strong);
+		transform: translateY(-2px);
+	}
+	.worldsmith .ws-mtile:hover .ws-mtile__img {
+		transform: scale(1.03);
+	}
+	.worldsmith .ws-mtile:hover .ws-mtile__cap {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* Table. */
+.worldsmith .ws-mtable__name {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+.worldsmith .ws-mlib .ws-mtable__thumb {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--color-red);
+	cursor: zoom-in;
+}
+.worldsmith .ws-mtable__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.worldsmith .ws-mtable__text {
+	min-width: 0;
+}
+.worldsmith .ws-mtable__file {
+	overflow: hidden;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-mtable__sub {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-mtable tr.is-missing .ws-mtable__sub {
+	color: var(--color-red);
+}
+.worldsmith .ws-mtable__uses {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+.worldsmith .ws-mtable__world {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+
+/* Filter panel: chips per section. */
+.worldsmith .ws-mfilter__sec + .ws-mfilter__sec {
+	margin-top: 12px;
+}
+.worldsmith .ws-mfilter__title {
+	margin-bottom: 6px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-mfilter__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-mfilter .ws-mchip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur-fast) ease, border-color var(--ws-dur-fast) ease, color var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-mchip svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-mchip__n {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-mfilter .ws-mchip:hover {
+	border-color: var(--ws-border-strong);
+	color: var(--ws-text);
+}
+.worldsmith .ws-mfilter .ws-mchip.is-on {
+	border-color: color-mix(in srgb, var(--ws-accent) 55%, transparent);
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-mchip.is-on .ws-mchip__n {
+	color: inherit;
+}
+.worldsmith .ws-mfilter__note {
+	margin-top: 12px;
+	padding-top: 10px;
+	border-top: 1px solid var(--ws-border);
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-mtable {
+	table-layout: fixed;
+}
+.worldsmith .ws-mtable th {
+	height: 34px;
+	padding: 0 12px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith .ws-mtable th:nth-child(1) { width: 34%; }
+.worldsmith .ws-mtable th:nth-child(2) { width: 26%; }
+.worldsmith .ws-mtable th:nth-child(3) { width: 17%; }
+.worldsmith .ws-mtable th:nth-child(4) { width: 8%; }
+.worldsmith .ws-mtable th:nth-child(5) { width: 10%; }
+.worldsmith .ws-mtable th:nth-child(6) { width: 52px; }
+.worldsmith .ws-mtable td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-mlib .ws-mtable__more {
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	opacity: 0.6;
+	transition: opacity var(--ws-dur-fast) ease, background-color var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-mtable tr:hover .ws-mtable__more,
+.worldsmith .ws-mlib .ws-mtable__more:focus-visible {
+	opacity: 1;
+}
+.worldsmith[data-ws-size='narrow'] .ws-mtable th:nth-child(3),
+.worldsmith[data-ws-size='narrow'] .ws-mtable td:nth-child(3),
+.worldsmith[data-ws-size='narrow'] .ws-mtable th:nth-child(4),
+.worldsmith[data-ws-size='narrow'] .ws-mtable td:nth-child(4),
+.worldsmith[data-ws-size='narrow'] .ws-mtable th:nth-child(5),
+.worldsmith[data-ws-size='narrow'] .ws-mtable td:nth-child(5) {
+	display: none;
+}
+
+/* Repositioning any banner other than an entry's (0.12.2). */
+.worldsmith .ws-banner-frame.is-repositioning {
+	cursor: grab;
+	outline: 2px solid var(--ws-accent);
+	outline-offset: -2px;
+}
+.worldsmith .ws-banner-frame.is-repositioning img {
+	transition: none;
+}
+.worldsmith .ws-banner-frame.is-grabbing {
+	cursor: grabbing;
+}
+.worldsmith .ws-banner-frame.is-repositioning .ws-hero__banner-tools {
+	display: none;
+}
+
+/* On Windows and Linux the window's own buttons (minimise, maximise, close) sit in the
+   top-right corner over everything. The viewer starts below them (measured when it opens), so
+   its close button is never next to the window's (0.12.4). */
+.worldsmith-modal.ws-lightbox-modal {
+	top: var(--ws-lightbox-top, 0px);
+}

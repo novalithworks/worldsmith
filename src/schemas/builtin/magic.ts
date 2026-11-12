@@ -1,0 +1,95 @@
+import { defineType, f, opts, section, tasks } from '../dsl';
+
+/**
+ * Magic & power systems. Nest systems via the generic parent relation
+ * (Soul System › Soul Energy › Weapon Manifestation …).
+ */
+export const magicType = defineType(
+	{
+		id: 'magic',
+		singular: 'Magic system',
+		plural: 'Magic & power systems',
+		icon: 'wand-sparkles',
+		description: 'Magic and power systems with rules, costs, limits and consequences. Nest branches and schools inside a system.',
+		group: 'world',
+		color: 'purple',
+		order: 50,
+		subtitle: ['category', 'source'],
+		card: ['category', 'source', 'powerCeiling'],
+		parentTypes: ['magic'],
+		childTypes: ['magic', 'ability'],
+		tasks: tasks(
+			'Define source|Foundations',
+			'Define access requirements|Access',
+			'Define rules and laws|Rules',
+			'Define limitations|Rules',
+			'Define costs|Rules',
+			'Define counters|Rules',
+			'Define progression|Mastery',
+			'Define societal impact|Impact',
+			'Define loopholes and exploits|Rules',
+			'Create example abilities|Abilities',
+		),
+	},
+	section('foundations', 'Foundations', 'sparkles', [
+		f.select(
+			'category',
+			'Category',
+			opts('Arcane:purple', 'Divine:yellow', 'Elemental:orange', 'Psionic:pink', 'Spiritual:cyan', 'Biological:green', 'Technological:blue', 'Cosmic:purple', 'Other:gray'),
+			{ recommended: true },
+		),
+		f.select('hardness', 'Hard or soft', opts('Hard (strict rules):blue', 'Mixed:cyan', 'Soft (mysterious):purple')),
+		f.text('source', 'Source', { recommended: true, placeholder: 'Where does the power come from?' }),
+		f.text('energy', 'Energy / resource', { recommended: true }),
+		f.rich('origin', 'Origin'),
+	]),
+	section('access', 'Access', 'key-round', [
+		f.long('acquisition', 'Acquisition method', { recommended: true }),
+		f.long('whoCanUse', 'Who can use it', { width: 'half' }),
+		f.long('eligibility', 'Eligibility', { width: 'half' }),
+		f.rel('users', 'Users', { via: 'uses-power', direction: 'reverse', targets: ['character', 'species', 'creature'] }),
+		f.rel('organizations', 'Organizations', { via: 'practices', direction: 'reverse', targets: ['faction', 'religion'] }),
+	]),
+	section('rules', 'Rules & laws', 'scale', [
+		f.rich('rules', 'Rules', { recommended: true }),
+		f.list('laws', 'Fundamental laws'),
+		f.long('costs', 'Costs', { width: 'half', recommended: true }),
+		f.long('risks', 'Risks', { width: 'half' }),
+		f.long('limitations', 'Limitations', { width: 'half', recommended: true }),
+		f.long('weaknesses', 'Weaknesses', { width: 'half' }),
+		f.long('counters', 'Counters', { recommended: true }),
+		f.long('sideEffects', 'Side effects'),
+		f.long('exploits', 'Exploits & loopholes', { advanced: true }),
+		f.long('exceptions', 'Exceptions', { advanced: true }),
+	]),
+	section('mastery', 'Power & mastery', 'trending-up', [
+		f.text('powerCeiling', 'Power ceiling'),
+		f.long('scaling', 'Scaling'),
+		f.rich('progression', 'Progression', { recommended: true }),
+		f.long('training', 'Training', { width: 'half' }),
+		f.long('mastery', 'Mastery', { width: 'half' }),
+		f.list('ranks', 'Ranks / tiers', { advanced: true }),
+	]),
+	section('structure', 'Techniques & branches', 'git-branch', [
+		f.rel('abilities', 'Abilities & techniques', { via: 'power-of', direction: 'reverse', targets: ['ability'] }),
+		f.list('schools', 'Schools'),
+		f.list('branches', 'Branches'),
+		f.list('transformations', 'Transformations', { advanced: true }),
+		f.rel('artifacts', 'Artifacts', { via: 'channels', direction: 'reverse', targets: ['artifact'] }),
+		f.long('forbidden', 'Forbidden techniques'),
+	]),
+	section(
+		'impact',
+		'Impact on the world',
+		'globe-2',
+		[
+			f.long('socialEffects', 'Social effects', { width: 'half' }),
+			f.long('politicalEffects', 'Political effects', { width: 'half' }),
+			f.long('religiousEffects', 'Religious effects', { width: 'half' }),
+			f.long('economicEffects', 'Economic effects', { width: 'half' }),
+			f.long('historicalEffects', 'Historical effects'),
+			f.long('mysteries', 'Unknown mysteries'),
+		],
+		{ description: 'How does this power reshape society?' },
+	),
+);

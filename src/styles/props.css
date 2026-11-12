@@ -1,0 +1,218 @@
+/* ── Details (properties block): one alignment line, one empty state ───────────
+ *
+ * Every editor's text starts exactly where its label starts. Editors that draw a hover
+ * background (inputs, pickers, chips, links) pull left by their inner padding so only the
+ * hover background bleeds out — the same trick rich text already uses.
+ */
+.worldsmith .ws-props {
+	--ws-inset: 9px;
+}
+.worldsmith .ws-props .ws-prop__value > :is(.ws-field-input, .ws-chrono, .ws-field-row) {
+	margin-left: calc(-1 * var(--ws-inset));
+	width: calc(100% + var(--ws-inset));
+	max-width: none;
+}
+/* Pills (choices, links, list items) align their edge — not their text — with the label. */
+.worldsmith .ws-props .ws-prop__value > .ws-select-trigger {
+	margin-left: -7px;
+}
+.worldsmith .ws-props .ws-prop__value > .ws-chips {
+	margin-left: -5px;
+}
+.worldsmith .ws-props .ws-prop__value > .ws-rich .ws-rich__preview {
+	margin-left: calc(-1 * var(--ws-inset));
+	padding-left: var(--ws-inset);
+}
+
+/* Empty fields: a single quiet "Empty" at rest; the real editor (with its own hint —
+   "Choose…", "Link nation…") appears on hover, focus or tap. */
+.worldsmith .ws-props .ws-prop.is-empty .ws-prop__value {
+	position: relative;
+}
+.worldsmith .ws-props .ws-prop.is-empty:not(:hover):not(:focus-within) .ws-prop__value > * {
+	opacity: 0;
+}
+.worldsmith .ws-props .ws-prop.is-empty:not(:hover):not(:focus-within) .ws-prop__value::after {
+	content: 'Empty';
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	height: 32px;
+	color: var(--ws-faint);
+	font-family: var(--ws-font-ui);
+	font-size: 13px;
+	pointer-events: none;
+}
+.worldsmith .ws-props .ws-prop.is-empty .ws-prop__value > * {
+	transition: opacity 120ms var(--ws-ease);
+}
+@media (hover: none) {
+	.worldsmith .ws-props .ws-prop.is-empty .ws-prop__value.ws-prop__value.ws-prop__value > * {
+		opacity: 1;
+	}
+	.worldsmith .ws-props .ws-prop.is-empty .ws-prop__value.ws-prop__value.ws-prop__value::after {
+		content: none;
+	}
+}
+
+/* Section header: title, then a slim progress track with the count. */
+.worldsmith .ws-props .ws-section__count {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: 4px;
+	flex: none;
+}
+.worldsmith .ws-props .ws-section__count:not(:empty)::before {
+	content: '';
+	width: 48px;
+	height: 4px;
+	border-radius: 999px;
+	background: linear-gradient(to right, var(--ws-accent) var(--ws-fill, 0%), var(--ws-hover) var(--ws-fill, 0%));
+}
+.worldsmith .ws-props .ws-section__count.is-complete::before {
+	background: var(--color-green);
+}
+.worldsmith .ws-props .ws-section__label {
+	flex: 0 1 auto;
+}
+.worldsmith .ws-props .ws-section__head {
+	gap: 8px;
+}
+.worldsmith .ws-props .ws-section__head::after {
+	content: '';
+	flex: 1;
+}
+.worldsmith .ws-props .ws-more__toggle {
+	margin-left: -4px;
+}
+
+/* ── List layout: label beside value ──────────────────────────────────────── */
+.worldsmith .ws-props--rows .ws-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+/* "Fewer fields" must hide the extra fields again in every layout. */
+.worldsmith .ws-props .ws-more:not(.is-open) .ws-more__fields {
+	display: none;
+}
+.worldsmith .ws-props--rows .ws-prop {
+	display: grid;
+	grid-template-columns: minmax(120px, 190px) minmax(0, 1fr);
+	align-items: start;
+	padding: 3px 0;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 55%, transparent);
+	border-radius: 0;
+	gap: 0 20px;
+}
+.worldsmith .ws-props--rows .ws-prop:last-child {
+	border-bottom: none;
+}
+.worldsmith .ws-props--rows .ws-prop__label {
+	min-height: 32px;
+	margin: 0;
+	padding-top: 1px;
+	font-size: 12.5px;
+}
+.worldsmith .ws-props--rows .ws-prop__msg {
+	grid-column: 2;
+}
+.worldsmith .ws-props--rows .ws-section__body {
+	padding: 2px 0 12px;
+}
+.worldsmith .ws-props--rows .ws-more {
+	margin-top: 4px;
+}
+.worldsmith .ws-props--rows .ws-more__fields {
+	margin-top: 0;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 55%, transparent);
+}
+/* Narrow panes: label above value. */
+.worldsmith[data-ws-size='narrow'] .ws-props--rows .ws-prop {
+	grid-template-columns: minmax(0, 1fr);
+	padding: 6px 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-props--rows .ws-prop__label {
+	min-height: 0;
+	margin-bottom: 2px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-props--rows .ws-prop__msg {
+	grid-column: 1;
+}
+
+/* ── Grid layout (default): label above value, one even grid for every section ─
+ *
+ * Two equal columns in every section, a hairline divider between them that fades in
+ * and out around full-width fields, small-caps labels like the rest of Worldsmith's
+ * section labels, and quieter labels on empty fields so the filled facts stand out.
+ */
+.worldsmith .ws-props--grid {
+	--ws-row-gap: 18px;
+	--ws-col-gap: 44px;
+}
+.worldsmith .ws-props--grid .ws-fields {
+	gap: var(--ws-row-gap) var(--ws-col-gap);
+}
+.worldsmith .ws-props--grid .ws-prop--third {
+	grid-column: span 3;
+}
+.worldsmith .ws-props--grid .ws-prop__label {
+	margin-bottom: 3px;
+	color: var(--ws-muted);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	transition: color var(--ws-dur);
+}
+.worldsmith .ws-props--grid .ws-prop.is-empty .ws-prop__label {
+	color: var(--ws-faint);
+}
+/* The field you're editing is easy to spot. */
+.worldsmith .ws-props--grid .ws-prop:focus-within .ws-prop__label {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-props--grid .ws-prop__value {
+	font-size: 0.95rem;
+}
+
+/* Column divider: a hairline centred in the gap, beside each right-hand field. */
+.worldsmith .ws-props--grid .ws-prop.is-pair-right {
+	position: relative;
+}
+.worldsmith .ws-props--grid .ws-prop.is-pair-right::before {
+	content: '';
+	position: absolute;
+	top: calc(var(--ws-row-gap) / -2);
+	bottom: calc(var(--ws-row-gap) / -2);
+	left: calc(var(--ws-col-gap) / -2);
+	width: 1px;
+	background: color-mix(in srgb, var(--ws-border) 85%, transparent);
+	pointer-events: none;
+}
+.worldsmith .ws-props--grid .ws-prop.is-pair-right.is-run-start::before {
+	top: 2px;
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ws-border) 85%, transparent) 18px);
+}
+.worldsmith .ws-props--grid .ws-prop.is-pair-right.is-run-end::before {
+	bottom: 2px;
+	background: linear-gradient(to top, transparent, color-mix(in srgb, var(--ws-border) 85%, transparent) 18px);
+}
+.worldsmith .ws-props--grid .ws-prop.is-pair-right.is-run-start.is-run-end::before {
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ws-border) 85%, transparent) 14px, color-mix(in srgb, var(--ws-border) 85%, transparent) calc(100% - 14px), transparent);
+}
+.worldsmith .ws-props--grid.ws-props--single .ws-prop,
+.worldsmith[data-ws-size='narrow'] .ws-props--grid .ws-prop {
+	grid-column: span 6;
+}
+.worldsmith .ws-props--grid.ws-props--single .ws-prop::before,
+.worldsmith[data-ws-size='narrow'] .ws-props--grid .ws-prop::before {
+	content: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-props--grid {
+	--ws-row-gap: 14px;
+}
+

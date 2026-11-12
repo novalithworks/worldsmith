@@ -1,0 +1,6 @@
+HANDOFF.md export-ignore
+HANDOFF-old.md export-ignore
+harness/ export-ignore
+tests/ export-ignore
+scripts/ export-ignore
+version-bump.mjs export-ignore

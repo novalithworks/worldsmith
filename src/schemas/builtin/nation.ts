@@ -1,0 +1,58 @@
+import { defineType, f, opts, section, tasks } from '../dsl';
+
+export const nationType = defineType(
+	{
+		id: 'nation',
+		singular: 'Nation',
+		plural: 'Nations & realms',
+		icon: 'crown',
+		description: 'Kingdoms, empires, republics, city-states and realms.',
+		group: 'society',
+		color: 'blue',
+		order: 80,
+		subtitle: ['government', 'capital'],
+		card: ['government', 'population', 'stability'],
+		parentTypes: ['nation'],
+		childTypes: ['nation'],
+		tasks: tasks(
+			'Define government|Politics',
+			'Define ruler|Politics',
+			'Define capital and territory|Geography',
+			'Define economy|Economy',
+			'Define culture and religion|Society',
+			'Define military strength|Power',
+			'Define relations with neighbors|Politics',
+			'Write founding history|History',
+			'Design flag or heraldry|Media|optional',
+		),
+	},
+	section('identity', 'Identity', 'crown', [
+		f.text('officialName', 'Official name', { recommended: true }),
+		f.select('government', 'Government', opts('Monarchy:purple', 'Empire:purple', 'Republic:blue', 'Theocracy:yellow', 'Oligarchy:orange', 'Federation:cyan', 'Tribal:green', 'Anarchy:gray', 'Other:gray'), { recommended: true }),
+		f.rel('ruler', 'Ruler', { via: 'rules', direction: 'reverse', targets: ['character'], max: 1 }),
+		f.rel('capital', 'Capital', { via: 'capital-of', targets: ['location'], max: 1 }),
+		f.text('motto', 'Motto', { advanced: true }),
+		f.select('stability', 'Stability', opts('Stable:green', 'Tense:yellow', 'Unstable:orange', 'Collapsing:red', 'At war:red')),
+	]),
+	section('territory', 'Territory & people', 'map', [
+		f.rel('territory', 'Territory', { via: 'territory-of', direction: 'reverse', targets: ['location'] }),
+		f.text('population', 'Population', { width: 'third' }),
+		f.rel('citizens', 'Notable citizens', { via: 'citizen-of', direction: 'reverse', targets: ['character'] }),
+		f.rel('cultures', 'Cultures', { via: 'culture-of', targets: ['culture'] }),
+		f.rel('religions', 'Religions', { via: 'follows-religion', targets: ['religion'] }),
+		f.rel('languages', 'Languages', { via: 'speaks', targets: ['language'] }),
+	]),
+	section('power', 'Power & economy', 'coins', [
+		f.long('economy', 'Economy', { recommended: true }),
+		f.text('currency', 'Currency', { width: 'third' }),
+		f.long('military', 'Military'),
+		f.long('laws', 'Laws & justice', { advanced: true }),
+		f.rel('allies', 'Allies', { via: 'alliance', targets: ['nation', 'faction'] }),
+		f.rel('rivals', 'Rivals & enemies', { via: 'hostility', targets: ['nation', 'faction'] }),
+	]),
+	section('history', 'History', 'scroll-text', [
+		f.chrono('founded', 'Founded'),
+		f.rich('history', 'History', { recommended: true }),
+		f.long('conflicts', 'Wars & conflicts'),
+	]),
+);

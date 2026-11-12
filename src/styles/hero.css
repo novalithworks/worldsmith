@@ -1,0 +1,375 @@
+/* ── Entity hero: the signature moment of every page ───────────────────────── */
+
+.worldsmith .ws-hero {
+	position: relative;
+}
+
+.worldsmith .ws-hero__banner {
+	position: relative;
+	display: none;
+	overflow: hidden;
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hero.has-banner .ws-hero__banner {
+	display: block;
+}
+.worldsmith .ws-hero__banner-img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	user-select: none;
+}
+/* A soft fade so the portrait and name sit on the image gracefully in any theme. */
+.worldsmith .ws-hero__banner::after {
+	content: '';
+	position: absolute;
+	inset: 55% 0 0 0;
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ws-bg) 55%, transparent));
+	pointer-events: none;
+}
+.worldsmith .ws-hero__banner-tools {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	z-index: 2;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-hero__banner:hover .ws-hero__banner-tools,
+.worldsmith .ws-hero__banner-tools:focus-within {
+	opacity: 1;
+}
+.worldsmith .ws-hero__banner-tools .ws-btn {
+	background: color-mix(in srgb, var(--ws-bg) 80%, transparent);
+	backdrop-filter: blur(6px);
+}
+.worldsmith .ws-hero__banner.is-repositioning {
+	cursor: grab;
+	outline: 2px solid var(--ws-accent);
+	outline-offset: -2px;
+}
+.worldsmith .ws-hero__banner.is-repositioning:active {
+	cursor: grabbing;
+}
+.worldsmith .ws-hero__reposition {
+	position: absolute;
+	left: 50%;
+	bottom: 14px;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px 6px 6px 14px;
+	border-radius: 999px;
+	transform: translateX(-50%);
+	background: color-mix(in srgb, var(--ws-bg) 88%, transparent);
+	backdrop-filter: blur(8px);
+	font-size: 12px;
+	color: var(--ws-muted);
+}
+
+.worldsmith .ws-hero__body {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	gap: 22px;
+	padding: 6px 4px 4px;
+}
+.worldsmith .ws-hero.has-banner .ws-hero__body {
+	margin-top: -64px;
+	padding: 0 22px 4px;
+}
+/* Only the portrait overlaps the banner; text starts below its edge. */
+.worldsmith .ws-hero.has-banner .ws-hero__text {
+	margin-top: 76px;
+}
+
+.worldsmith .ws-hero__portrait {
+	flex: none;
+	z-index: 1;
+}
+.worldsmith .ws-hero__portrait-btn {
+	display: block;
+	height: auto;
+	padding: 0;
+	border: none;
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	cursor: pointer;
+}
+.worldsmith .ws-hero__portrait-btn .ws-avatar--arch:not(.ws-portrait-placeholder) {
+	box-shadow: 0 0 0 4px var(--ws-bg), 0 0 0 5px color-mix(in srgb, var(--ws-tint) 35%, var(--ws-border));
+	transition: box-shadow var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-hero__portrait-btn:hover .ws-avatar--arch:not(.ws-portrait-placeholder) {
+	box-shadow: 0 0 0 4px var(--ws-bg), 0 0 0 5px var(--ws-tint);
+}
+.worldsmith .ws-portrait-placeholder {
+	flex-direction: column;
+	transition: border-color var(--ws-dur), background var(--ws-dur);
+	gap: 6px;
+	border: 1px dashed color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 6%, var(--ws-bg));
+	color: var(--ws-muted);
+}
+.worldsmith .ws-hero__portrait-btn:hover .ws-portrait-placeholder {
+	border-color: var(--ws-tint);
+	background: color-mix(in srgb, var(--ws-tint) 11%, var(--ws-bg));
+}
+.worldsmith .ws-portrait-placeholder__icon svg {
+	width: 22px;
+	height: 22px;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-portrait-placeholder__label {
+	font-size: 12px;
+}
+
+.worldsmith .ws-hero__text {
+	flex: 1;
+	min-width: 0;
+	padding-bottom: 6px;
+	font-family: var(--ws-font-body);
+}
+.worldsmith .ws-hero__crumbs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 2px;
+	margin-bottom: 4px;
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+}
+.worldsmith .ws-hero__crumbs.is-empty {
+	display: none;
+}
+.worldsmith .ws-hero__crumb {
+	color: var(--ws-muted);
+	text-decoration: none;
+}
+.worldsmith .ws-hero__crumb:hover {
+	color: var(--ws-text);
+	text-decoration: underline;
+}
+.worldsmith .ws-hero__crumb-sep {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-hero__crumb-sep svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-hero__kind {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-tint);
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith .ws-hero__kind svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-hero__name {
+	display: block;
+	width: 100%;
+	margin: 2px 0 0 -6px;
+	padding: 2px 6px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	resize: none;
+	overflow: hidden;
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-size: clamp(1.75rem, 3.4cqi, 2.6rem);
+	font-weight: var(--h1-weight, 600);
+	line-height: 1.12;
+	letter-spacing: -0.01em;
+	transition: background var(--ws-dur), border-color var(--ws-dur);
+}
+.worldsmith .ws-hero__name:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hero__name:focus {
+	border-color: var(--ws-focus);
+	background: var(--ws-bg);
+	outline: none;
+}
+.worldsmith .ws-hero__subtitle {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-size: 1.02rem;
+	font-style: italic;
+}
+.worldsmith .ws-hero__subtitle.is-empty {
+	display: none;
+}
+.worldsmith .ws-hero__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 14px;
+	margin-top: 12px;
+	font-family: var(--ws-font-ui);
+}
+.worldsmith .ws-status-btn {
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	cursor: pointer;
+}
+.worldsmith .ws-status-btn:hover {
+	border-color: var(--ws-border-strong);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-status-btn .ws-status {
+	color: var(--ws-text);
+}
+.worldsmith .ws-hero__progress {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-hero__badges {
+	display: flex;
+	gap: 6px;
+}
+.worldsmith .ws-hero__actions {
+	display: flex;
+	align-self: flex-start;
+	gap: 2px;
+	padding-top: 8px;
+}
+.worldsmith .ws-hero.has-banner .ws-hero__actions {
+	padding-top: 72px;
+}
+.worldsmith .ws-hero.has-banner .ws-hero__banner-btn {
+	display: none;
+}
+.worldsmith .ws-hero__actions .ws-btn.is-active svg {
+	fill: currentColor;
+}
+
+/* Narrow: center the hero, portrait above the name */
+.worldsmith[data-ws-size='narrow'] .ws-hero__body {
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 12px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hero.has-banner .ws-hero__body {
+	margin-top: -56px;
+	padding: 0 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hero.has-banner .ws-hero__text {
+	margin-top: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hero__name {
+	margin-left: 0;
+	text-align: center;
+}
+.worldsmith[data-ws-size='narrow'] :is(.ws-hero__meta, .ws-hero__crumbs) {
+	justify-content: center;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hero__actions,
+.worldsmith[data-ws-size='narrow'] .ws-hero.has-banner .ws-hero__actions {
+	align-self: center;
+	padding-top: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-avatar--arch.ws-avatar--xl {
+	width: 112px;
+}
+
+/* ── Page banners (Tasks, dashboards, type databases — 0.10) ─────────────────── */
+
+.worldsmith .ws-page-banner.is-empty {
+	display: none;
+}
+.worldsmith .ws-page-banner__frame {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-hover);
+	animation: ws-banner-in var(--ws-dur-slow) var(--ws-ease-out);
+}
+.worldsmith .ws-page-banner__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	user-select: none;
+}
+.worldsmith .ws-page-banner__frame::after {
+	content: '';
+	position: absolute;
+	inset: 50% 0 0 0;
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ws-bg) 60%, transparent));
+	pointer-events: none;
+}
+.worldsmith .ws-page-banner__frame:hover .ws-hero__banner-tools,
+.worldsmith .ws-page-banner__tools:focus-within {
+	opacity: 1;
+}
+.worldsmith :is(.ws-db-header, .ws-studio-head).has-page-banner {
+	position: relative;
+	z-index: 1;
+	margin-top: -34px;
+	padding: 0 20px;
+}
+.worldsmith :is(.ws-db-header, .ws-studio-head).has-page-banner > .ws-db-header__mark {
+	background: color-mix(in srgb, var(--ws-tint) 13%, var(--ws-bg));
+	box-shadow: 0 0 0 4px var(--ws-bg);
+}
+.worldsmith :is(.ws-db-header, .ws-studio-head).has-page-banner > .ws-db-header__text,
+.worldsmith :is(.ws-db-header, .ws-studio-head).has-page-banner > .ws-db-header__actions {
+	padding-top: 42px;
+}
+.worldsmith .ws-db-header__actions.ws-page-banner__slot:empty {
+	display: none;
+}
+.worldsmith .ws-db-header__actions.ws-page-banner__slot + .ws-db-header__actions {
+	margin-left: -6px;
+}
+.worldsmith .is-drop-target.ws-page-banner,
+.worldsmith :is(.ws-db-header, .ws-studio-head).is-drop-target {
+	outline: 2px dashed var(--ws-accent);
+	outline-offset: 4px;
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith[data-ws-size='narrow'] :is(.ws-db-header, .ws-studio-head).has-page-banner {
+	padding: 0 10px;
+}
+.worldsmith[data-ws-size='narrow'] :is(.ws-db-header, .ws-studio-head).has-page-banner > .ws-db-header__actions {
+	padding-top: 0;
+}
+@keyframes ws-banner-in {
+	from {
+		opacity: 0;
+	}
+}
+.worldsmith[data-ws-motion='off'] .ws-page-banner__frame {
+	animation: none;
+}
+
+.worldsmith .ws-search-head {
+	margin-bottom: 18px;
+}
+
+.worldsmith .ws-page-banner__frame.is-settled {
+	animation: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-search-head .ws-page-banner__slot {
+	width: auto;
+	margin-left: auto;
+}

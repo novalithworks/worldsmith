@@ -1,0 +1,98 @@
+/*
+ * Worldsmith design tokens.
+ *
+ * Every color derives from the active Obsidian theme. Worldsmith adds no palette of its
+ * own: entity types carry a *semantic* hue (red…pink) that maps to the theme's --color-*.
+ * Everything is scoped to Worldsmith roots; nothing here touches global selectors.
+ */
+:is(.worldsmith, .worldsmith-modal, .worldsmith-settings) {
+	/* Surfaces */
+	--ws-bg: var(--background-primary);
+	--ws-bg-side: var(--background-secondary);
+	--ws-surface: color-mix(in srgb, var(--background-secondary) 45%, var(--background-primary));
+	--ws-surface-raised: var(--background-primary);
+	--ws-hover: var(--background-modifier-hover);
+	--ws-border: var(--background-modifier-border);
+	--ws-border-strong: var(--background-modifier-border-hover);
+	--ws-focus: var(--background-modifier-border-focus);
+
+	/* Text */
+	--ws-text: var(--text-normal);
+	--ws-muted: var(--text-muted);
+	--ws-faint: var(--text-faint);
+	--ws-accent: var(--interactive-accent);
+	--ws-accent-hover: var(--interactive-accent-hover);
+	--ws-on-accent: var(--text-on-accent);
+
+	/* Type: display = theme heading font, body = theme text font, chrome = interface font */
+	--ws-font-ui: var(--font-interface);
+	--ws-font-body: var(--ws-font-body-custom, var(--font-text));
+	--ws-font-display: var(--ws-font-display-custom, var(--h1-font, var(--ws-font-body)));
+
+	/* Shape & rhythm */
+	--ws-radius-s: var(--radius-s, 4px);
+	--ws-radius: var(--radius-m, 8px);
+	--ws-radius-l: var(--radius-l, 12px);
+	--ws-gap: 18px;
+	--ws-pad: 18px;
+	--ws-field-gap: 14px;
+	/* Motion: short, eased-out moves for anything that responds to the pointer. */
+	--ws-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+	--ws-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--ws-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+	--ws-dur-fast: 120ms;
+	--ws-dur: 180ms;
+	--ws-dur-slow: 280ms;
+	--ws-lift: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 18px -6px rgb(0 0 0 / 0.22);
+
+	/* Default tint (overridden by .ws-tint--*) */
+	--ws-tint: var(--text-muted);
+}
+
+.worldsmith[data-ws-density='compact'] {
+	--ws-gap: 12px;
+	--ws-pad: 13px;
+	--ws-field-gap: 10px;
+}
+.worldsmith[data-ws-density='spacious'] {
+	--ws-gap: 26px;
+	--ws-pad: 24px;
+	--ws-field-gap: 18px;
+}
+
+/* Predictable sizing inside Worldsmith regardless of theme defaults */
+:is(.worldsmith, .worldsmith-modal) *,
+:is(.worldsmith, .worldsmith-modal) *::before,
+:is(.worldsmith, .worldsmith-modal) *::after {
+	box-sizing: border-box;
+}
+
+/* Semantic tints → theme colors */
+:is(.worldsmith, .worldsmith-modal) .ws-tint--red,
+:is(.worldsmith, .worldsmith-modal).ws-tint--red { --ws-tint: var(--color-red); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--orange { --ws-tint: var(--color-orange); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--yellow { --ws-tint: var(--color-yellow); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--green { --ws-tint: var(--color-green); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--cyan { --ws-tint: var(--color-cyan); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--blue { --ws-tint: var(--color-blue); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--purple { --ws-tint: var(--color-purple); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--pink { --ws-tint: var(--color-pink); }
+:is(.worldsmith, .worldsmith-modal) .ws-tint--gray { --ws-tint: var(--text-muted); }
+
+/* Motion is responsive only, and always off when asked */
+/* :not(#ws-none) matches every element but weighs like an id, so these win over any styled motion. */
+.worldsmith[data-ws-motion='off'] :not(#ws-none),
+.worldsmith[data-ws-motion='off'] :not(#ws-none)::before,
+.worldsmith[data-ws-motion='off'] :not(#ws-none)::after {
+	transition: none;
+	animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+	:is(.worldsmith, .worldsmith-modal) :not(#ws-none),
+	:is(.worldsmith, .worldsmith-modal) :not(#ws-none)::before,
+	:is(.worldsmith, .worldsmith-modal) :not(#ws-none)::after {
+		transition: none;
+		animation: none;
+		scroll-behavior: auto;
+	}
+}

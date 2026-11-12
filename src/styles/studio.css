@@ -1,0 +1,1408 @@
+/* ── Type Studio ───────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-page--studio {
+	max-width: max(var(--ws-max-width, 1180px), 1180px);
+}
+.worldsmith .ws-studio-head {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+
+.worldsmith .ws-studio {
+	display: grid;
+	grid-template-columns: 240px minmax(0, 1fr);
+	gap: 28px;
+	align-items: start;
+}
+.worldsmith .ws-studio__list {
+	position: sticky;
+	top: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	max-height: calc(100vh - 140px);
+	overflow-y: auto;
+	padding-right: 4px;
+}
+.worldsmith .ws-studio__select {
+	display: none;
+}
+.worldsmith .ws-studio__group {
+	flex: none;
+	margin: 14px 8px 4px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-studio__group:first-of-type {
+	margin-top: 0;
+}
+.worldsmith .ws-studio__item {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	width: 100%;
+	height: 32px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-studio__item:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-studio__item.is-active {
+	background: var(--background-modifier-active-hover, var(--ws-hover));
+	color: var(--ws-text);
+	font-weight: 600;
+}
+.worldsmith .ws-studio__item.is-archived {
+	opacity: 0.6;
+}
+.worldsmith .ws-studio__item-icon {
+	color: var(--ws-tint);
+}
+.worldsmith .ws-studio__item-icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-studio__item-label {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-studio__item-badge {
+	padding: 1px 6px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+	color: var(--ws-accent);
+	font-size: 10.5px;
+	font-weight: 500;
+}
+.worldsmith .ws-studio__item-count {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 400;
+}
+
+.worldsmith .ws-studio__type {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-bottom: 14px;
+}
+.worldsmith .ws-studio__type-mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 50px;
+	flex: none;
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-tint) 13%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-studio__type-mark svg {
+	width: 19px;
+	height: 19px;
+}
+.worldsmith .ws-studio__type-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-studio__type-name {
+	font-family: var(--ws-font-display);
+	font-size: 1.45rem;
+	line-height: 1.2;
+}
+.worldsmith .ws-studio__type-meta {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* Tabs */
+.worldsmith .ws-tabs {
+	display: flex;
+	gap: 2px;
+	margin-bottom: 18px;
+	border-bottom: 1px solid var(--ws-border);
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+.worldsmith .ws-tabs::-webkit-scrollbar {
+	display: none;
+}
+.worldsmith .ws-tab {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	height: 36px;
+	margin-bottom: -1px;
+	padding: 0 12px;
+	border: none;
+	border-bottom: 2px solid transparent;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.worldsmith .ws-tab:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-tab.is-active {
+	border-bottom-color: var(--ws-accent);
+	color: var(--ws-text);
+	font-weight: 600;
+}
+.worldsmith .ws-tab svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-tab__count {
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-weight: 500;
+}
+
+/* Inline-edit text: reads as text, edits like an input */
+:is(.worldsmith, .worldsmith-modal) .ws-inline {
+	min-width: 0;
+	height: 30px;
+	padding: 0 8px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font: inherit;
+	transition: background var(--ws-dur), border-color var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-inline--multi {
+	height: auto;
+	min-height: 54px;
+	padding: 6px 8px;
+	resize: vertical;
+	line-height: 1.5;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-inline:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-inline:focus {
+	outline: none;
+	border-color: var(--ws-focus);
+	background: var(--ws-bg);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-inline::placeholder {
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-input-like {
+	width: 100%;
+	border-color: var(--ws-border);
+	background: var(--background-modifier-form-field, var(--ws-bg));
+}
+
+/* Structure editor */
+.worldsmith .ws-structure {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.worldsmith .ws-sec-card {
+	position: relative;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	transition: box-shadow var(--ws-dur), border-color var(--ws-dur);
+}
+.worldsmith .ws-sec-card.is-unsectioned {
+	border-style: dashed;
+	background: transparent;
+}
+.worldsmith .ws-sec-card.is-focus {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+.worldsmith .ws-sec-card.is-dragging {
+	opacity: 0.5;
+}
+.worldsmith .ws-sec-card.is-drop-before::before,
+.worldsmith .ws-sec-card.is-drop-after::after {
+	content: '';
+	position: absolute;
+	left: 8px;
+	right: 8px;
+	height: 3px;
+	border-radius: 3px;
+	background: var(--ws-accent);
+}
+.worldsmith .ws-sec-card.is-drop-before::before {
+	top: -9px;
+}
+.worldsmith .ws-sec-card.is-drop-after::after {
+	bottom: -9px;
+}
+.worldsmith .ws-sec-card__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 12px 12px 8px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-sec-card.is-unsectioned .ws-sec-card__head {
+	padding-left: 18px;
+}
+.worldsmith .ws-sec-card__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	flex: none;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+	box-shadow: none;
+	color: var(--ws-accent);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-sec-card__icon:not(.is-static):hover {
+	background: color-mix(in srgb, var(--ws-accent) 22%, transparent);
+}
+.worldsmith .ws-sec-card__icon.is-static {
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+}
+.worldsmith .ws-sec-card__titles {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith .ws-sec-card__blurb {
+	margin-top: 1px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+.worldsmith .ws-sec-card__icon.is-static {
+	cursor: default;
+}
+.worldsmith .ws-sec-card__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-sec-card__title {
+	font-size: 14px;
+	font-weight: 600;
+}
+.worldsmith .ws-sec-card__title.is-static {
+	padding: 0;
+}
+.worldsmith .ws-sec-card__badges {
+	display: flex;
+	gap: 4px;
+}
+.worldsmith .ws-sec-card__foot {
+	padding: 4px 12px 10px;
+}
+
+.worldsmith .ws-drag-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	flex: none;
+	color: var(--ws-faint);
+	cursor: grab;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-drag-handle svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith :is(.ws-sec-card__head, .ws-frow-item, .ws-choice, .ws-task-row):hover .ws-drag-handle,
+.worldsmith .ws-frow-item:focus-within .ws-drag-handle {
+	opacity: 1;
+}
+.worldsmith-modal .ws-drag-handle {
+	display: flex;
+	color: var(--ws-faint);
+	cursor: grab;
+}
+.worldsmith-modal .ws-drag-handle svg {
+	width: 14px;
+	height: 14px;
+}
+
+.worldsmith .ws-field-rows {
+	display: flex;
+	flex-direction: column;
+	margin: 0 8px;
+	padding: 6px 0 2px;
+	border-radius: var(--ws-radius);
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-field-rows.is-drop-zone {
+	background: color-mix(in srgb, var(--ws-accent) 6%, transparent);
+}
+.worldsmith .ws-field-rows__empty {
+	padding: 12px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+	text-align: center;
+}
+.worldsmith .ws-frow-item {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 42px;
+	padding: 3px 6px 3px 4px;
+	border-radius: var(--ws-radius);
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-frow-item:hover,
+.worldsmith .ws-frow-item:focus-within {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-frow-item:focus-visible {
+	outline: 2px solid var(--ws-focus);
+	outline-offset: -2px;
+}
+.worldsmith .ws-frow-item.is-dragging {
+	opacity: 0.45;
+}
+.worldsmith .ws-frow-item.is-hidden-field .ws-frow-item__label {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+.worldsmith .ws-frow-item.is-drop-before::before,
+.worldsmith .ws-frow-item.is-drop-after::after {
+	content: '';
+	position: absolute;
+	left: 24px;
+	right: 4px;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--ws-accent);
+	pointer-events: none;
+}
+.worldsmith .ws-frow-item.is-drop-before::before {
+	top: -1px;
+}
+.worldsmith .ws-frow-item.is-drop-after::after {
+	bottom: -1px;
+}
+.worldsmith .ws-frow-item__kind {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	flex: none;
+	border: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-bg);
+	color: var(--ws-muted);
+}
+.worldsmith .ws-frow-item__kind svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-frow-item__label {
+	flex: 1 1 180px;
+	font-family: var(--ws-font-body);
+	font-size: 0.95rem;
+}
+.worldsmith .ws-frow-item__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 4px;
+	min-width: 0;
+}
+.worldsmith .ws-frow-item__kindname {
+	margin-right: 4px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.worldsmith .ws-frow-item__actions {
+	display: flex;
+	gap: 0;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-frow-item:hover .ws-frow-item__actions,
+.worldsmith .ws-frow-item:focus-within .ws-frow-item__actions {
+	opacity: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-badge--req {
+	border-color: color-mix(in srgb, var(--color-red) 40%, var(--ws-border));
+	color: var(--color-red);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-badge--soon {
+	border-style: dashed;
+}
+
+/* Display tab (0.11.1: settings cards) */
+.worldsmith .ws-display-tab {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 280px;
+	gap: 16px;
+	align-items: start;
+}
+.worldsmith .ws-display-tab__controls {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+}
+.worldsmith .ws-display-tab__preview {
+	position: sticky;
+	top: 8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__titles {
+	flex: 1;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__aside {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__aside:empty {
+	display: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__count {
+	padding: 2px 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+.worldsmith .ws-display-card .ws-tset__rows {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px 18px;
+}
+.worldsmith .ws-display-card__reads {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 8px;
+	padding: 10px 12px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	font-size: 13px;
+}
+.worldsmith .ws-display-card__reads svg {
+	align-self: center;
+	width: 14px;
+	height: 14px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-display-card__reads-label {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-display-card__reads-text {
+	min-width: 0;
+	font-family: var(--ws-font-body);
+	font-style: italic;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-display-card__reads-text.is-empty {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-display-card__tip {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-display-preview .ws-tset__rows {
+	padding: 16px;
+	background: color-mix(in srgb, var(--ws-bg) 60%, transparent);
+}
+.worldsmith .ws-cards--preview {
+	grid-template-columns: 1fr;
+	pointer-events: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-pick-chips .ws-chip {
+	cursor: grab;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-pick-chips .ws-chip .ws-chip__remove {
+	opacity: 0.6;
+}
+
+/* Fields tab overview */
+.worldsmith .ws-structure__overview .ws-tset__rows {
+	padding: 12px 18px 14px;
+}
+.worldsmith .ws-structure__stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.worldsmith .ws-structure__stat {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 11px 5px 9px;
+	border: 1px solid color-mix(in srgb, var(--ws-border) 80%, transparent);
+	border-radius: 999px;
+	background: var(--ws-bg);
+	font-size: 12.5px;
+}
+.worldsmith .ws-structure__stat svg {
+	width: 13px;
+	height: 13px;
+	color: var(--ws-accent);
+}
+.worldsmith .ws-structure__stat-n {
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-structure__stat-label {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-structure__add {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 18px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-structure__add > svg {
+	width: 16px;
+	height: 16px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-structure__add-text {
+	flex: 1;
+	min-width: 180px;
+}
+
+/* Checklist tab (0.11.1: settings cards) */
+.worldsmith .ws-checklist-tab {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+.worldsmith .ws-checklist-card .ws-tset__rows {
+	padding: 6px 10px 8px;
+}
+.worldsmith .ws-task-rows {
+	display: flex;
+	flex-direction: column;
+}
+.worldsmith .ws-task-rows__empty {
+	padding: 14px 10px 6px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+}
+.worldsmith .ws-task-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 42px;
+	padding: 2px 6px;
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-task-rows .ws-task-row + .ws-task-row {
+	box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ws-border) 55%, transparent);
+}
+.worldsmith .ws-task-rows .ws-task-row:hover {
+	box-shadow: none;
+}
+.worldsmith .ws-task-row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-task-rows .ws-task-row.is-drop-target {
+	box-shadow: inset 0 2px 0 var(--ws-accent);
+}
+.worldsmith .ws-task-row__box {
+	display: flex;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-task-row__box svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-task-row__title {
+	flex: 1 1 200px;
+	font-family: var(--ws-font-body);
+	font-size: 0.95rem;
+}
+.worldsmith .ws-task-row.is-optional .ws-task-row__title {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-task-row__cat {
+	flex: 0 1 140px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-task-row__prio,
+.worldsmith .ws-task-row__opt {
+	height: 24px;
+	padding: 0 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.worldsmith .ws-task-row__prio.is-p1 {
+	color: var(--color-blue);
+	border-color: color-mix(in srgb, var(--color-blue) 35%, var(--ws-border));
+}
+.worldsmith .ws-task-row__prio.is-p2 {
+	color: var(--color-yellow);
+	border-color: color-mix(in srgb, var(--color-yellow) 35%, var(--ws-border));
+}
+.worldsmith .ws-task-row__prio.is-p3 {
+	color: var(--color-orange);
+	border-color: color-mix(in srgb, var(--color-orange) 40%, var(--ws-border));
+}
+.worldsmith .ws-task-row__prio.is-p4 {
+	color: var(--color-red);
+	border-color: color-mix(in srgb, var(--color-red) 40%, var(--ws-border));
+}
+.worldsmith .ws-task-row__opt.is-on {
+	color: var(--ws-text);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-task-row--add {
+	margin-top: 4px;
+	border: 1px dashed color-mix(in srgb, var(--ws-border) 80%, transparent);
+	color: var(--ws-faint);
+}
+.worldsmith .ws-task-row--add:focus-within {
+	border-color: var(--ws-accent);
+	border-style: solid;
+}
+.worldsmith .ws-checklist-existing .ws-frow {
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 16px;
+	padding: 14px 0;
+	border-top: none;
+}
+.worldsmith .ws-checklist-existing .ws-frow__label {
+	font-weight: 500;
+}
+.worldsmith[data-ws-size='narrow'] .ws-checklist-existing .ws-frow {
+	grid-template-columns: 1fr;
+	gap: 10px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-task-row {
+	flex-wrap: wrap;
+	padding-block: 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-task-row__cat {
+	flex: 1 1 100%;
+	order: 5;
+	padding-left: 50px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-sec-card__head {
+	flex-wrap: wrap;
+}
+
+:is(.worldsmith, .worldsmith-modal) .ws-mini-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-mini-btn:hover:not(:disabled) {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-mini-btn:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-mini-btn svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* Settings tab & form rows */
+.worldsmith .ws-type-settings {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 820px;
+}
+/* Settings cards (0.10): one per group, rows on one shared grid so labels and controls line up. */
+:is(.worldsmith, .worldsmith-modal) .ws-tset {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	overflow: hidden;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px 18px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	flex: none;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+	color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__mark svg {
+	width: 16px;
+	height: 16px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__title {
+	font-size: 14px;
+	font-weight: 600;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__blurb {
+	margin-top: 1px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-tset__rows {
+	padding: 2px 18px;
+}
+.worldsmith .ws-type-settings .ws-frow {
+	grid-template-columns: 240px minmax(0, 1fr);
+	gap: 20px;
+	min-height: 58px;
+	padding: 12px 0;
+}
+.worldsmith .ws-type-settings .ws-tset__rows > .ws-frow:first-child {
+	border-top: none;
+}
+.worldsmith .ws-type-settings .ws-frow__label {
+	font-weight: 500;
+}
+.worldsmith .ws-type-settings .ws-frow__control > .ws-input-like,
+.worldsmith .ws-type-settings .ws-tset__select {
+	width: 100%;
+	max-width: 440px;
+	min-height: 34px;
+}
+.worldsmith .ws-type-settings .ws-tset__select {
+	height: 34px;
+	padding-block: 0;
+}
+.worldsmith .ws-type-settings .ws-tset__icon {
+	width: 40px;
+	height: 40px;
+	border-radius: var(--ws-radius);
+	color: var(--ws-tint, var(--ws-accent));
+}
+.worldsmith .ws-type-settings .ws-danger-zone__row {
+	margin: 0;
+	padding: 16px 0 14px;
+}
+.worldsmith .ws-type-settings .ws-danger-zone__row .ws-btn--danger {
+	margin-left: auto;
+}
+.worldsmith .ws-type-settings .ws-tset__note {
+	padding-bottom: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-type-settings .ws-frow {
+	grid-template-columns: 1fr;
+	gap: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tset__rows,
+.worldsmith[data-ws-size='narrow'] .ws-tset__head {
+	padding-inline: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-type-settings .ws-danger-zone__row .ws-btn--danger {
+	margin-left: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-frow {
+	display: grid;
+	grid-template-columns: minmax(160px, 34%) minmax(0, 1fr);
+	gap: 16px;
+	align-items: center;
+	padding: 10px 0;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-frow__label {
+	font-size: 13px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-frow__hint {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.4;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-frow__control {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-frow {
+	grid-template-columns: 1fr;
+	gap: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatches {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn {
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 999px;
+	background: var(--ws-tint);
+	box-shadow: none;
+	cursor: pointer;
+	transition: transform var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn:hover {
+	transform: scale(1.1);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn.is-active {
+	box-shadow: 0 0 0 2px var(--ws-bg), 0 0 0 4px var(--ws-tint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn--none {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border-color: var(--ws-border-strong);
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn--none.is-active {
+	box-shadow: 0 0 0 2px var(--ws-bg), 0 0 0 4px var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-swatch-btn--none svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-danger-zone__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 10px 0 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-segmented--labels .ws-segmented__item {
+	width: auto;
+	gap: 6px;
+	padding: 0 10px;
+	font-size: 12.5px;
+}
+
+/* Narrow: list becomes a select, columns stack */
+.worldsmith[data-ws-size='narrow'] .ws-studio,
+.worldsmith[data-ws-size='medium'] .ws-studio {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 14px;
+}
+.worldsmith .ws-studio__main {
+	min-width: 0;
+}
+.worldsmith .ws-studio-head .ws-db-header__text {
+	flex: 1 1 220px;
+	min-width: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio-head {
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio-head .ws-db-header__mark {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio-head .ws-db-header__actions {
+	width: 100%;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio__type {
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tab {
+	padding: 0 9px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio__list,
+.worldsmith[data-ws-size='medium'] .ws-studio__list {
+	position: static;
+	max-height: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio__list > :not(.ws-studio__select),
+.worldsmith[data-ws-size='medium'] .ws-studio__list > :not(.ws-studio__select) {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-studio__select,
+.worldsmith[data-ws-size='medium'] .ws-studio__select {
+	display: block;
+}
+.worldsmith[data-ws-size='narrow'] .ws-display-tab {
+	grid-template-columns: 1fr;
+}
+.worldsmith[data-ws-size='narrow'] .ws-frow-item__kindname,
+.worldsmith[data-ws-size='narrow'] .ws-frow-item__meta .ws-badge:not(.ws-badge--req) {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-frow-item__actions,
+.worldsmith[data-ws-size='narrow'] .ws-drag-handle {
+	opacity: 1;
+}
+
+/* ── Field settings modal & add-field modal ────────────────────────────────── */
+/* 0.12: the settings cards of Type Studio's Settings tab (studioCard): a tinted mark, a
+   title and a line, then rows with the label and hint on the left, the control on the right. */
+
+.worldsmith-modal.ws-field-modal {
+	width: min(680px, 94vw);
+}
+.worldsmith-modal.ws-add-field-modal {
+	width: min(720px, 94vw);
+}
+.worldsmith-modal .ws-fm {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.worldsmith-modal .ws-fm__form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.worldsmith-modal .ws-fm .ws-tset__head {
+	padding: 12px 16px;
+}
+.worldsmith-modal .ws-fm .ws-tset__mark {
+	width: 30px;
+	height: 30px;
+	background: color-mix(in srgb, var(--color-purple) 13%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith-modal .ws-fm .ws-tset__mark svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith-modal .ws-fm .ws-tset__rows {
+	padding: 2px 16px;
+}
+.worldsmith-modal .ws-fm .ws-frow {
+	grid-template-columns: minmax(150px, 38%) minmax(0, 1fr);
+	gap: 16px;
+	min-height: 54px;
+	padding: 11px 0;
+}
+.worldsmith-modal .ws-fm .ws-tset__rows > .ws-frow:first-child {
+	border-top: none;
+}
+.worldsmith-modal .ws-fm .ws-frow__label {
+	font-weight: 500;
+}
+/* Switches sit at the far right of their row. */
+.worldsmith-modal .ws-fm .ws-fm__flag .ws-frow__control {
+	justify-content: flex-end;
+}
+.worldsmith-modal .ws-fm .ws-fm__control {
+	min-width: 0;
+}
+.worldsmith-modal .ws-fm .ws-frow__control > :is(.ws-inline, .ws-fm__select, .ws-input, .ws-prop__value) {
+	flex: 1;
+	width: 100%;
+}
+/* Inputs, selects and editors in one look: a field-coloured box with a border. */
+.worldsmith-modal .ws-fm :is(.ws-fm__desc, .ws-fm__inline-input, .ws-choice--add .ws-choice__label) {
+	border-color: var(--ws-border);
+	background: var(--background-modifier-form-field, var(--ws-bg));
+}
+.worldsmith-modal .ws-fm .ws-fm__inline-input {
+	height: 34px;
+	font-size: 13.5px;
+}
+.worldsmith-modal .ws-fm .ws-fm__desc {
+	min-height: 64px;
+	font-family: var(--ws-font-body);
+}
+.worldsmith-modal .ws-fm :is(.ws-fm__select, .ws-input) {
+	height: 34px;
+	font-size: 13.5px;
+}
+.worldsmith-modal .ws-fm .ws-field-input {
+	width: 100%;
+	height: 34px;
+	background: var(--background-modifier-form-field, var(--ws-bg));
+}
+.worldsmith-modal .ws-fm .ws-fm__default {
+	padding: 0;
+}
+.worldsmith-modal .ws-fm .ws-pick-chips {
+	min-height: 34px;
+}
+
+/* The field itself: a band like the calendars showcase. */
+.worldsmith-modal .ws-fm__head {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 14px 16px;
+	border: 1px solid color-mix(in srgb, var(--color-purple) 28%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(90% 160% at 100% 0%, color-mix(in srgb, var(--color-purple) 12%, transparent), transparent 60%),
+		var(--ws-surface);
+}
+.worldsmith-modal .ws-fm__mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	flex: none;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-purple) 15%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith-modal .ws-fm__mark svg {
+	width: 20px;
+	height: 20px;
+}
+.worldsmith-modal .ws-fm__head-text {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+}
+.worldsmith-modal .ws-fm__name {
+	width: 100%;
+	height: 36px;
+	margin-left: -8px;
+	font-family: var(--ws-font-display);
+	font-size: 1.3rem;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-fm__kind {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid color-mix(in srgb, var(--color-purple) 35%, var(--ws-border));
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-purple) 8%, transparent);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	cursor: pointer;
+	transition: border-color var(--ws-dur-fast) var(--ws-ease-out), background-color var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith-modal .ws-fm__kind:hover {
+	border-color: var(--color-purple);
+	background: color-mix(in srgb, var(--color-purple) 14%, transparent);
+}
+.worldsmith-modal .ws-fm__kind svg {
+	width: 12px;
+	height: 12px;
+	color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-fm__note {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	padding: 10px 12px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-fm__note svg {
+	width: 15px;
+	height: 15px;
+	margin-top: 1px;
+	color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-fm__hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.45;
+}
+.worldsmith-modal .ws-fm__note-row {
+	padding: 0 0 12px;
+}
+.worldsmith-modal .ws-fm__foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 4px 2px 0;
+}
+.worldsmith-modal .ws-fm__id {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+	cursor: copy;
+}
+.worldsmith-modal .ws-fm__id code {
+	color: var(--ws-muted);
+	font-size: 11.5px;
+}
+.worldsmith-modal .ws-fm .ws-modal-actions {
+	margin-top: 2px;
+}
+/* Choices and kinds sit in their card's body, not in rows. */
+.worldsmith-modal .ws-fm-choices .ws-tset__rows,
+.worldsmith-modal .ws-fm-kinds .ws-tset__rows {
+	padding: 10px 12px 12px;
+}
+@media (max-width: 560px) {
+	.worldsmith-modal .ws-fm .ws-frow {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 8px;
+	}
+	.worldsmith-modal .ws-fm .ws-fm__flag {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+	.worldsmith-modal .ws-fm .ws-tset__head,
+	.worldsmith-modal .ws-fm .ws-tset__rows,
+	.worldsmith-modal .ws-fm__head {
+		padding-inline: 12px;
+	}
+	.worldsmith-modal .ws-fm .ws-tset__head {
+		flex-wrap: wrap;
+	}
+	.worldsmith-modal .ws-fm__foot {
+		flex-wrap: wrap;
+	}
+}
+/* Field editors reused inside modals */
+.worldsmith-modal .ws-fields {
+	display: grid;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 10px 14px;
+}
+.worldsmith-modal .ws-prop {
+	grid-column: span 3;
+	min-width: 0;
+}
+.worldsmith-modal .ws-prop--full { grid-column: span 6; }
+.worldsmith-modal .ws-prop--third { grid-column: span 2; }
+.worldsmith-modal .ws-prop__label {
+	margin-bottom: 3px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-field-input {
+	border-color: var(--ws-border);
+}
+.worldsmith-modal :is(.ws-select-trigger, .ws-chips--editable) {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+
+/* Choices editor */
+.worldsmith-modal .ws-choices {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith-modal .ws-choices__empty {
+	padding: 6px 2px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-choice {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 0 4px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-choices .ws-choice {
+	border-color: color-mix(in srgb, var(--ws-border) 70%, transparent);
+	background: color-mix(in srgb, var(--ws-bg) 60%, transparent);
+}
+.worldsmith-modal .ws-choice--add {
+	margin-top: 6px;
+}
+.worldsmith-modal .ws-choice .ws-drag-handle {
+	cursor: grab;
+}
+.worldsmith-modal .ws-choice:hover {
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-choice.is-dragging {
+	opacity: 0.4;
+}
+.worldsmith-modal .ws-choice.is-drop-target {
+	box-shadow: inset 0 2px 0 var(--ws-accent);
+}
+.worldsmith-modal .ws-choice__dot {
+	width: 14px;
+	height: 14px;
+	flex: none;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: var(--ws-tint);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-tint) 20%, transparent);
+	cursor: pointer;
+}
+.worldsmith-modal .ws-choice__label {
+	flex: 1;
+}
+.worldsmith-modal .ws-choice__usage {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-choice__usage:not(:empty) {
+	padding: 1px 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+}
+.worldsmith-modal .ws-choice__plus {
+	display: flex;
+	width: 32px;
+	justify-content: center;
+	color: var(--ws-faint);
+}
+.worldsmith-modal .ws-choice__plus svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* Kind picker */
+.worldsmith-modal .ws-kind-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	gap: 6px;
+	max-height: 38vh;
+	overflow-y: auto;
+	padding: 2px;
+}
+.worldsmith-modal .ws-kind-grid__group {
+	grid-column: 1 / -1;
+	margin-top: 8px;
+	color: var(--color-purple);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith-modal .ws-kind-grid__group:first-of-type {
+	margin-top: 0;
+}
+.worldsmith-modal .ws-kind {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	height: auto;
+	padding: 9px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-kind:hover {
+	border-color: var(--ws-border-strong);
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-kind.is-active {
+	border-color: var(--color-purple);
+	background: color-mix(in srgb, var(--color-purple) 9%, var(--ws-surface));
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 14%, transparent);
+}
+.worldsmith-modal .ws-kind.is-soon {
+	opacity: 0.7;
+}
+.worldsmith-modal .ws-kind__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--color-purple) 13%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith-modal .ws-kind__icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-kind__label {
+	font-size: 13px;
+	font-weight: 500;
+}
+.worldsmith-modal .ws-kind__hint {
+	margin-top: 1px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	line-height: 1.35;
+	white-space: normal;
+}

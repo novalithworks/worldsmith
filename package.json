@@ -1,0 +1,39 @@
+{
+	"name": "worldsmith",
+	"version": "0.30.11",
+	"description": "A structured, visual, schema-driven worldbuilding studio for Obsidian.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"build:pro": "tsc -noEmit -skipLibCheck && WS_EDITION=pro node esbuild.config.mjs production",
+		"typecheck": "tsc -noEmit -skipLibCheck && tsc -noEmit -skipLibCheck -p tests",
+		"test": "tsx tests/run.ts",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"harness": "node esbuild.config.mjs production && node harness/build.mjs && node harness/shoot.mjs && node harness/edge.mjs && node harness/dashboards.mjs && node harness/views.mjs && node harness/polish.mjs && node harness/studios.mjs && node harness/m10.mjs && node harness/m10b.mjs && node harness/fixes0111.mjs && node harness/polish0112.mjs && node harness/visual012.mjs && node harness/fixes0122.mjs && node harness/peek0123.mjs && node harness/peek0124.mjs && node harness/writing.mjs && node harness/ws4.mjs && node harness/fix0161.mjs && node harness/fix0162.mjs && node harness/notes.mjs && node harness/fix0171.mjs && node harness/adopt.mjs && node harness/archive.mjs && node harness/backups.mjs && node harness/worlds.mjs && node harness/security.mjs && node harness/onboarding.mjs && node harness/ws5.mjs && node harness/ws5b.mjs && node harness/ws6.mjs && node harness/ws6b.mjs && node harness/ws7.mjs && node harness/ws8.mjs && node harness/design.mjs && node harness/design2.mjs && node harness/fixes0282.mjs && node harness/features.mjs && node harness/startup.mjs && node harness/review0309.mjs && node harness/editions.mjs && node harness/transfer0305.mjs",
+		"release": "node scripts/release.mjs"
+	},
+	"keywords": [
+		"obsidian",
+		"worldbuilding",
+		"database",
+		"fiction"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"devDependencies": {
+		"@types/node": "^22.15.17",
+		"esbuild": "^0.25.5",
+		"obsidian": "~1.13.1",
+		"tsx": "^4.19.0",
+		"tslib": "^2.8.1",
+		"typescript": "^5.8.3",
+		"playwright": "^1.56.0"
+	},
+	"dependencies": {
+		"pdf-lib": "1.17.1",
+		"@codemirror/state": "6.5.0",
+		"@codemirror/view": "6.38.6"
+	},
+	"author": "Novalith"
+}

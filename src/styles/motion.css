@@ -1,0 +1,136 @@
+/*
+ * Motion (polish round): one small vocabulary for everything that answers the pointer.
+ * Only transform, opacity and colors are animated — never layout or shadows directly — so
+ * hovering stays smooth and cheap even on long lists. A card's lift shadow is drawn on a
+ * pseudo-element that fades in. Touch screens don't get hover lifts; "Animations" off and
+ * the system's reduced-motion setting turn everything off (tokens.css).
+ */
+
+/* Cards that open something: lift, tint the edge, shadow fades in. */
+.worldsmith :is(.ws-card, .ws-vtile, .ws-bcard, .ws-media-card, button.ws-stat, .ws-feature, .ws-spotlight) {
+	position: relative;
+	transition:
+		transform var(--ws-dur) var(--ws-ease-out),
+		border-color var(--ws-dur) var(--ws-ease-out),
+		background-color var(--ws-dur) var(--ws-ease-out);
+}
+/* Cards that clip their content (overflow: hidden) can't show a shadow drawn on a child, so
+   they get theirs directly; the rest fade one in on a pseudo-element. */
+.worldsmith :is(.ws-vtile, .ws-bcard, .ws-media-card) {
+	transition:
+		transform var(--ws-dur) var(--ws-ease-out),
+		border-color var(--ws-dur) var(--ws-ease-out),
+		box-shadow var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith :is(.ws-card, button.ws-stat)::after {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	border-radius: inherit;
+	box-shadow: var(--ws-lift);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity var(--ws-dur) var(--ws-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+	.worldsmith :is(.ws-card, .ws-vtile, .ws-bcard, .ws-media-card, button.ws-stat):hover {
+		transform: translateY(-2px);
+	}
+	.worldsmith :is(.ws-card, button.ws-stat):hover {
+		box-shadow: none;
+	}
+	.worldsmith :is(.ws-vtile, .ws-bcard, .ws-media-card):hover {
+		box-shadow: var(--ws-lift);
+	}
+	.worldsmith :is(.ws-card, button.ws-stat):hover::after {
+		opacity: 1;
+	}
+	/* Pictures drift a touch closer. */
+	.worldsmith :is(.ws-vtile, .ws-media-card) :is(img, .ws-vtile__img, .ws-media-card__img) {
+		transition: transform var(--ws-dur-slow) var(--ws-ease-out);
+	}
+	.worldsmith :is(.ws-vtile, .ws-media-card):hover :is(.ws-vtile__img, .ws-media-card__img) {
+		transform: scale(1.035);
+	}
+}
+/* Pressing gives a small, quick give. */
+.worldsmith :is(.ws-card, .ws-vtile, .ws-bcard, button.ws-stat):active {
+	transform: translateY(0) scale(0.99);
+	transition-duration: var(--ws-dur-fast);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-btn {
+	transition:
+		background-color var(--ws-dur) var(--ws-ease-out),
+		border-color var(--ws-dur) var(--ws-ease-out),
+		color var(--ws-dur) var(--ws-ease-out),
+		transform var(--ws-dur-fast) var(--ws-ease-out);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-btn:active:not(:disabled) {
+	transform: scale(0.97);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-btn .ws-btn__icon {
+	transition: transform var(--ws-dur) var(--ws-ease-spring);
+}
+@media (hover: hover) and (pointer: fine) {
+	:is(.worldsmith, .worldsmith-modal) .ws-btn--primary:hover .ws-btn__icon {
+		transform: scale(1.12);
+	}
+}
+
+/* Rows (lists, tables, menus inside panes): a soft background, no jumping. */
+.worldsmith :is(.ws-list-row, .ws-table__row, .ws-mini-list__row, .ws-nav-item, .ws-vtab, .ws-segmented__item, .ws-tool-btn, .ws-vchip, .ws-quick__item) {
+	transition:
+		background-color var(--ws-dur) var(--ws-ease-out),
+		border-color var(--ws-dur) var(--ws-ease-out),
+		color var(--ws-dur) var(--ws-ease-out);
+}
+/* Sidebar: the icon leans in. */
+.worldsmith .ws-nav-item__icon {
+	transition: transform var(--ws-dur) var(--ws-ease-spring);
+}
+@media (hover: hover) and (pointer: fine) {
+	.worldsmith .ws-nav-item:hover .ws-nav-item__icon {
+		transform: translateX(1px) scale(1.08);
+	}
+}
+.worldsmith .ws-nav-item:active {
+	transform: scale(0.985);
+}
+
+/* Pages and panels arrive softly. */
+@keyframes ws-page-in {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+.worldsmith .ws-shell__page > .ws-page {
+	animation: ws-page-in var(--ws-dur-slow) var(--ws-ease-out) backwards;
+}
+@keyframes ws-pop-in {
+	from {
+		opacity: 0;
+		transform: translateY(-3px) scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+:is(.worldsmith, .worldsmith-modal) .ws-popover {
+	transform-origin: top left;
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease-out);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-popover.is-above {
+	transform-origin: bottom left;
+}
+
+/* Keyboard focus: a crisp ring that eases in. */
+.worldsmith :is(button, a, [tabindex]):focus-visible {
+	outline-offset: 2px;
+	transition: outline-offset var(--ws-dur-fast) var(--ws-ease-out);
+}

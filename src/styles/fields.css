@@ -1,0 +1,691 @@
+/* ── Properties: sections and fields ───────────────────────────────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-props {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+:is(.worldsmith, .worldsmith-modal) .ws-section + .ws-section {
+	border-top: 1px solid var(--ws-border);
+	padding-top: 6px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: calc(100% + 12px);
+	height: 36px;
+	margin: 0 -6px;
+	padding: 0 6px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__head:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__caret {
+	color: var(--ws-faint);
+	transition: transform var(--ws-dur) var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__caret svg {
+	width: 14px;
+	height: 14px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section.is-collapsed .ws-section__caret {
+	transform: rotate(-90deg);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__icon {
+	color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__icon svg {
+	width: 15px;
+	height: 15px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__label {
+	flex: 1;
+	font-family: var(--ws-font-display);
+	font-size: 0.98rem;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__count {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__count.is-complete {
+	color: var(--color-green);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section__body {
+	padding: 6px 0 14px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-section.is-collapsed .ws-section__body {
+	display: none;
+}
+
+/* Field grid: 6 tracks → full = 6, half = 3, third = 2 */
+:is(.worldsmith, .worldsmith-modal) .ws-fields {
+	display: grid;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: var(--ws-field-gap) 18px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop {
+	grid-column: span 3;
+	min-width: 0;
+	border-radius: var(--ws-radius);
+	transition: background 600ms var(--ws-ease), box-shadow 600ms var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop--full { grid-column: span 6; }
+:is(.worldsmith, .worldsmith-modal) .ws-prop--third { grid-column: span 2; }
+:is(.worldsmith, .worldsmith-modal) .ws-props--single .ws-prop,
+.worldsmith[data-ws-size='narrow'] .ws-prop {
+	grid-column: span 6;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop.is-flash {
+	background: color-mix(in srgb, var(--ws-accent) 10%, transparent);
+	box-shadow: 0 0 0 6px color-mix(in srgb, var(--ws-accent) 10%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop__label {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	margin-bottom: 3px;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+	line-height: 1.3;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop__req {
+	color: var(--color-red);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop__value {
+	min-width: 0;
+	font-family: var(--ws-font-body);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop__msg {
+	display: none;
+	margin-top: 3px;
+	font-family: var(--ws-font-ui);
+	font-size: 11.5px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop.is-invalid .ws-prop__msg {
+	display: block;
+	color: var(--text-error, var(--color-red));
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop.has-warning .ws-prop__msg {
+	display: block;
+	color: var(--text-warning, var(--color-orange));
+}
+:is(.worldsmith, .worldsmith-modal) .ws-prop.is-invalid .ws-field-input {
+	border-color: var(--color-red);
+}
+
+/* More fields disclosure */
+:is(.worldsmith, .worldsmith-modal) .ws-more {
+	margin-top: 10px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	height: 26px;
+	padding: 0 8px 0 4px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more__toggle:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more__caret svg {
+	width: 13px;
+	height: 13px;
+	transition: transform var(--ws-dur) var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more.is-open .ws-more__caret svg {
+	transform: rotate(90deg);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more__fields {
+	display: none;
+	margin-top: 10px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-more.is-open .ws-more__fields {
+	display: grid;
+}
+
+/* ── Inline editors: quiet until hovered or focused ─────────────────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-field-input {
+	display: block;
+	width: 100%;
+	min-height: 30px;
+	margin: 0;
+	padding: 4px 8px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 0.95rem;
+	line-height: 1.5;
+	transition: background var(--ws-dur), border-color var(--ws-dur), box-shadow var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input--multi {
+	resize: none;
+	overflow: hidden;
+	min-height: 30px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input::placeholder {
+	color: var(--ws-faint);
+	opacity: 0.8;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input:focus {
+	outline: none;
+	border-color: var(--ws-focus);
+	background: var(--ws-bg);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input--num {
+	font-variant-numeric: tabular-nums;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-row .ws-field-input.ws-field-input--num {
+	flex: 0 1 9rem;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input--mono {
+	font-family: var(--font-monospace);
+	font-size: 0.85rem;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-input--short {
+	width: 72px;
+	flex: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-row .ws-field-input {
+	flex: 1;
+	min-width: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-row--percent .ws-bar {
+	max-width: 160px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-unit {
+	color: var(--ws-faint);
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+	white-space: nowrap;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-display {
+	font-family: var(--ws-font-body);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-display.is-empty {
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-link {
+	color: var(--text-accent);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Rich text */
+:is(.worldsmith, .worldsmith-modal) .ws-rich__preview {
+	min-height: 30px;
+	margin: 0 -8px;
+	padding: 4px 8px;
+	border-radius: var(--ws-radius);
+	cursor: text;
+	font-family: var(--ws-font-body);
+	transition: background var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rich__preview:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rich__preview.is-empty {
+	color: var(--ws-faint);
+	font-style: italic;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rich.is-editing {
+	margin: 0 -8px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-markdown > :first-child { margin-top: 0; }
+:is(.worldsmith, .worldsmith-modal) .ws-markdown > :last-child { margin-bottom: 0; }
+:is(.worldsmith, .worldsmith-modal) .ws-markdown p { line-height: 1.6; }
+:is(.worldsmith, .worldsmith-modal) .ws-description .ws-rich__preview:not(.is-empty) {
+	font-size: 1.04rem;
+	line-height: 1.65;
+}
+
+/* Select trigger */
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	max-width: 100%;
+	min-height: 30px;
+	height: auto;
+	padding: 3px 6px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger__placeholder {
+	color: var(--ws-faint);
+	font-family: var(--ws-font-body);
+	font-size: 0.95rem;
+	padding: 0 2px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger__caret {
+	color: var(--ws-faint);
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger:hover .ws-select-trigger__caret,
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger:focus-visible .ws-select-trigger__caret {
+	opacity: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-select-trigger__caret svg {
+	width: 13px;
+	height: 13px;
+}
+
+/* Chip list editors */
+:is(.worldsmith, .worldsmith-modal) .ws-chips--editable {
+	min-height: 30px;
+	padding: 3px 4px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius);
+	transition: background var(--ws-dur), border-color var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-list-editor:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-list-editor:focus-within {
+	border-color: var(--ws-focus);
+	background: var(--ws-bg);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-list-editor__input {
+	flex: 1;
+	min-width: 90px;
+	height: 24px;
+	padding: 0 4px;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 0.92rem;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-list-editor__input:focus {
+	outline: none;
+	box-shadow: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-list-editor__input::placeholder {
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chip-add {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	height: 24px;
+	padding: 0 8px;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chip-add:hover {
+	border-style: solid;
+	color: var(--ws-text);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chip-add svg {
+	width: 12px;
+	height: 12px;
+}
+
+/* Switch */
+:is(.worldsmith, .worldsmith-modal) .ws-switch {
+	position: relative;
+	width: 34px;
+	height: 20px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: var(--ws-border-strong);
+	box-shadow: none;
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-switch__knob {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 14px;
+	height: 14px;
+	border-radius: 999px;
+	background: var(--ws-bg);
+	box-shadow: var(--shadow-s);
+	transition: transform var(--ws-dur) var(--ws-ease);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-switch.is-on {
+	background: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-switch.is-on .ws-switch__knob {
+	transform: translateX(14px);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-bool svg {
+	width: 15px;
+	height: 15px;
+	color: var(--ws-faint);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-bool.is-on svg {
+	color: var(--color-green);
+}
+
+/* Rating */
+:is(.worldsmith, .worldsmith-modal) .ws-rating {
+	display: inline-flex;
+	gap: 2px;
+	padding: 4px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rating.is-readonly {
+	cursor: default;
+	padding: 0;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rating__star svg {
+	width: 17px;
+	height: 17px;
+	color: var(--ws-border-strong);
+	transition: color 100ms, transform 100ms;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rating__star.is-on svg {
+	color: var(--color-yellow);
+	fill: var(--color-yellow);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-rating:not(.is-readonly) .ws-rating__star:hover svg {
+	transform: scale(1.15);
+}
+
+/* Fictional date */
+:is(.worldsmith, .worldsmith-modal) .ws-chrono {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__approx {
+	height: 26px;
+	padding: 0 7px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-family: var(--ws-font-body);
+	font-style: italic;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__approx:hover {
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__approx.is-on {
+	color: var(--ws-text);
+	border-color: var(--ws-border);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__year {
+	width: 84px;
+	flex: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__era {
+	width: 80px;
+	flex: none;
+}
+
+:is(.worldsmith, .worldsmith-modal) .ws-chrono--cal {
+	flex-wrap: wrap;
+	row-gap: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono .is-hidden {
+	display: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__day {
+	width: 52px;
+	flex: none;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono--cal .ws-chrono__year {
+	width: 72px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__sel {
+	height: 28px;
+	max-width: 150px;
+	min-width: 0;
+	padding-block: 0;
+	font-size: 13px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__erasel {
+	max-width: 96px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__pick {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono__pick svg {
+	width: 15px;
+	height: 15px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono-pop {
+	padding: 10px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono-grid__year {
+	color: var(--ws-muted);
+	font-weight: 500;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-chrono-grid__note {
+	margin-top: 6px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-align: center;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-dp__day.is-festival:not(.is-selected) {
+	color: var(--ws-accent);
+}
+
+/* Media fields */
+:is(.worldsmith, .worldsmith-modal) .ws-image-field {
+	position: relative;
+	width: 100%;
+	max-width: 220px;
+	border-radius: var(--ws-radius);
+	overflow: hidden;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__tools {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	display: flex;
+	gap: 2px;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field:hover .ws-image-field__tools,
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__tools:focus-within {
+	opacity: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-image-field__tools .ws-btn {
+	background: color-mix(in srgb, var(--ws-bg) 85%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) :is(.ws-image-field__add, .ws-gallery-field__add) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	height: 72px;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) :is(.ws-image-field__add, .ws-gallery-field__add):hover {
+	color: var(--ws-text);
+	border-color: var(--ws-muted);
+	background: var(--ws-hover);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-field-thumb {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--ws-radius-s);
+	object-fit: cover;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-thumb-strip {
+	display: flex;
+	gap: 4px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-color-input {
+	width: 30px;
+	height: 30px;
+	padding: 2px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	flex: none;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-icon-pick {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	flex: none;
+	padding: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-accent);
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-icon-pick:hover {
+	border-color: var(--ws-accent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-icon-pick--sm {
+	width: 32px;
+	height: 32px;
+	border-radius: var(--ws-radius);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-icon-pick.is-empty {
+	color: var(--ws-faint);
+	border-style: dashed;
+}
+/* Section header actions (add field / edit in Type Studio) — revealed on hover. */
+.worldsmith .ws-section__bar {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+.worldsmith .ws-section__bar .ws-section__head {
+	flex: 1;
+	width: auto;
+	min-width: 0;
+	margin-right: 0;
+}
+.worldsmith .ws-section__actions {
+	display: flex;
+	gap: 2px;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-section__bar:hover .ws-section__actions,
+.worldsmith .ws-section__actions:focus-within {
+	opacity: 1;
+}
+
+/* Field label options button. */
+.worldsmith .ws-prop__label-text {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-prop__menu {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 16px;
+	margin-left: 2px;
+	padding: 0;
+	border: none;
+	border-radius: 4px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	opacity: 0;
+	cursor: pointer;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-prop__menu svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-prop__menu:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-prop:hover .ws-prop__menu,
+.worldsmith .ws-prop__menu:focus-visible {
+	opacity: 1;
+}
+/* Touch screens have no hover: keep the affordances visible but quiet. */
+@media (hover: none) {
+	.worldsmith .ws-section__actions,
+	.worldsmith .ws-prop__menu {
+		opacity: 0.7;
+	}
+}
+
+/* A stored link that isn't opened (javascript:, file:, data:…), 0.20.2. */
+.worldsmith .ws-field-link.is-unsafe {
+	color: var(--ws-muted);
+	text-decoration: none;
+	cursor: help;
+	overflow-wrap: anywhere;
+}

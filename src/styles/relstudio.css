@@ -1,0 +1,588 @@
+/* ── Studio → Relationships (polish round) ─────────────────────────────────────── */
+
+.worldsmith .ws-page--studio .ws-studio {
+	grid-template-columns: 280px minmax(0, 1fr);
+}
+/* Narrow and medium panes: the list becomes a select above the editor. */
+.worldsmith[data-ws-size='narrow'] .ws-page--studio .ws-studio,
+.worldsmith[data-ws-size='medium'] .ws-page--studio .ws-studio {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith .ws-rlist__tools {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-bottom: 8px;
+	background: var(--ws-bg);
+}
+.worldsmith .ws-rlist__search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+.worldsmith .ws-rlist__search > .ws-icon {
+	position: absolute;
+	left: 9px;
+	display: flex;
+	color: var(--ws-faint);
+	pointer-events: none;
+}
+.worldsmith .ws-rlist__search svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-studio__list .ws-rlist__input {
+	width: 100%;
+	height: 30px;
+	padding: 0 10px 0 30px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	font-size: 12.5px;
+}
+.worldsmith .ws-rlist__filter {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2px;
+	padding: 2px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-studio__list .ws-rlist__fbtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	height: 26px;
+	padding: 0 6px;
+	border: none;
+	border-radius: calc(var(--ws-radius) - 2px);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur) var(--ws-ease-out), color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-studio__list .ws-rlist__fbtn:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-studio__list .ws-rlist__fbtn.is-active {
+	background: var(--background-primary);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+	color: var(--ws-text);
+	font-weight: 500;
+}
+.worldsmith .ws-rlist__fn {
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-rlist__empty {
+	padding: 18px 8px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+	text-align: center;
+}
+.worldsmith .ws-rlist__cat {
+	flex: none;
+}
+.worldsmith .ws-studio__list .ws-rlist__cat-head {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	width: 100%;
+	height: 28px;
+	margin-top: 6px;
+	padding: 0 6px;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.worldsmith .ws-studio__list .ws-rlist__cat-head:hover {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-rlist__caret {
+	display: flex;
+	transition: transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-rlist__caret svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-rlist__cat.is-folded .ws-rlist__caret {
+	transform: rotate(-90deg);
+}
+.worldsmith .ws-rlist__cat-label {
+	flex: 1;
+	text-align: left;
+}
+.worldsmith .ws-rlist__cat-n {
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0;
+}
+.worldsmith .ws-studio__list .ws-rlist__item {
+	display: grid;
+	grid-template-columns: 28px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 9px;
+	width: 100%;
+	min-height: 44px;
+	padding: 5px 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+	transition: background-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-rlist__glyph {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--ws-tint) 13%, transparent);
+	color: var(--ws-tint);
+	transition: transform var(--ws-dur) var(--ws-ease-spring);
+}
+.worldsmith .ws-rlist__glyph svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-rlist__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith .ws-rlist__name,
+.worldsmith .ws-rlist__reads {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-rlist__name {
+	font-size: 13px;
+	font-weight: 500;
+}
+.worldsmith .ws-rlist__reads {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-rlist__n {
+	min-width: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	line-height: 18px;
+	text-align: center;
+}
+.worldsmith .ws-rlist__badge {
+	padding: 0 6px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+	color: var(--ws-accent);
+	font-size: 10.5px;
+	font-weight: 500;
+	line-height: 18px;
+}
+.worldsmith .ws-studio__list .ws-rlist__item:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-studio__list .ws-rlist__item:hover .ws-rlist__glyph {
+	transform: scale(1.06);
+}
+.worldsmith .ws-studio__list .ws-rlist__item.is-active {
+	background: color-mix(in srgb, var(--ws-tint) 11%, transparent);
+	box-shadow: inset 2px 0 0 var(--ws-tint);
+}
+
+/* Hero */
+.worldsmith .ws-rhero {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	margin-bottom: 16px;
+	padding: 18px 20px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--ws-tint) 13%, transparent), transparent 55%),
+		var(--ws-surface);
+}
+.worldsmith .ws-rhero .ws-rhero__mark {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	padding: 0;
+	border: none;
+	border-radius: 15px;
+	background: color-mix(in srgb, var(--ws-tint) 18%, transparent);
+	box-shadow: none;
+	color: var(--ws-tint);
+	cursor: pointer;
+	transition: transform var(--ws-dur) var(--ws-ease-spring), background-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-rhero .ws-rhero__mark:hover {
+	transform: scale(1.05) rotate(-3deg);
+	background: color-mix(in srgb, var(--ws-tint) 26%, transparent);
+}
+.worldsmith .ws-rhero__mark svg {
+	width: 26px;
+	height: 26px;
+}
+.worldsmith .ws-rhero__text {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+.worldsmith .ws-rhero .ws-rhero__name {
+	width: 100%;
+	padding: 0 4px;
+	margin-left: -4px;
+	font-family: var(--ws-font-display);
+	font-size: 1.6rem;
+	font-weight: 600;
+}
+.worldsmith .ws-rhero__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-rhero .ws-rhero__cat {
+	field-sizing: content;
+	min-width: 60px;
+	height: 22px;
+	padding: 0 8px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	color: var(--ws-tint);
+	font-size: 12px;
+	font-weight: 500;
+}
+.worldsmith .ws-rhero__dot {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-rhero .ws-rhero__desc {
+	width: 100%;
+	margin: 4px 0 0 -4px;
+	padding: 2px 4px;
+	color: var(--ws-muted);
+	font-size: 13.5px;
+	resize: none;
+}
+
+/* Cards */
+.worldsmith .ws-rgrid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+}
+.worldsmith .ws-rcard {
+	min-width: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-rcard--wide {
+	grid-column: 1 / -1;
+}
+.worldsmith .ws-rcard__head {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 14px 16px 0;
+}
+.worldsmith .ws-rcard__icon {
+	display: flex;
+	margin-top: 2px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-rcard__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-rcard__title {
+	font-size: 14px;
+	font-weight: 600;
+}
+.worldsmith .ws-rcard__hint {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-rcard__body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px 16px 16px;
+}
+.worldsmith .ws-rcard__empty {
+	color: var(--ws-faint);
+	font-size: 12.5px;
+}
+
+/* The picture of a relationship */
+.worldsmith .ws-rdiag {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(140px, 1.3fr) minmax(0, 1fr);
+	align-items: center;
+	gap: 8px;
+	padding: 18px 12px;
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+}
+.worldsmith .ws-rdiag__node {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+	text-align: center;
+}
+.worldsmith .ws-rdiag__glyph {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--ws-tint) 15%, transparent);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--ws-tint) 6%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-rdiag__glyph svg {
+	width: 20px;
+	height: 20px;
+}
+.worldsmith .ws-rdiag__name {
+	max-width: 100%;
+	overflow: hidden;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-rdiag__kind {
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-rdiag__link {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	padding: 8px 0;
+}
+.worldsmith .ws-rdiag__line {
+	position: relative;
+	height: 2px;
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--ws-tint) 55%, transparent);
+}
+.worldsmith .ws-rdiag__line::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: 8px;
+	height: 8px;
+	border-top: 2px solid color-mix(in srgb, var(--ws-tint) 75%, transparent);
+	border-right: 2px solid color-mix(in srgb, var(--ws-tint) 75%, transparent);
+}
+.worldsmith .ws-rdiag__line.is-fwd::after,
+.worldsmith .ws-rdiag__line.is-both::after {
+	right: 0;
+	transform: translateY(-50%) rotate(45deg);
+}
+.worldsmith .ws-rdiag__line.is-rev::after {
+	left: 0;
+	transform: translateY(-50%) rotate(-135deg);
+}
+.worldsmith .ws-rdiag__line.is-both::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 8px;
+	height: 8px;
+	border-top: 2px solid color-mix(in srgb, var(--ws-tint) 75%, transparent);
+	border-right: 2px solid color-mix(in srgb, var(--ws-tint) 75%, transparent);
+	transform: translateY(-50%) rotate(-135deg);
+}
+.worldsmith .ws-rdiag__label {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	padding: 1px 10px;
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 35%, transparent);
+	border-radius: 999px;
+	background: var(--background-primary);
+	color: var(--ws-tint);
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	transform: translate(-50%, -50%);
+}
+.worldsmith .ws-rdiag__sentences {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-rdiag__sentence {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-rdiag__sentence svg {
+	width: 13px;
+	height: 13px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-rwords {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 12px;
+	margin-top: 4px;
+	padding-top: 12px;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith .ws-rwords__label {
+	margin-bottom: 4px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 500;
+}
+.worldsmith .ws-rwords__hint {
+	margin-top: 4px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-rconnects {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+}
+.worldsmith .ws-rels__edge {
+	gap: 6px;
+}
+.worldsmith .ws-rels__edge-arrow {
+	display: flex;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-rels__edge-arrow svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-rdanger {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-top: 14px;
+	padding: 14px 16px;
+	border: 1px solid color-mix(in srgb, var(--color-red) 30%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith .ws-rdanger__text {
+	flex: 1;
+}
+.worldsmith .ws-rdanger__title {
+	font-weight: 600;
+}
+.worldsmith[data-ws-size='narrow'] .ws-rgrid,
+.worldsmith[data-ws-size='medium'] .ws-rgrid {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-rdiag {
+	grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr);
+	padding: 14px 6px;
+}
+
+/* ── Type Studio: the same family as Relationships ─────────────────────────────── */
+
+.worldsmith .ws-studio__list .ws-rlist__cat-head.is-static {
+	cursor: default;
+}
+.worldsmith .ws-studio__list .ws-rlist__item.is-archived {
+	opacity: 0.6;
+}
+.worldsmith .ws-page--studio .ws-studio__type {
+	gap: 16px;
+	margin-bottom: 14px;
+	padding: 18px 20px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(120% 160% at 0% 0%, color-mix(in srgb, var(--ws-tint) 14%, transparent), transparent 55%),
+		var(--ws-surface);
+}
+.worldsmith .ws-page--studio .ws-studio__type-mark {
+	width: 52px;
+	height: 52px;
+	border-radius: 15px;
+	background: color-mix(in srgb, var(--ws-tint) 18%, transparent);
+}
+.worldsmith .ws-page--studio .ws-studio__type-mark svg {
+	width: 26px;
+	height: 26px;
+}
+.worldsmith .ws-page--studio .ws-studio__type-name {
+	font-size: 1.6rem;
+	font-weight: 600;
+}
+.worldsmith .ws-page--studio .ws-studio__type-meta {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+/* Tabs as a quiet segmented strip. */
+.worldsmith .ws-page--studio .ws-studio__main > .ws-tabs {
+	gap: 2px;
+	width: fit-content;
+	max-width: 100%;
+	margin-bottom: 18px;
+	padding: 3px;
+	border: none;
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-page--studio .ws-studio__main > .ws-tabs .ws-tab {
+	height: 32px;
+	margin: 0;
+	padding: 0 12px;
+	border: none;
+	border-radius: var(--ws-radius);
+	transition: background-color var(--ws-dur) var(--ws-ease-out), color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-page--studio .ws-studio__main > .ws-tabs .ws-tab::after {
+	display: none;
+}
+.worldsmith .ws-page--studio .ws-studio__main > .ws-tabs .ws-tab:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-page--studio .ws-studio__main > .ws-tabs .ws-tab.is-active {
+	background: var(--background-primary);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.18);
+	color: var(--ws-text);
+}

@@ -1,0 +1,2151 @@
+/* ── Time (0.10): Calendars, Timeline, World health ───────────────────────────── */
+
+/* Calendars: the start screen */
+.worldsmith .ws-cal-start {
+	align-items: center;
+}
+.worldsmith .ws-cal-start .ws-rhero__mark {
+	cursor: default;
+}
+.worldsmith .ws-cal-start__title {
+	font-family: var(--ws-font-display);
+	font-size: 1.35rem;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-templates {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: 12px;
+}
+.worldsmith .ws-cal-templates .ws-cal-template {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	height: auto;
+	padding: 16px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: border-color var(--ws-dur) var(--ws-ease-out), transform var(--ws-dur) var(--ws-ease-out), box-shadow var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-cal-templates .ws-cal-template:hover {
+	border-color: color-mix(in srgb, var(--color-purple) 45%, var(--ws-border));
+	box-shadow: var(--ws-lift);
+	transform: translateY(-1px);
+}
+.worldsmith .ws-cal-template__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--color-purple) 14%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith .ws-cal-template__icon svg {
+	width: 18px;
+	height: 18px;
+}
+.worldsmith .ws-cal-template__name {
+	font-weight: 600;
+}
+.worldsmith .ws-cal-template__blurb {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+.worldsmith .ws-cal-template__strip {
+	display: flex;
+	gap: 2px;
+	width: 100%;
+	height: 6px;
+	margin-top: auto;
+	padding-top: 0;
+}
+.worldsmith .ws-cal-template__seg {
+	flex: 1;
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--color-purple) 32%, transparent);
+}
+.worldsmith .ws-cal-template__seg.is-fest {
+	background: var(--ws-accent);
+}
+.worldsmith .ws-cal-template__seg.is-era {
+	background: linear-gradient(90deg, color-mix(in srgb, var(--color-orange) 40%, transparent), color-mix(in srgb, var(--color-cyan) 40%, transparent));
+}
+
+/* Calendars: the editor */
+.worldsmith .ws-cal-hero__mark {
+	cursor: default;
+}
+.worldsmith .ws-cal-hero__actions {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 4px;
+}
+.worldsmith .ws-cal-rows {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-cal-rows--months {
+	display: grid;
+	grid-template-columns: 26px minmax(0, 1fr) 110px 70px auto;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-cal-rows__head {
+	padding: 0 2px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-cal-row {
+	padding: 2px;
+	border-radius: var(--ws-radius-s);
+	transition: background-color var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith .ws-cal-row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-cal-row__n {
+	color: var(--ws-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+.worldsmith .ws-cal-row__tools {
+	display: flex;
+	align-items: center;
+	gap: 0;
+}
+.worldsmith .ws-cal-row__tools .ws-btn {
+	opacity: 0.55;
+}
+.worldsmith .ws-cal-row:hover .ws-cal-row__tools .ws-btn,
+.worldsmith .ws-cal-era:hover .ws-cal-row__tools .ws-btn,
+.worldsmith .ws-cal-row__tools .ws-btn:focus-visible {
+	opacity: 1;
+}
+.worldsmith .ws-cal-text.ws-input-like,
+.worldsmith .ws-cal-num {
+	height: 30px;
+	min-width: 0;
+	padding: 0 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	font-size: 13px;
+}
+.worldsmith .ws-cal-num {
+	width: 70px;
+	flex: none;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-cal-text--short.ws-input-like {
+	width: 110px;
+	flex: none;
+}
+.worldsmith .ws-cal-add {
+	display: flex;
+	padding-top: 4px;
+}
+.worldsmith .ws-cal-sel {
+	height: 30px;
+	max-width: 100%;
+	font-size: 13px;
+}
+.worldsmith .ws-cal-line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	padding-top: 6px;
+}
+.worldsmith .ws-cal-line__label {
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+
+/* Week */
+.worldsmith .ws-weekdays {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-weekdays__day {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-weekdays__n {
+	width: 20px;
+	flex: none;
+	color: var(--ws-faint);
+	font-size: 12px;
+	text-align: center;
+}
+
+/* Festivals */
+.worldsmith .ws-cal-fest {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 4%, var(--ws-surface));
+}
+.worldsmith .ws-cal-fest__top {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-cal-fest__line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+
+/* Eras */
+.worldsmith .ws-cal-ribbon {
+	display: flex;
+	gap: 3px;
+	margin-bottom: 6px;
+	overflow: hidden;
+	border-radius: 999px;
+}
+.worldsmith .ws-cal-ribbon__era {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	min-width: 0;
+	height: 28px;
+	padding: 0 12px;
+	background: color-mix(in srgb, var(--ws-tint) 22%, transparent);
+	color: color-mix(in srgb, var(--ws-tint) 70%, var(--ws-text));
+	font-size: 12px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-ribbon__era.is-down {
+	background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ws-tint) 22%, transparent) 0 8px, color-mix(in srgb, var(--ws-tint) 14%, transparent) 8px 16px);
+}
+.worldsmith .ws-cal-ribbon__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-ribbon__abbr {
+	flex: none;
+	opacity: 0.75;
+}
+.worldsmith .ws-cal-era {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-left: 3px solid var(--ws-tint);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-cal-era .ws-cal-era__dot {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin-top: 6px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: var(--ws-tint);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-tint) 20%, transparent);
+	cursor: pointer;
+}
+.worldsmith .ws-cal-era__main {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+.worldsmith .ws-cal-era__top {
+	display: flex;
+	gap: 6px;
+}
+.worldsmith .ws-cal-era__example {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* Date style */
+.worldsmith .ws-cal-styles.ws-segmented {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	height: auto;
+	gap: 2px;
+}
+.worldsmith .ws-cal-styles .ws-segmented__item {
+	min-height: 30px;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-examples {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 10px 12px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-cal-examples__row {
+	display: flex;
+	gap: 10px;
+	font-size: 13px;
+}
+.worldsmith .ws-cal-examples__label {
+	width: 72px;
+	flex: none;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-cal-examples__value {
+	font-family: var(--ws-font-display);
+}
+
+/* Year at a glance */
+.worldsmith .ws-cal-glance__bar {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-cal-glance__year {
+	min-width: 90px;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 600;
+	text-align: center;
+}
+.worldsmith .ws-cal-glance__len {
+	margin-left: auto;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-cal-glance {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 10px;
+}
+.worldsmith .ws-cal-glance__tile {
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-cal-glance__tile.is-festival {
+	border-color: color-mix(in srgb, var(--ws-accent) 40%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-accent) 7%, var(--ws-bg));
+}
+.worldsmith .ws-cal-glance__name {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 6px;
+	margin-bottom: 8px;
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-glance__name > span:first-child {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-glance__days {
+	flex: none;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 400;
+}
+.worldsmith .ws-cal-glance__grid {
+	display: grid;
+	gap: 2px;
+}
+.worldsmith .ws-cal-glance__cell {
+	aspect-ratio: 1;
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--color-purple) 22%, transparent);
+}
+.worldsmith .ws-cal-glance__tile.is-festival .ws-cal-glance__cell {
+	background: color-mix(in srgb, var(--ws-accent) 55%, transparent);
+}
+.worldsmith .ws-cal-glance__cell.is-blank {
+	background: transparent;
+}
+
+.worldsmith[data-ws-size='narrow'] .ws-cal-rows--months {
+	grid-template-columns: 20px minmax(0, 1fr) 64px auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-rows--months > :nth-child(3) {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-rows--months .ws-cal-num {
+	width: 64px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-row__mv {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-hero {
+	flex-wrap: wrap;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-glance {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-glance__tile {
+	padding: 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-glance__days {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-glance__grid {
+	gap: 1px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-era__top {
+	flex-wrap: wrap;
+}
+
+/* Timeline page (refreshed in 0.12 to match the calendars page) */
+.worldsmith .ws-tl.ws-page {
+	max-width: none;
+}
+.worldsmith .ws-tl__show:empty {
+	display: none;
+}
+.worldsmith .ws-tl-show {
+	margin: 0 0 14px;
+}
+.worldsmith .ws-tl-show .ws-tl-show__stats {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.worldsmith .ws-tl__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 14px;
+}
+.worldsmith .ws-tl__types {
+	display: flex;
+	flex: 1 1 320px;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-tl__types .ws-tl__type {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 11px 0 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur-fast) var(--ws-ease-out), border-color var(--ws-dur-fast) var(--ws-ease-out), color var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith .ws-tl__types .ws-tl__type:hover {
+	border-color: color-mix(in srgb, var(--ws-tint, var(--color-purple)) 45%, var(--ws-border));
+	color: var(--ws-text);
+}
+.worldsmith .ws-tl__types .ws-tl__type.is-on {
+	border-color: color-mix(in srgb, var(--ws-tint, var(--color-purple)) 60%, transparent);
+	background: color-mix(in srgb, var(--ws-tint, var(--color-purple)) 13%, var(--ws-surface));
+	color: var(--ws-text);
+}
+.worldsmith .ws-tl__type-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--ws-tint, var(--ws-muted)) 15%, transparent);
+	color: var(--ws-tint, var(--ws-muted));
+}
+.worldsmith .ws-tl__type-icon svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-tl__type-n {
+	min-width: 18px;
+	padding: 0 5px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-text) 7%, transparent);
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	line-height: 17px;
+	text-align: center;
+}
+.worldsmith .ws-tl:not(.ws-tcard) .ws-tl__tools {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-left: auto;
+}
+.worldsmith .ws-tl__mode {
+	margin-left: 6px;
+}
+.worldsmith .ws-tl__note {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+	color: var(--ws-faint);
+	font-size: 12.5px;
+}
+.worldsmith .ws-tl__note + .ws-tl__note {
+	margin-top: 6px;
+}
+.worldsmith .ws-tl__note svg {
+	flex: none;
+	width: 14px;
+	height: 14px;
+}
+
+/* Timeline: the axis */
+.worldsmith .ws-tl-axis {
+	position: relative;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(60% 120% at 100% 0%, color-mix(in srgb, var(--color-purple) 6%, transparent), transparent 60%),
+		var(--ws-surface);
+}
+.worldsmith .ws-tl-axis__scroll {
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-x: contain;
+	border-radius: inherit;
+}
+.worldsmith .ws-tl-axis__canvas {
+	position: relative;
+	min-width: 100%;
+	padding-bottom: 10px;
+}
+.worldsmith .ws-tl-axis__ruler {
+	position: sticky;
+	top: 0;
+	z-index: 3;
+	height: 38px;
+	border-bottom: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--ws-bg) 55%, var(--ws-surface));
+}
+.worldsmith .ws-tl-axis__corner,
+.worldsmith .ws-tl-axis__lane-label {
+	position: sticky;
+	left: 0;
+	z-index: 4;
+	width: 172px;
+	background: var(--ws-surface);
+}
+.worldsmith .ws-tl-axis__corner {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	padding-left: 14px;
+	border-right: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--ws-bg) 55%, var(--ws-surface));
+}
+.worldsmith .ws-tl-axis__corner-text {
+	color: var(--color-purple);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-tl-axis__tick {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	border-left: 1px solid color-mix(in srgb, var(--color-purple) 35%, var(--ws-border));
+}
+.worldsmith .ws-tl-axis__tick span {
+	position: absolute;
+	top: 10px;
+	left: 7px;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 12.5px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl-axis__minor {
+	position: absolute;
+	bottom: 0;
+	height: 6px;
+	border-left: 1px solid var(--ws-border);
+}
+.worldsmith .ws-tl-axis__grid {
+	position: absolute;
+	top: 38px;
+	left: 0;
+	right: 0;
+	z-index: 0;
+	pointer-events: none;
+}
+.worldsmith .ws-tl-axis__gridline {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	border-left: 1px dashed color-mix(in srgb, var(--ws-border) 60%, transparent);
+}
+.worldsmith .ws-tl-axis__washes {
+	position: absolute;
+	top: 38px;
+	left: 0;
+	right: 0;
+	z-index: 0;
+	pointer-events: none;
+}
+.worldsmith .ws-tl-axis__wash {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	background: linear-gradient(180deg, color-mix(in srgb, var(--ws-tint) 9%, transparent), color-mix(in srgb, var(--ws-tint) 3%, transparent));
+	border-left: 1px dashed color-mix(in srgb, var(--ws-tint) 35%, transparent);
+}
+.worldsmith .ws-tl-axis__bands,
+.worldsmith .ws-tl-axis__lane {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-tl-axis__lane:last-child {
+	border-bottom: none;
+}
+.worldsmith .ws-tl-axis__lane-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 12px 10px 0 12px;
+	border-right: 1px solid var(--ws-border);
+	color: var(--ws-text);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-tl-axis__lane-icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	margin-top: -3px;
+	border-radius: 7px;
+	background: color-mix(in srgb, var(--ws-tint) 15%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-tl-axis__lane-icon--eras {
+	background: color-mix(in srgb, var(--color-purple) 15%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith .ws-tl-axis__lane-icon svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-tl-axis__lane-name {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl-axis__lane-n {
+	margin-left: auto;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-text) 7%, transparent);
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 17px;
+}
+.worldsmith .ws-tl-axis__band {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	height: 24px;
+	padding: 0 9px;
+	overflow: hidden;
+	border: none;
+	border-left: 3px solid var(--ws-tint);
+	border-radius: 7px;
+	background: linear-gradient(90deg, color-mix(in srgb, var(--ws-tint) 28%, transparent), color-mix(in srgb, var(--ws-tint) 14%, transparent));
+	box-shadow: none;
+	color: color-mix(in srgb, var(--ws-tint) 55%, var(--ws-text));
+	font-family: var(--ws-font-display);
+	font-size: 12.5px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+.worldsmith button.ws-tl-axis__band {
+	cursor: pointer;
+	transition: filter var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith button.ws-tl-axis__band:hover {
+	filter: brightness(1.12);
+}
+.worldsmith .ws-tl-axis__band-label {
+	position: sticky;
+	left: 180px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-tl-axis .ws-tl-axis__span {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	height: 24px;
+	min-width: 6px;
+	padding: 0 8px;
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 45%, transparent);
+	border-left: 3px solid var(--ws-tint);
+	border-radius: 7px;
+	background: linear-gradient(90deg, color-mix(in srgb, var(--ws-tint) 26%, var(--ws-surface)), color-mix(in srgb, var(--ws-tint) 12%, var(--ws-surface)));
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	overflow: visible;
+	cursor: pointer;
+	transition: box-shadow var(--ws-dur-fast) var(--ws-ease-out), transform var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith .ws-tl-axis .ws-tl-axis__span:hover,
+.worldsmith .ws-tl-axis .ws-tl-axis__span:focus-visible {
+	box-shadow: var(--ws-lift), 0 0 0 1px var(--ws-tint);
+}
+.worldsmith .ws-tl-axis__span-label {
+	position: sticky;
+	left: 180px;
+}
+/* A bar too short for its name: the name sits just after it. */
+.worldsmith .ws-tl-axis .ws-tl-axis__span.is-short .ws-tl-axis__span-label {
+	position: absolute;
+	left: calc(100% + 6px);
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-surface) 88%, transparent);
+}
+.worldsmith .ws-tl-axis .ws-tl-axis__pt {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.worldsmith .ws-tl-axis__dot {
+	flex: none;
+	width: 12px;
+	height: 12px;
+	border: 2px solid var(--ws-surface);
+	border-radius: 999px;
+	background: var(--ws-tint);
+	box-shadow: 0 0 0 1.5px var(--ws-tint), 0 0 0 5px color-mix(in srgb, var(--ws-tint) 16%, transparent);
+	transition: transform var(--ws-dur-fast) var(--ws-ease-spring);
+}
+.worldsmith .ws-tl-axis__pt:is(:hover, :focus-visible) .ws-tl-axis__dot {
+	transform: scale(1.25);
+}
+.worldsmith .ws-tl-axis__pt-label {
+	padding: 1px 7px;
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 25%, transparent);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 8%, var(--ws-surface));
+	transition: background-color var(--ws-dur-fast) var(--ws-ease-out), box-shadow var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith .ws-tl-axis .ws-tl-axis__pt:is(:hover, :focus-visible) .ws-tl-axis__pt-label {
+	background: color-mix(in srgb, var(--ws-tint) 20%, var(--ws-surface));
+	box-shadow: var(--ws-lift);
+}
+
+/* Hover card: the entry's name, dates in the calendar's words, and summary. */
+.worldsmith .ws-tl-axis__card {
+	position: absolute;
+	z-index: 6;
+	display: none;
+	width: 280px;
+	max-width: calc(100% - 16px);
+	padding: 11px 13px 12px;
+	border: 1px solid color-mix(in srgb, var(--ws-tint) 35%, var(--ws-border));
+	border-radius: var(--ws-radius);
+	background:
+		radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--ws-tint) 10%, transparent), transparent 60%),
+		var(--background-primary);
+	box-shadow: var(--shadow-l, var(--ws-lift));
+	pointer-events: none;
+}
+.worldsmith .ws-tl-axis__card.is-shown {
+	display: block;
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tl-axis__card-top {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+}
+.worldsmith .ws-tl-axis__card-mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--ws-tint) 16%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-tl-axis__card-mark svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-tl-axis__card-name {
+	margin-top: 6px;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+.worldsmith .ws-tl-axis__card-when {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 8px;
+	margin-top: 3px;
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-size: 13px;
+}
+.worldsmith .ws-tl-axis__card-len {
+	padding: 0 7px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+	color: color-mix(in srgb, var(--ws-tint) 60%, var(--ws-text));
+	font-family: var(--ws-font-ui);
+	font-size: 11px;
+	line-height: 18px;
+}
+.worldsmith .ws-tl-axis__card-sum {
+	margin-top: 7px;
+	padding-top: 7px;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.45;
+}
+
+/* Timeline: the list (cards by year under each era on the page; a plain list in widgets) */
+.worldsmith .ws-tl-list {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+.worldsmith .ws-tl-list:not(.is-compact) {
+	gap: 10px;
+}
+.worldsmith .ws-tl-list__era {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 10px 0 0;
+	color: var(--color-purple);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-tl-list__era::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	background: color-mix(in srgb, var(--color-purple) 25%, var(--ws-border));
+}
+.worldsmith .ws-tl-list__era:first-child {
+	margin-top: 0;
+}
+.worldsmith .ws-tl-list__era-mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 7px;
+	background: color-mix(in srgb, var(--color-purple) 14%, transparent);
+}
+.worldsmith .ws-tl-list__era-mark svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-tl-list__group {
+	display: grid;
+	grid-template-columns: 150px minmax(0, 1fr);
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-tl-list__when {
+	padding: 14px 16px;
+	border-right: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+	background: color-mix(in srgb, var(--color-purple) 5%, transparent);
+}
+.worldsmith .ws-tl-list__year {
+	font-family: var(--ws-font-display);
+	font-size: 1.15rem;
+	font-weight: 600;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-tl-list__count {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-tl-list__rows {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: 4px;
+}
+.worldsmith .ws-tl-list .ws-tl-list__row {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr) auto;
+	grid-template-areas: 'mark text date';
+	align-items: center;
+	gap: 12px;
+	height: auto;
+	min-height: 48px;
+	padding: 8px 10px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	position: relative;
+}
+.worldsmith .ws-tl-list .ws-tl-list__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-tl-list .ws-tl-list__row.is-current {
+	background: color-mix(in srgb, var(--ws-tint) 10%, transparent);
+}
+.worldsmith .ws-tl-list__date {
+	grid-area: date;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith .ws-tl-list__mark {
+	grid-area: mark;
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 16%, var(--ws-surface));
+	color: var(--ws-tint);
+}
+.worldsmith .ws-tl-list__mark.is-span {
+	border-radius: 9px;
+}
+.worldsmith .ws-tl-list__mark svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-tl-list__text {
+	grid-area: text;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith .ws-tl-list__name {
+	overflow: hidden;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl-list__kind {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-tl-list__sum {
+	margin-top: 2px;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl-list__more {
+	padding: 6px 8px 0;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-tl-list.is-compact .ws-tl-list__row {
+	grid-template-columns: 28px minmax(0, 1fr);
+	grid-template-areas: 'mark text' 'mark date';
+	gap: 0 10px;
+	min-height: 40px;
+	padding: 4px 8px;
+}
+.worldsmith .ws-tl-list.is-compact .ws-tl-list__row::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 21px;
+	width: 2px;
+	background: color-mix(in srgb, var(--ws-border) 80%, transparent);
+	pointer-events: none;
+}
+.worldsmith .ws-tl-list.is-compact .ws-tl-list__mark {
+	width: 28px;
+	height: 28px;
+}
+.worldsmith .ws-tl-list.is-compact .ws-tl-list__date {
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+	text-align: left;
+}
+.worldsmith .ws-tl-widget {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+.worldsmith .ws-tl-widget .ws-tl-axis {
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-tl-widget__foot {
+	display: flex;
+	justify-content: flex-end;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl-list__group {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl-list__when {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 10px 14px;
+	border-right: none;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl-list__year {
+	font-size: 1.05rem;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl-list .ws-tl-list__row {
+	grid-template-columns: 30px minmax(0, 1fr);
+	grid-template-areas: 'mark text' 'mark date';
+	row-gap: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl-list__date {
+	text-align: left;
+	font-size: 12.5px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl:not(.ws-tcard) .ws-tl__tools {
+	width: 100%;
+	margin-left: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl__mode {
+	margin-left: auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl__hint {
+	display: none;
+}
+
+/* World health */
+.worldsmith .ws-hl__hero {
+	display: flex;
+	align-items: center;
+	gap: 22px;
+	margin-bottom: 16px;
+	padding: 20px 22px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(120% 160% at 0% 0%, color-mix(in srgb, var(--ws-tint) 16%, transparent), transparent 60%),
+		var(--ws-surface);
+}
+.worldsmith .ws-hl__ring .ws-ring__bar {
+	stroke: var(--ws-tint);
+}
+.worldsmith .ws-hl__ring .ws-ring__label {
+	font-family: var(--ws-font-display);
+	font-size: 26px;
+	font-weight: 700;
+}
+.worldsmith .ws-hl__word {
+	font-family: var(--ws-font-display);
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+.worldsmith .ws-hl__summary {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-hl__ignored-note {
+	margin-top: 4px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-hl__tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 8px;
+	margin-bottom: 18px;
+}
+.worldsmith .ws-hl__tiles .ws-hl__tile {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-areas: 'icon n' 'label label';
+	align-items: center;
+	gap: 4px 8px;
+	height: auto;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: border-color var(--ws-dur-fast) var(--ws-ease-out), transform var(--ws-dur-fast) var(--ws-ease-out);
+}
+.worldsmith .ws-hl__tiles .ws-hl__tile:hover {
+	border-color: var(--ws-border-strong);
+	transform: translateY(-1px);
+}
+.worldsmith .ws-hl__tile-icon {
+	grid-area: icon;
+	display: flex;
+	color: var(--color-orange);
+}
+.worldsmith .ws-hl__tile.is-info .ws-hl__tile-icon {
+	color: var(--color-blue);
+}
+.worldsmith .ws-hl__tile.is-clear .ws-hl__tile-icon {
+	color: var(--color-green);
+}
+.worldsmith .ws-hl__tile-icon svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-hl__tile-n {
+	grid-area: n;
+	font-family: var(--ws-font-display);
+	font-size: 18px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith .ws-hl__tile.is-clear .ws-hl__tile-n {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-hl__tile-label {
+	grid-area: label;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-hl__sections {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.worldsmith .ws-hl__section {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	scroll-margin-top: 12px;
+	transition: box-shadow var(--ws-dur-slow) var(--ws-ease-out);
+}
+.worldsmith .ws-hl__section.is-flash {
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--ws-accent) 50%, transparent);
+}
+.worldsmith .ws-hl__section-head {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 14px 16px 8px;
+}
+.worldsmith .ws-hl__section-icon {
+	display: flex;
+	margin-top: 2px;
+	color: var(--color-orange);
+}
+.worldsmith .ws-hl__section.is-info .ws-hl__section-icon {
+	color: var(--color-blue);
+}
+.worldsmith .ws-hl__section-icon svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-hl__section-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-hl__section-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+}
+.worldsmith .ws-hl__count {
+	padding: 0 7px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	line-height: 18px;
+}
+.worldsmith .ws-hl__section-hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-hl__rows {
+	display: flex;
+	flex-direction: column;
+	padding: 0 8px 8px;
+}
+.worldsmith .ws-hl__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 44px;
+	padding: 6px 8px;
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-hl__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hl__row-icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--ws-tint, var(--ws-muted)) 14%, transparent);
+	color: var(--ws-tint, var(--ws-muted));
+}
+.worldsmith .ws-hl__row-icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-hl__row-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-hl__row-text .ws-hl__row-title {
+	display: block;
+	height: auto;
+	max-width: 100%;
+	padding: 0;
+	overflow: hidden;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13.5px;
+	font-weight: 600;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-hl__row-text button.ws-hl__row-title {
+	cursor: pointer;
+}
+.worldsmith .ws-hl__row-text button.ws-hl__row-title:hover {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-hl__row-detail {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-hl__row-actions {
+	display: flex;
+	flex: none;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 4px;
+}
+.worldsmith .ws-hl__row .ws-hl__ignore {
+	opacity: 0.5;
+}
+.worldsmith .ws-hl__row:hover .ws-hl__ignore,
+.worldsmith .ws-hl__row .ws-hl__ignore:focus-visible {
+	opacity: 1;
+}
+.worldsmith .ws-hl__more {
+	padding: 0 16px 12px;
+}
+.worldsmith .ws-hl__clear {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-hl__clear svg {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	color: var(--color-green);
+}
+.worldsmith .ws-hl__ignored {
+	margin-top: 18px;
+}
+.worldsmith .ws-hl__ignored .ws-hl__ignored-head {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 10px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-hl__ignored .ws-hl__ignored-head:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hl__ignored-head svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-hl__ignored.is-open .ws-hl__caret {
+	transform: rotate(180deg);
+}
+.worldsmith .ws-hl__row.is-ignored {
+	opacity: 0.75;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hl__hero {
+	gap: 14px;
+	padding: 16px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hl__ring.ws-hl__ring.ws-hl__ring {
+	--ws-ring-size: 70px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hl__row {
+	flex-wrap: wrap;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hl__row-actions {
+	width: 100%;
+	padding-left: 38px;
+	justify-content: flex-start;
+}
+.worldsmith[data-ws-size='narrow'] .ws-hl__tiles {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* World health widget */
+.worldsmith .ws-hlw {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-hlw .ws-hlw__top {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	height: auto;
+	padding: 4px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-hlw .ws-hlw__top:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hlw .ws-ring__label {
+	font-family: var(--ws-font-display);
+	font-size: 16px;
+	font-weight: 700;
+}
+.worldsmith .ws-hlw__word {
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 600;
+}
+.worldsmith .ws-hlw__sub {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-hlw__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.worldsmith .ws-hlw .ws-hlw__row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 32px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-hlw .ws-hlw__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-hlw__row.is-clear {
+	cursor: default;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-hlw__icon {
+	display: flex;
+	color: var(--color-orange);
+}
+.worldsmith .ws-hlw__row.is-clear .ws-hlw__icon {
+	color: var(--color-green);
+}
+.worldsmith .ws-hlw__icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-hlw__label {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-hlw__n {
+	color: var(--ws-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Calendars, refreshed (0.11.1) ─────────────────────────────────────────────── */
+
+/* Cards in the studio look: a tinted mark, title and line, then the body. */
+.worldsmith .ws-cals .ws-cal-grid {
+	gap: 16px;
+}
+.worldsmith .ws-cals .ws-cal-card {
+	overflow: hidden;
+	scroll-margin-top: 64px;
+}
+.worldsmith .ws-cal-card__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px 18px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-cal-card__mark {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-purple) 13%, transparent);
+	color: var(--color-purple);
+}
+.worldsmith .ws-cal-card__mark svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-cal-card__titles {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-cal-card__title {
+	font-size: 14px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-card__hint {
+	margin-top: 1px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+.worldsmith .ws-cal-card__aside {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 6px;
+}
+.worldsmith .ws-cal-card__aside:empty {
+	display: none;
+}
+.worldsmith .ws-cals .ws-cal-card__body {
+	gap: 10px;
+	padding: 16px 18px 18px;
+}
+.worldsmith .ws-cal-count {
+	padding: 2px 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+
+/* Showcase: the calendar in its own words, and what it's made of. */
+.worldsmith .ws-cal-showcase {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+	gap: 18px;
+	align-items: center;
+	margin: -4px 0 14px;
+	padding: 20px 22px;
+	border: 1px solid color-mix(in srgb, var(--color-purple) 28%, var(--ws-border));
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(90% 160% at 100% 0%, color-mix(in srgb, var(--color-purple) 12%, transparent), transparent 60%),
+		radial-gradient(70% 120% at 0% 100%, color-mix(in srgb, var(--ws-accent) 8%, transparent), transparent 60%),
+		var(--ws-surface);
+}
+.worldsmith .ws-cal-showcase__label {
+	color: var(--color-purple);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-cal-showcase__date {
+	margin-top: 6px;
+	font-family: var(--ws-font-display);
+	font-size: 1.55rem;
+	font-weight: 600;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-cal-showcase__sub {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 6px;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 13.5px;
+}
+.worldsmith .ws-cal-showcase__dot {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-cal-showcase__stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+.worldsmith .ws-cal-stat {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: center;
+	padding: 9px 11px;
+	border: 1px solid color-mix(in srgb, var(--ws-border) 80%, transparent);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-bg) 70%, transparent);
+	gap: 0 8px;
+}
+.worldsmith .ws-cal-stat svg {
+	grid-row: span 2;
+	width: 15px;
+	height: 15px;
+	color: var(--color-purple);
+}
+.worldsmith .ws-cal-stat__n {
+	font-size: 15px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.2;
+}
+.worldsmith .ws-cal-stat__label {
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	line-height: 1.25;
+}
+
+/* Jump bar */
+.worldsmith .ws-cal-jump {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 14px;
+	padding: 8px 0;
+	overflow-x: auto;
+	background: var(--ws-bg);
+	scrollbar-width: none;
+}
+.worldsmith .ws-cal-jump .ws-cal-jump__item {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 11px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	transition: color var(--ws-dur), border-color var(--ws-dur), background var(--ws-dur);
+}
+.worldsmith .ws-cal-jump .ws-cal-jump__item:hover {
+	border-color: color-mix(in srgb, var(--color-purple) 45%, var(--ws-border));
+	color: var(--ws-text);
+}
+.worldsmith .ws-cal-jump__item svg {
+	width: 13px;
+	height: 13px;
+}
+
+/* Year at a glance */
+.worldsmith .ws-cals .ws-cal-glance {
+	grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+	gap: 10px;
+	align-items: start;
+}
+.worldsmith .ws-cals .ws-cal-glance__tile {
+	padding: 10px 10px 11px;
+	border-color: color-mix(in srgb, var(--ws-border) 85%, transparent);
+	border-radius: var(--ws-radius);
+	transition: border-color var(--ws-dur), box-shadow var(--ws-dur);
+}
+.worldsmith .ws-cals .ws-cal-glance__tile:hover {
+	border-color: color-mix(in srgb, var(--color-purple) 40%, var(--ws-border));
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-cals .ws-cal-glance__name {
+	align-items: center;
+	justify-content: flex-start;
+	margin-bottom: 7px;
+}
+.worldsmith .ws-cal-glance__badge {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 4px;
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--color-purple) 14%, transparent);
+	color: var(--color-purple);
+	font-size: 10.5px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-cal-glance__badge svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-cals .ws-cal-glance__title {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-glance__wd {
+	display: grid;
+	gap: 2px;
+	margin-bottom: 2px;
+	color: var(--ws-faint);
+	font-size: 9px;
+	text-align: center;
+}
+.worldsmith .ws-cals .ws-cal-glance__cell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: auto;
+	height: 17px;
+	background: color-mix(in srgb, var(--color-purple) 15%, transparent);
+	color: color-mix(in srgb, var(--color-purple) 55%, var(--ws-muted));
+	font-size: 9px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-cals .ws-cal-glance__tile.is-festival .ws-cal-glance__badge {
+	background: color-mix(in srgb, var(--ws-accent) 18%, transparent);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-cals .ws-cal-glance__tile.is-festival .ws-cal-glance__cell {
+	background: color-mix(in srgb, var(--ws-accent) 40%, transparent);
+	color: var(--text-on-accent, var(--ws-text));
+}
+.worldsmith .ws-cals .ws-cal-glance__bar {
+	gap: 2px;
+}
+.worldsmith .ws-cals .ws-cal-glance__year {
+	min-width: 80px;
+	font-size: 14px;
+}
+.worldsmith .ws-cals .ws-cal-glance__len {
+	margin-left: 8px;
+}
+
+/* Months: the year as a ribbon */
+.worldsmith .ws-cal-strip {
+	display: flex;
+	gap: 2px;
+	height: 26px;
+	margin-bottom: 6px;
+	overflow: hidden;
+	border-radius: 8px;
+}
+.worldsmith .ws-cal-strip__seg {
+	display: flex;
+	flex-basis: 0;
+	align-items: center;
+	justify-content: center;
+	min-width: 4px;
+	overflow: hidden;
+	background: color-mix(in srgb, var(--color-purple) 20%, transparent);
+	color: color-mix(in srgb, var(--color-purple) 65%, var(--ws-text));
+	font-size: 10.5px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+.worldsmith .ws-cal-strip__seg.is-alt {
+	background: color-mix(in srgb, var(--color-purple) 13%, transparent);
+}
+.worldsmith .ws-cal-strip__seg.is-fest {
+	background: color-mix(in srgb, var(--ws-accent) 55%, transparent);
+}
+.worldsmith .ws-cal-strip__label {
+	overflow: hidden;
+	text-overflow: clip;
+}
+.worldsmith .ws-cals .ws-cal-row {
+	padding: 3px 4px;
+}
+
+/* Week as pills */
+.worldsmith .ws-cals .ws-weekdays__day {
+	padding: 2px 4px;
+	border-radius: var(--ws-radius-s);
+}
+.worldsmith .ws-cals .ws-weekdays__day:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-cals .ws-weekdays__n {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-purple) 12%, transparent);
+	color: var(--color-purple);
+	font-size: 11px;
+}
+.worldsmith .ws-cal-line__note {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* Festivals */
+.worldsmith .ws-cals .ws-cal-rows {
+	gap: 6px;
+}
+.worldsmith .ws-cals .ws-cal-fest {
+	gap: 8px;
+	padding: 12px;
+	background:
+		radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--ws-accent) 8%, transparent), transparent 60%),
+		var(--ws-surface);
+}
+.worldsmith .ws-cal-fest__mark {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-cal-fest__mark svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-cal-fest__top .ws-cal-text {
+	flex: 1;
+}
+.worldsmith .ws-cal-fest__says {
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 13px;
+	font-style: italic;
+}
+
+/* Eras */
+.worldsmith .ws-cals .ws-cal-ribbon {
+	height: 32px;
+	margin-bottom: 8px;
+}
+.worldsmith .ws-cals .ws-cal-ribbon__era {
+	height: 32px;
+}
+.worldsmith .ws-cals .ws-cal-era {
+	padding: 12px;
+	background: color-mix(in srgb, var(--ws-tint) 4%, var(--ws-surface));
+}
+
+/* How dates are written: style cards */
+.worldsmith .ws-cal-stylecards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+	gap: 8px;
+}
+.worldsmith .ws-cal-stylecards .ws-cal-stylecard {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	height: auto;
+	min-height: 78px;
+	padding: 11px 13px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: border-color var(--ws-dur), box-shadow var(--ws-dur), transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-cal-stylecards .ws-cal-stylecard:hover {
+	border-color: color-mix(in srgb, var(--color-purple) 45%, var(--ws-border));
+	transform: translateY(-1px);
+}
+.worldsmith .ws-cal-stylecards .ws-cal-stylecard.is-on {
+	border-color: var(--color-purple);
+	background: color-mix(in srgb, var(--color-purple) 8%, var(--ws-surface));
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 14%, transparent);
+}
+.worldsmith .ws-cal-stylecards .ws-cal-stylecard.is-own:not(.is-on) {
+	border-style: dashed;
+}
+.worldsmith .ws-cal-stylecard__caption {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 100%;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-stylecard__caption svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-cal-stylecard__check {
+	display: flex;
+	margin-left: auto;
+	color: var(--color-purple);
+}
+.worldsmith .ws-cal-stylecard__sample {
+	font-family: var(--ws-font-display);
+	font-size: 14.5px;
+	line-height: 1.3;
+	overflow-wrap: anywhere;
+}
+
+/* Your own format */
+.worldsmith .ws-cal-builder {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 14px;
+	border: 1px solid color-mix(in srgb, var(--color-purple) 30%, var(--ws-border));
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-purple) 4%, var(--ws-surface));
+}
+.worldsmith .ws-cal-builder__label {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 10px;
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-cal-builder__hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+	font-weight: 400;
+}
+.worldsmith .ws-cal-builder .ws-cal-builder__input {
+	width: 100%;
+	height: 38px;
+	padding: 0 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-bg);
+	color: var(--ws-text);
+	font-family: var(--font-monospace);
+	font-size: 13px;
+}
+.worldsmith .ws-cal-builder .ws-cal-builder__input:focus {
+	border-color: var(--color-purple);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 16%, transparent);
+}
+.worldsmith .ws-cal-builder .ws-cal-builder__input.is-small {
+	height: 32px;
+	font-size: 12.5px;
+}
+.worldsmith .ws-cal-builder__live {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 8px 12px;
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-cal-builder__live svg {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	color: var(--color-purple);
+}
+.worldsmith .ws-cal-builder__live-text {
+	font-family: var(--ws-font-display);
+	font-size: 16px;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-cal-tokens {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-cal-tokens .ws-cal-token {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 6px;
+	height: auto;
+	min-height: 28px;
+	padding: 4px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-cal-tokens .ws-cal-token:hover {
+	border-color: var(--color-purple);
+	background: color-mix(in srgb, var(--color-purple) 8%, var(--ws-surface));
+}
+.worldsmith .ws-cal-token__eg {
+	color: var(--ws-faint);
+	font-family: var(--ws-font-display);
+	font-size: 11.5px;
+}
+.worldsmith .ws-cal-builder__warn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--color-orange);
+	font-size: 12.5px;
+}
+.worldsmith .ws-cal-builder__warn svg {
+	flex: none;
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-cal-ideas {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.worldsmith .ws-cal-ideas__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-cal-ideas .ws-cal-idea {
+	height: auto;
+	min-height: 30px;
+	padding: 5px 12px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 13px;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith .ws-cal-ideas .ws-cal-idea:hover,
+.worldsmith .ws-cal-ideas .ws-cal-idea.is-on {
+	border-style: solid;
+	border-color: var(--color-purple);
+	color: var(--ws-text);
+}
+.worldsmith .ws-cal-fine {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-cal-fine > summary {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	list-style: none;
+}
+.worldsmith .ws-cal-fine > summary::-webkit-details-marker {
+	display: none;
+}
+.worldsmith .ws-cal-fine > summary svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-cal-fine[open] > summary {
+	margin-bottom: 6px;
+	color: var(--ws-text);
+}
+.worldsmith .ws-cal-fine__row {
+	display: grid;
+	grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	margin-top: 6px;
+}
+.worldsmith .ws-cal-fine__label {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-cal-fine__eg {
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 13px;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-cals .ws-cal-examples {
+	gap: 4px;
+	padding: 12px 14px;
+	background: color-mix(in srgb, var(--ws-bg) 70%, transparent);
+	border: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-cal-examples__head {
+	margin-bottom: 4px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-cals .ws-cal-examples__label {
+	width: 100px;
+}
+
+/* Phones and narrow panes */
+.worldsmith[data-ws-size='narrow'] .ws-cal-showcase {
+	grid-template-columns: 1fr;
+	padding: 16px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-showcase__date {
+	font-size: 1.3rem;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-showcase__stats {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-card__head {
+	flex-wrap: wrap;
+	padding-inline: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cals .ws-cal-card__body {
+	padding-inline: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-card__aside {
+	justify-content: flex-start;
+	width: 100%;
+	padding-left: 44px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-fine__row {
+	grid-template-columns: 1fr;
+	gap: 4px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-strip__label {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cals .ws-cal-glance {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cals .ws-cal-glance__tile {
+	padding: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cal-glance__wd,
+.worldsmith[data-ws-size='narrow'] .ws-cals .ws-cal-glance__days {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-cals .ws-cal-glance__cell {
+	height: 9px;
+	font-size: 0;
+}

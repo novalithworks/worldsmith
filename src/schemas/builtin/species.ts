@@ -1,0 +1,71 @@
+import { defineType, f, opts, section, tasks } from '../dsl';
+
+/** Species, races and peoples — the category that individuals belong to. */
+export const speciesType = defineType(
+	{
+		id: 'species',
+		singular: 'Species',
+		plural: 'Species & peoples',
+		icon: 'dna',
+		description: 'Species, races and peoples, with taxonomy, ecology and culture.',
+		group: 'world',
+		color: 'cyan',
+		order: 40,
+		subtitle: ['classification', 'sapience'],
+		card: ['classification', 'lifespan', 'dangerLevel'],
+		parentTypes: ['species'],
+		childTypes: ['species'],
+		tasks: tasks(
+			'Define classification|Taxonomy',
+			'Describe appearance and anatomy|Biology',
+			'Define lifespan and reproduction|Biology',
+			'Define habitat and range|Ecology',
+			'Define diet and place in the food chain|Ecology',
+			'Define social structure|Society',
+			'Define communication|Society',
+			'Define innate abilities and weaknesses|Abilities',
+			'Describe cultural importance|Culture',
+			'Add variants or subspecies|Taxonomy|optional',
+		),
+	},
+	section('taxonomy', 'Taxonomy', 'network', [
+		f.text('classification', 'Classification', { recommended: true, placeholder: 'e.g. Draconic, Fey, Mammalian' }),
+		f.text('taxonomy', 'Taxonomy', { advanced: true, placeholder: 'Kingdom › Order › Family' }),
+		f.select('sapience', 'Sapience', opts('Non-sapient:gray', 'Semi-sapient:cyan', 'Sapient:blue')),
+		f.select('dangerLevel', 'Danger level', opts('Harmless:green', 'Low:cyan', 'Moderate:yellow', 'High:orange', 'Extreme:red')),
+		f.list('variants', 'Variants & subspecies'),
+		f.long('evolution', 'Evolution & origin', { advanced: true }),
+	]),
+	section('biology', 'Biology', 'heart-pulse', [
+		f.rich('appearance', 'Appearance', { recommended: true }),
+		f.long('anatomy', 'Anatomy'),
+		f.text('size', 'Size', { width: 'third' }),
+		f.text('lifespan', 'Lifespan', { width: 'third', recommended: true }),
+		f.long('reproduction', 'Reproduction', { advanced: true }),
+	]),
+	section('ecology', 'Ecology', 'trees', [
+		f.long('habitat', 'Habitat', { width: 'half', recommended: true }),
+		f.long('diet', 'Diet', { width: 'half' }),
+		f.long('behavior', 'Behavior'),
+		f.list('predators', 'Predators', { advanced: true }),
+		f.list('prey', 'Prey', { advanced: true }),
+		f.rel('locations', 'Range', { via: 'inhabits', targets: ['location'] }),
+		f.select('domestication', 'Domestication', opts('Wild:green', 'Tameable:yellow', 'Domesticated:blue'), { advanced: true }),
+	]),
+	section('society', 'Society & mind', 'users', [
+		f.select('intelligence', 'Intelligence', opts('Instinctual:gray', 'Animal:green', 'Clever:cyan', 'Sapient:blue', 'Genius:purple')),
+		f.long('socialStructure', 'Social structure'),
+		f.long('communication', 'Communication'),
+		f.rel('cultures', 'Cultures', { via: 'culture-of', targets: ['culture'] }),
+		f.rel('members', 'Notable members', { via: 'species-of', direction: 'reverse', targets: ['character', 'creature'] }),
+	]),
+	section('abilities', 'Abilities', 'zap', [
+		f.rel('abilities', 'Innate abilities', { via: 'has-ability', targets: ['ability'] }),
+		f.rel('magic', 'Magic', { via: 'uses-power', targets: ['magic'] }),
+		f.list('weaknesses', 'Weaknesses'),
+	]),
+	section('culture', 'Culture & myth', 'sparkle', [
+		f.long('culturalImportance', 'Cultural importance'),
+		f.long('mythology', 'Mythology'),
+	]),
+);

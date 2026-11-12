@@ -1,0 +1,919 @@
+/*
+ * The Writing Studio's page (WS3): Obsidian's own editor on a sheet of paper, the toolbar
+ * above it, the side pane (inspector, another scene, the note to read), focus mode and the
+ * writing settings panel.
+ *
+ * The editor is a real Obsidian leaf placed in the page (src/ui/editor/EmbeddedEditor.ts).
+ * Its own scroller (CodeMirror's .cm-scroller) is the desk; .cm-sizer is the sheet of
+ * paper, as wide as the text plus its margins. The page redefines Obsidian's colour and
+ * font variables, so Live Preview (links, quotes, headings, the caret, selections) reads
+ * correctly on the surface chosen in the settings.
+ */
+
+/* ── Surfaces ──────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-ms {
+	--ws-wr-measure: 68ch;
+	--ws-wr-leading: 1.7;
+	--ws-wr-size: 18px;
+	--ws-wr-prose: 'Charter', 'Bitstream Charter', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+	--ws-wr-side-w: 340px;
+	--ws-wr-p-padx: clamp(18px, 6cqi, 64px);
+}
+/*
+ * One colour (0.16.1): while a scene is on the page, the whole writing area (the breadcrumb
+ * bar, the toolbar, the page and the side pane) is the surface, edge to edge; the text is a
+ * column of the chosen width in the middle, with no sheet edge or shadow. These scopes all
+ * read the surface's colours (the page's own block still applies to a page on its own).
+ */
+/* Paper (the default): warm cream with brown ink, in light and dark themes and both looks. */
+.worldsmith :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--ws-wr-p-desk: var(--ws-wr-p-bg);
+	--ws-wr-p-bg: #f4ecdc;
+	--ws-wr-p-ink: #2a251d;
+	--ws-wr-p-muted: #6b604f;
+	--ws-wr-p-faint: #9a8d78;
+	--ws-wr-p-edge: #e3d6bd;
+	--ws-wr-p-rule: #cdb994;
+	--ws-wr-p-accent: #8f6236;
+	--ws-wr-p-shadow: 0 1px 0 rgb(0 0 0 / 0.05), 0 18px 40px -22px rgb(0 0 0 / 0.55);
+}
+body.theme-dark .worldsmith :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--ws-wr-p-shadow: 0 1px 0 var(--ws-wr-p-edge), 0 30px 50px -30px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(0 0 0 / 0.15);
+}
+.worldsmith .ws-wr-ms[data-surface='dark'] :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--ws-wr-p-desk: var(--ws-wr-p-bg);
+	--ws-wr-p-bg: #1d1c1a;
+	--ws-wr-p-ink: #e6e0d3;
+	--ws-wr-p-muted: #a49b8b;
+	--ws-wr-p-faint: #6e675c;
+	--ws-wr-p-edge: #2c2a26;
+	--ws-wr-p-rule: #4a4438;
+	--ws-wr-p-accent: #cf9f66;
+	--ws-wr-p-shadow: 0 0 0 1px #2c2a26, 0 30px 50px -30px rgb(0 0 0 / 0.9);
+}
+/* Theme: the theme's own colours (put on the page by the studio, since Worldsmith's palette replaces them in its pane). */
+.worldsmith .ws-wr-ms[data-surface='theme'] :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--ws-wr-p-desk: var(--ws-wr-p-bg);
+	--ws-wr-p-bg: var(--background-primary);
+	--ws-wr-p-ink: var(--text-normal);
+	--ws-wr-p-muted: var(--text-muted);
+	--ws-wr-p-faint: var(--text-faint);
+	--ws-wr-p-edge: var(--background-modifier-border);
+	--ws-wr-p-rule: var(--background-modifier-border);
+	--ws-wr-p-accent: var(--text-accent);
+	--ws-wr-p-shadow: 0 0 0 1px var(--background-modifier-border);
+}
+/* Inside the page everything (Worldsmith's tokens and Obsidian's) reads the surface. */
+.worldsmith .ws-wr-ms:is([data-surface='paper'], [data-surface='dark']) :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--background-primary: var(--ws-wr-p-bg);
+	--background-primary-alt: color-mix(in srgb, var(--ws-wr-p-ink) 4%, var(--ws-wr-p-bg));
+	--background-secondary: color-mix(in srgb, var(--ws-wr-p-ink) 6%, var(--ws-wr-p-bg));
+	--background-modifier-border: var(--ws-wr-p-edge);
+	--background-modifier-border-hover: var(--ws-wr-p-rule);
+	--background-modifier-hover: color-mix(in srgb, var(--ws-wr-p-ink) 7%, transparent);
+	--background-modifier-form-field: color-mix(in srgb, var(--ws-wr-p-ink) 3%, var(--ws-wr-p-bg));
+	--text-normal: var(--ws-wr-p-ink);
+	--text-muted: var(--ws-wr-p-muted);
+	--text-faint: var(--ws-wr-p-faint);
+	--text-accent: var(--ws-wr-p-accent);
+	--text-accent-hover: color-mix(in srgb, var(--ws-wr-p-accent) 80%, var(--ws-wr-p-ink));
+	--text-selection: color-mix(in srgb, var(--ws-wr-p-accent) 26%, transparent);
+	--text-highlight-bg: color-mix(in srgb, #e2aa4c 34%, transparent);
+	--text-on-accent: var(--ws-wr-p-bg);
+	--interactive-accent: var(--ws-wr-p-accent);
+	--interactive-accent-hover: color-mix(in srgb, var(--ws-wr-p-accent) 85%, var(--ws-wr-p-ink));
+	--color-accent: var(--ws-wr-p-accent);
+	--link-color: var(--ws-wr-p-accent);
+	--link-color-hover: var(--text-accent-hover);
+	--link-unresolved-color: var(--ws-wr-p-accent);
+	--link-external-color: var(--ws-wr-p-accent);
+	--hr-color: var(--ws-wr-p-rule);
+	--blockquote-border-color: var(--ws-wr-p-rule);
+	--code-background: color-mix(in srgb, var(--ws-wr-p-ink) 6%, var(--ws-wr-p-bg));
+	--code-normal: var(--ws-wr-p-ink);
+	--caret-color: var(--ws-wr-p-accent);
+	--list-marker-color: var(--ws-wr-p-muted);
+	--checkbox-color: var(--ws-wr-p-accent);
+	--checkbox-border-color: var(--ws-wr-p-muted);
+	--tag-color: var(--ws-wr-p-accent);
+	--tag-background: color-mix(in srgb, var(--ws-wr-p-accent) 12%, transparent);
+	--icon-color: var(--ws-wr-p-muted);
+	--icon-color-hover: var(--ws-wr-p-ink);
+	--h1-color: var(--ws-wr-p-ink);
+	--h2-color: var(--ws-wr-p-ink);
+	--h3-color: var(--ws-wr-p-ink);
+	--h4-color: var(--ws-wr-p-ink);
+	--h5-color: var(--ws-wr-p-ink);
+	--h6-color: var(--ws-wr-p-ink);
+	--bold-color: inherit;
+	--italic-color: inherit;
+}
+.worldsmith :is(.ws-wr-page, .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side, .ws-wr-resizer)) {
+	--ws-text: var(--ws-wr-p-ink);
+	--ws-muted: var(--ws-wr-p-muted);
+	--ws-faint: var(--ws-wr-p-faint);
+	--ws-border: var(--ws-wr-p-edge);
+	--ws-border-strong: var(--ws-wr-p-rule);
+	--ws-accent: var(--ws-wr-p-accent);
+	--ws-accent-hover: color-mix(in srgb, var(--ws-wr-p-accent) 85%, var(--ws-wr-p-ink));
+	--ws-on-accent: var(--ws-wr-p-bg);
+	--ws-focus: var(--ws-wr-p-accent);
+	--ws-bg: var(--ws-wr-p-bg);
+	--ws-bg-side: var(--ws-wr-p-bg);
+	--ws-surface: color-mix(in srgb, var(--ws-wr-p-ink) 3%, var(--ws-wr-p-bg));
+	--ws-surface-raised: color-mix(in srgb, var(--ws-wr-p-ink) 4%, var(--ws-wr-p-bg));
+	--ws-hover: color-mix(in srgb, var(--ws-wr-p-ink) 7%, transparent);
+	--ws-wr-rule: var(--ws-wr-p-rule);
+	color: var(--ws-wr-p-ink);
+}
+.worldsmith .ws-wr-ms.is-writing > :is(.ws-wr-ms__main, .ws-wr-side) {
+	background: var(--ws-wr-p-bg);
+}
+.worldsmith .ws-wr-page {
+	/* The text's font, size, line height and width (Writing Studio settings). */
+	--font-text: var(--ws-wr-prose);
+	--font-text-size: var(--ws-wr-size);
+	--line-height-normal: var(--ws-wr-leading);
+	--file-line-width: var(--ws-wr-measure);
+	--file-margins: 0;
+	position: relative;
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+	background: var(--ws-wr-p-desk);
+}
+
+/* ── Obsidian's editor inside the page ─────────────────────────────────── */
+.worldsmith .ws-wr-editor {
+	position: absolute;
+	inset: 0;
+	display: flex;
+}
+.worldsmith .ws-wr-editor > .workspace-split {
+	position: relative;
+	display: flex;
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+	background: none;
+}
+.worldsmith .ws-wr-editor .workspace-leaf {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+	height: 100%;
+	background: none;
+}
+.worldsmith .ws-wr-editor .workspace-leaf-resize-handle,
+.worldsmith .ws-wr-editor .view-header,
+.worldsmith .ws-wr-editor .workspace-tab-header-container {
+	display: none;
+}
+.worldsmith .ws-wr-editor .workspace-leaf-content,
+.worldsmith .ws-wr-editor .view-content {
+	height: 100%;
+	padding: 0;
+	background: transparent;
+}
+.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 .cm-scroller {
+	padding: 28px clamp(10px, 3cqi, 32px) 56px;
+	font-family: var(--ws-wr-prose);
+	font-size: var(--ws-wr-size);
+	line-height: var(--ws-wr-leading);
+	scrollbar-gutter: stable;
+}
+/* The sheet of paper: as wide as the text plus its margins, centred on the desk. */
+.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 .cm-sizer {
+	box-sizing: content-box;
+	/* As wide as the measure, shrinking with the pane (the scroller is a flex row). */
+	flex: 0 1 var(--ws-wr-measure);
+	width: var(--ws-wr-measure);
+	min-width: 0;
+	max-width: var(--ws-wr-measure);
+	min-height: calc(100% - 96px);
+	margin: 0 auto;
+	padding: 46px var(--ws-wr-p-padx) 72px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-wr-p-ink);
+}
+.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 :is(.cm-contentContainer, .cm-content, .cm-line) {
+	max-width: none;
+}
+.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 .cm-content {
+	caret-color: var(--ws-wr-p-accent);
+}
+/* The text itself never wears Worldsmith's focus ring: the caret is enough. */
+.worldsmith .ws-wr-editor .cm-content:focus-visible {
+	outline: none;
+}
+/* The studio shows its own heading; the note's file name, properties and backlinks stay out of the page. */
+.worldsmith .ws-wr-page:not(.ws-wr-page--reading) .inline-title.inline-title.inline-title, .worldsmith .ws-wr-page .metadata-container.metadata-container.metadata-container, .worldsmith .ws-wr-page .embedded-backlinks.embedded-backlinks.embedded-backlinks {
+
+
+	display: none;
+}
+/* Front matter shown as text (when Properties are set to "source") stays out of the way. */
+.worldsmith .ws-wr-page .cm-line.HyperMD-frontmatter {
+	color: var(--ws-wr-p-faint);
+	font-family: var(--font-monospace);
+	font-size: 0.75em;
+}
+/* A scene break ("* * *") sits in the middle of its line. */
+.worldsmith .ws-wr-page .cm-line.HyperMD-hr {
+	text-align: center;
+	color: var(--ws-wr-p-muted);
+}
+.worldsmith .ws-wr-page :is(.cm-line, .markdown-rendered) hr {
+	height: auto;
+	margin: 0.6em 0;
+	overflow: visible;
+	border: 0;
+	background: none;
+	text-align: center;
+}
+.worldsmith .ws-wr-page :is(.cm-line, .markdown-rendered) hr::after {
+	content: '*\2003*\2003*';
+	color: var(--ws-wr-p-muted);
+}
+/* The find bar stays at the top of the page while the text scrolls. */
+.worldsmith .ws-wr-editor .document-search-container {
+	position: sticky;
+	top: 0;
+	z-index: 3;
+	margin: 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	color: var(--text-normal);
+}
+
+/* The heading above the text (it scrolls away with it). */
+.worldsmith .ws-wr-pagehead {
+	margin: 0 0 30px;
+	text-align: center;
+	user-select: none;
+	cursor: default;
+	font-family: var(--ws-font-ui);
+	line-height: 1.2;
+}
+.worldsmith .ws-wr-pagehead__label {
+	color: var(--ws-wr-p-accent);
+}
+.worldsmith .ws-wr-pagehead__row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+.worldsmith .ws-wr-pagehead__title {
+	margin: 4px 0 0;
+	color: var(--ws-wr-p-ink);
+	font-family: var(--ws-wr-serif);
+	font-size: calc(36px * var(--ws-title-scale, 1));
+	font-weight: var(--ws-title-weight, 600);
+	line-height: 1.12;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-wr-pagehead__rename {
+	flex: none;
+	opacity: 0;
+	transition: opacity var(--ws-dur, 150ms);
+}
+.worldsmith .ws-wr-pagehead:hover .ws-wr-pagehead__rename,
+.worldsmith .ws-wr-pagehead__rename:focus-visible {
+	opacity: 0.7;
+}
+
+/* Typewriter mode: room below the last line, so it too can sit in the middle. */
+.worldsmith .ws-wr-ms.is-typewriter .ws-wr-editor .markdown-source-view.mod-cm6 .cm-content {
+	padding-bottom: 45vh;
+}
+/* Dim other paragraphs while writing. */
+.worldsmith .ws-wr-ms.is-typewriter.is-dim .ws-wr-editor .cm-editor.cm-focused .cm-line {
+	opacity: 0.34;
+	transition: opacity 180ms var(--ws-ease, ease);
+}
+.worldsmith .ws-wr-ms.is-typewriter.is-dim .ws-wr-editor .cm-editor.cm-focused .cm-line.cm-active {
+	opacity: 1;
+}
+
+/* Reading view (the note beside the page). */
+.worldsmith .ws-wr-page--reading .markdown-reading-view .markdown-preview-view {
+	padding: 22px clamp(10px, 3cqi, 28px) 48px;
+	font-family: var(--ws-wr-prose);
+	font-size: calc(var(--ws-wr-size) * 0.94);
+	line-height: var(--ws-wr-leading);
+}
+.worldsmith .ws-wr-page--reading .markdown-preview-sizer.markdown-preview-sizer.markdown-preview-sizer {
+	box-sizing: content-box;
+	max-width: var(--ws-wr-measure);
+	min-height: calc(100% - 70px);
+	margin: 0 auto;
+	padding: 30px clamp(16px, 5cqi, 44px) 40px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-wr-p-ink);
+}
+.worldsmith .ws-wr-page--reading .inline-title {
+	font-family: var(--ws-wr-serif);
+	font-size: 26px;
+	color: var(--ws-wr-p-ink);
+}
+
+/* When the studio can't hold the editor. */
+.worldsmith .ws-wr-fallback {
+	position: absolute;
+	inset: 28px clamp(10px, 3cqi, 32px) auto;
+	max-width: var(--ws-wr-measure);
+	margin: 0 auto;
+	padding: 40px var(--ws-wr-p-padx) 36px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-wr-p-ink);
+	text-align: center;
+}
+.worldsmith .ws-wr-fallback__msg {
+	display: flex;
+	gap: 10px;
+	max-width: 52ch;
+	margin: 24px auto 0;
+	font-family: var(--ws-wr-prose);
+	font-size: 16px;
+	line-height: 1.6;
+	text-align: left;
+}
+.worldsmith .ws-wr-fallback__msg > .ws-icon svg {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin-top: 4px;
+	color: var(--ws-wr-p-accent);
+}
+.worldsmith .ws-wr-fallback .ws-wr-sheet__actions {
+	justify-content: center;
+	margin-top: 18px;
+}
+.worldsmith .ws-wr-fallback .ws-wr-sheet__help {
+	overflow-wrap: anywhere;
+}
+
+/* ── The manuscript: binder · page · side pane ─────────────────────────── */
+.worldsmith .ws-wr-ms {
+	border-inline: 1px solid var(--ws-border);
+}
+.worldsmith.is-full-width .ws-wr-ms {
+	border-inline: 0;
+}
+.worldsmith .ws-wr-ms__main {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+}
+.worldsmith .ws-wr-ms.is-writing .ws-wr-ms__scroll,
+.worldsmith .ws-wr-ms:not(.is-writing) .ws-wr-write {
+	display: none;
+}
+.worldsmith .ws-wr-write {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	background: var(--ws-wr-p-bg, var(--ws-wr-desk));
+}
+.worldsmith .ws-wr-ms__sidebtn.is-on {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-wr-ms__bar .ws-wr-ms__sidebtn {
+	margin-left: auto;
+	flex: none;
+}
+
+/* The toolbar: a pill centred above the page. */
+.worldsmith .ws-wr-toolbar-wrap {
+	display: flex;
+	justify-content: center;
+	padding: 10px 12px 0;
+	flex: none;
+}
+.worldsmith .ws-wr-write.is-fallback .ws-wr-toolbar-wrap .ws-wr-toolbar__group:not(:last-child) {
+	display: none;
+}
+.worldsmith .ws-wr-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	max-width: 100%;
+	height: 38px;
+	padding: 0 6px;
+	overflow-x: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-bg);
+	scrollbar-width: none;
+}
+.worldsmith .ws-wr-toolbar::-webkit-scrollbar {
+	display: none;
+}
+.worldsmith .ws-wr-toolbar__group {
+	display: flex;
+	align-items: center;
+	gap: 1px;
+	flex: none;
+}
+.worldsmith .ws-wr-toolbar__group + .ws-wr-toolbar__group::before {
+	content: '';
+	width: 1px;
+	height: 18px;
+	margin: 0 5px;
+	background: var(--ws-border);
+}
+.worldsmith .ws-wr-tool {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-wr-tool:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-tool.is-on {
+	color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+
+.worldsmith .ws-wr-statusbar__bar {
+	width: 90px;
+	height: 4px;
+	flex: none;
+}
+.worldsmith .ws-wr-saved.is-saving svg {
+	animation: ws-spin 1.4s linear infinite;
+}
+
+/* The side pane and the bar to resize it. */
+.worldsmith .ws-wr-resizer {
+	position: relative;
+	flex: none;
+	width: 7px;
+	margin: 0 -3px;
+	z-index: 2;
+	cursor: col-resize;
+	touch-action: none;
+}
+.worldsmith .ws-wr-resizer::after {
+	content: '';
+	position: absolute;
+	inset: 0 3px;
+	background: var(--ws-border);
+	transition: background var(--ws-dur, 150ms);
+}
+.worldsmith .ws-wr-resizer:hover::after,
+.worldsmith .ws-wr-resizer.is-dragging::after,
+.worldsmith .ws-wr-resizer:focus-visible::after {
+	background: var(--ws-accent);
+}
+.worldsmith .ws-wr-side {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	width: var(--ws-wr-side-w);
+	min-width: 0;
+	min-height: 0;
+	background: var(--ws-bg);
+}
+.worldsmith .ws-wr-ms:not(.is-side-open) :is(.ws-wr-side, .ws-wr-resizer) {
+	display: none;
+}
+.worldsmith .ws-wr-side__head {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 8px 8px 6px 10px;
+	border-bottom: 1px solid var(--ws-border);
+	flex: none;
+}
+.worldsmith .ws-wr-side__tabs {
+	display: flex;
+	flex: 1;
+	gap: 2px;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+.worldsmith .ws-wr-side__tab,
+.worldsmith .ws-wr-insp__tab {
+	flex: none;
+	height: 28px;
+	padding: 0 11px;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-side__tab:hover,
+.worldsmith .ws-wr-insp__tab:hover {
+	color: var(--ws-text);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-side__tab.is-active,
+.worldsmith .ws-wr-insp__tab.is-active {
+	color: var(--ws-text);
+	background: color-mix(in srgb, var(--ws-accent) 16%, transparent);
+	font-weight: 600;
+}
+.worldsmith .ws-wr-side__body {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.worldsmith .ws-wr-side__body > .is-hidden.is-hidden.is-hidden, .worldsmith .ws-wr-side__body.is-hidden.is-hidden.is-hidden {
+
+	display: none;
+}
+.worldsmith .ws-wr-side__page {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.worldsmith .ws-wr-side__pick {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 36px;
+	padding: 4px 10px;
+	overflow: hidden;
+	border-bottom: 1px solid var(--ws-border);
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	flex: none;
+}
+.worldsmith .ws-wr-side__pickbtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	max-width: 100%;
+	height: 28px;
+	padding: 0 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-side__pickbtn > span:not(.ws-icon) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-wr-side__pickbtn svg {
+	width: 14px;
+	height: 14px;
+	flex: none;
+}
+.worldsmith .ws-wr-side__msg {
+	display: none;
+	padding: 28px 18px;
+	color: var(--ws-muted);
+	text-align: center;
+}
+.worldsmith .ws-wr-side__page.is-empty .ws-wr-side__msg {
+	display: block;
+}
+.worldsmith .ws-wr-side__page.is-empty .ws-wr-page {
+	display: none;
+}
+.worldsmith .ws-wr-page--side .markdown-source-view.mod-cm6 .cm-scroller {
+	padding: 16px 10px 40px;
+	font-size: calc(var(--ws-wr-size) * 0.94);
+}
+.worldsmith .ws-wr-page--side .markdown-source-view.mod-cm6 .cm-sizer {
+	padding: 30px clamp(14px, 4cqi, 40px) 48px;
+}
+.worldsmith .ws-wr-page--side .ws-wr-pagehead {
+	margin-bottom: 20px;
+}
+.worldsmith .ws-wr-page--side .ws-wr-pagehead__title {
+	font-size: calc(26px * var(--ws-title-scale, 1));
+}
+
+/* The inspector. */
+.worldsmith .ws-wr-insp {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.worldsmith .ws-wr-insp__tabs {
+	display: flex;
+	gap: 2px;
+	padding: 8px 12px 0;
+	flex: none;
+}
+.worldsmith .ws-wr-insp__body {
+	flex: 1;
+	min-height: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 6px 16px 28px;
+}
+.worldsmith .ws-wr-insp__empty {
+	padding: 24px 4px;
+	text-align: center;
+}
+.worldsmith .ws-wr-insp__field {
+	margin-top: 16px;
+}
+.worldsmith .ws-wr-insp__field .ws-wr-sheet__label {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-wr-insp__big {
+	font-family: var(--ws-wr-serif);
+	font-size: 22px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-insp__bar {
+	margin: 6px 0 4px;
+}
+.worldsmith .ws-wr-insp__target {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-wr-insp__target input {
+	width: 110px;
+	height: 28px;
+}
+.worldsmith .ws-wr-insp__note {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	font-size: 12.5px;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-wr-insp__note svg {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-wr-insp__note.is-missing svg {
+	color: var(--color-orange);
+}
+.worldsmith .ws-wr-insp .ws-wr-sheet__tools {
+	border-top-color: var(--ws-border);
+}
+.worldsmith .ws-wr-itemnotes {
+	display: block;
+	width: 100%;
+	min-height: 160px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--background-modifier-form-field, transparent);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 14px;
+	line-height: 1.55;
+	resize: vertical;
+}
+.worldsmith .ws-wr-itemnotes:focus {
+	border-color: var(--ws-focus);
+	box-shadow: none;
+	outline: none;
+}
+
+/* ── Focus mode: just the page, filling the pane ───────────────────────── */
+.worldsmith .ws-wr-focustop,
+.worldsmith .ws-wr-session {
+	display: none;
+}
+.worldsmith .ws-page.ws-wr.is-focus {
+	position: fixed;
+	inset: 0;
+	z-index: 25;
+	max-width: none;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	animation: none;
+}
+.worldsmith .ws-wr.is-focus > .ws-wr-top {
+	display: none;
+}
+.worldsmith .ws-wr.is-focus .ws-wr-body > .ws-wr-ms {
+	max-width: none;
+	border-inline: 0;
+}
+.worldsmith .ws-wr-ms.is-focus :is(.ws-wr-binder, .ws-wr-side, .ws-wr-resizer, .ws-wr-ms__bar, .ws-wr-statusbar, .ws-wr-toolbar-wrap, .ws-wr-ms__scrim.ws-wr-ms__scrim.ws-wr-ms__scrim) {
+	display: none;
+}
+.worldsmith .ws-wr-ms.is-focus .ws-wr-focustop {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 10px clamp(12px, 4cqi, 60px) 0;
+	color: var(--ws-muted);
+	font-size: 13px;
+	flex: none;
+}
+.worldsmith .ws-wr-focustop__title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-focustop .is-on {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-wr-ms.is-focus .ws-wr-session {
+	position: absolute;
+	bottom: 14px;
+	left: 50%;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 5px 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-bg) 92%, transparent);
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	transform: translateX(-50%);
+	pointer-events: none;
+}
+.worldsmith .ws-wr-session__delta {
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-ms.is-focus .ws-wr-editor .markdown-source-view.mod-cm6 .cm-scroller {
+	padding-bottom: 70px;
+}
+
+/* ── The writing settings panel ────────────────────────────────────────── */
+.worldsmith .ws-popover.ws-wr-setpop {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 12px 14px 8px;
+}
+.worldsmith .ws-wr-setpop__title {
+	margin-bottom: 4px;
+	font-family: var(--ws-wr-serif);
+	font-size: 17px;
+	font-weight: 600;
+}
+.worldsmith .ws-wr-setpop .ws-frow {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+	gap: 12px;
+	padding: 7px 0;
+}
+.worldsmith .ws-wr-setpop .ws-frow__control {
+	min-width: 0;
+}
+.worldsmith .ws-wr-setpop .ws-frow__control select {
+	max-width: 100%;
+}
+/* A switch or a short select: the text gets the rest of the row. */
+.worldsmith .ws-wr-setpop .ws-frow.ws-wr-setpop__short {
+	grid-template-columns: minmax(0, 1fr) auto;
+}
+/* The surface choice gets the panel's whole width (three labels don't fit beside a label). */
+.worldsmith .ws-wr-setpop .ws-frow.ws-wr-setpop__stack {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 6px;
+}
+.worldsmith .ws-wr-setpop__stack .ws-segmented {
+	display: flex;
+	width: 100%;
+	box-sizing: border-box;
+}
+.worldsmith .ws-wr-setpop__stack .ws-segmented__item {
+	flex: 1 1 0;
+	min-width: 0;
+	justify-content: center;
+}
+.worldsmith .ws-wr-setpop__slider .ws-range {
+	flex: 1;
+	min-width: 90px;
+}
+.worldsmith .ws-wr-setpop__value {
+	min-width: 72px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith .ws-wr-setpop__custom {
+	padding: 0 0 6px;
+}
+.worldsmith .ws-wr-setpop__custom input {
+	width: 100%;
+}
+.worldsmith .ws-wr-setpop__foot {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 4px;
+	padding-top: 6px;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith .ws-wr-top__settings {
+	color: var(--ws-muted);
+}
+
+
+/* ── Narrow panes: the side pane is a sheet over the page ──────────────── */
+.worldsmith .ws-wr-ms.is-side-sheet .ws-wr-resizer.ws-wr-resizer.ws-wr-resizer {
+	display: none;
+}
+.worldsmith .ws-wr-ms.is-side-sheet .ws-wr-side {
+	position: absolute;
+	z-index: 5;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: min(380px, 92%);
+	box-shadow: 0 0 40px rgb(0 0 0 / 0.35);
+	transform: translateX(105%);
+	transition: transform var(--ws-dur-slow, 250ms) var(--ws-ease-out, ease-out);
+}
+.worldsmith .ws-wr-ms.is-side-sheet.is-side-open .ws-wr-side {
+	display: flex;
+	transform: none;
+}
+.worldsmith .ws-wr-ms.is-side-sheet.is-side-open .ws-wr-ms__scrim {
+	position: absolute;
+	z-index: 4;
+	inset: 0;
+	display: block;
+	background: rgb(0 0 0 / 0.35);
+}
+@container ws-wr (max-width: 640px) {
+	.worldsmith .ws-wr-ms.is-side-sheet .ws-wr-side {
+		width: 100%;
+	}
+	.worldsmith .ws-wr-ms.is-side-sheet.is-side-open .ws-wr-ms__scrim {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	.worldsmith .ws-wr-toolbar-wrap {
+		padding: 6px 6px 0;
+	}
+	.worldsmith .ws-wr-toolbar {
+		justify-content: flex-start;
+	}
+	.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 .cm-scroller {
+		padding: 10px 6px 40px;
+	}
+	.worldsmith .ws-wr-editor .markdown-source-view.mod-cm6 .cm-sizer {
+		padding: 28px 18px 48px;
+	}
+	.worldsmith .ws-wr-pagehead__title {
+		font-size: 26px;
+	}
+	.worldsmith .ws-wr-pagehead__rename {
+		opacity: 0.6;
+	}
+	.worldsmith .ws-wr-fallback {
+		inset: 10px 6px auto;
+		padding: 28px 18px;
+	}
+	.worldsmith .ws-wr-sb__read,
+	.worldsmith .ws-wr-sb__target,
+	.worldsmith .ws-wr-statusbar__bar,
+	.worldsmith .ws-wr-sb__session {
+		display: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.worldsmith .ws-wr-ms .ws-wr-side,
+	.worldsmith .ws-wr-ms.is-typewriter.is-dim .ws-wr-editor .cm-line {
+		transition: none;
+	}
+}
+.worldsmith .ws-popover.ws-wr-setpop > * {
+	flex-shrink: 0;
+}

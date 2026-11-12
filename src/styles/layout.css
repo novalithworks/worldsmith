@@ -1,0 +1,276 @@
+/* ── Layout engine output: stacks (vertical) and rows (columns) ────────────────
+ * Columns grow by their span and wrap when a pane gets too narrow for them, so the
+ * same layout reads well at full width, in a split, and on a phone.
+ */
+
+.worldsmith .ws-layout,
+.worldsmith .ws-layout-stack {
+	display: flex;
+	flex-direction: column;
+	gap: var(--ws-gap);
+	min-width: 0;
+}
+
+.worldsmith .ws-layout-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: var(--ws-gap);
+	min-width: 0;
+}
+
+.worldsmith .ws-layout-col {
+	flex: var(--ws-span) 1 0;
+	min-width: min(100%, calc(var(--ws-span) * 26px + 150px));
+	display: flex;
+	flex-direction: column;
+	gap: var(--ws-gap);
+}
+.worldsmith .ws-layout-col--spacer {
+	min-width: 0;
+}
+
+.worldsmith .ws-layout-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--ws-cols), minmax(0, 1fr));
+	gap: var(--ws-gap);
+	align-items: start;
+}
+
+.worldsmith[data-ws-size='narrow'] .ws-layout-row {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: stretch;
+}
+.worldsmith .ws-layout-row--tiles > .ws-layout-col {
+	min-width: min(100%, 150px);
+}
+.worldsmith[data-ws-size='narrow'] .ws-layout-row--tiles {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-layout-col--spacer {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-layout-grid {
+	display: flex;
+	flex-direction: column;
+}
+
+/* ── Block frames ──────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-block {
+	min-width: 0;
+}
+.worldsmith .ws-block--card {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-block__header {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 42px;
+	padding: 6px 10px 0 calc(var(--ws-pad) - 4px);
+}
+.worldsmith .ws-block__toggle {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: 0 1 auto;
+	min-width: 0;
+	margin-right: auto;
+	height: 30px;
+	padding: 0 4px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-block__caret {
+	color: var(--ws-faint);
+	opacity: 0;
+	transition: opacity var(--ws-dur), transform var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-block__caret svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-block__header:hover .ws-block__caret,
+.worldsmith .ws-block.is-collapsed .ws-block__caret,
+.worldsmith .ws-block__toggle:focus-visible .ws-block__caret {
+	opacity: 1;
+}
+.worldsmith .ws-block.is-collapsed .ws-block__caret {
+	transform: rotate(-90deg);
+}
+.worldsmith .ws-block__title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--ws-font-display);
+	font-size: 1.02rem;
+	letter-spacing: 0.005em;
+}
+.worldsmith .ws-block__actions {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+.worldsmith .ws-block__body {
+	padding: 8px var(--ws-pad) var(--ws-pad);
+}
+.worldsmith .ws-block.is-collapsed .ws-block__body {
+	display: none;
+}
+.worldsmith .ws-block.is-collapsed .ws-block__header {
+	padding-bottom: 6px;
+}
+
+/* Banner notice (trash / missing type) */
+.worldsmith .ws-banner-notice {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: var(--ws-gap);
+	padding: 10px 14px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-tint) 11%, transparent);
+	color: var(--ws-text);
+	font-size: var(--font-ui-small, 13px);
+}
+.worldsmith .ws-banner-notice > .ws-icon {
+	color: var(--ws-tint);
+}
+.worldsmith .ws-banner-notice__actions {
+	display: flex;
+	gap: 6px;
+	margin-left: auto;
+}
+
+/* Compact entity list (children, recent, favorites) */
+.worldsmith .ws-mini-list {
+	display: flex;
+	flex-direction: column;
+	margin: 0 -6px;
+}
+.worldsmith .ws-mini-list__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-mini-list__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-mini-list__text {
+	min-width: 0;
+	flex: 1;
+}
+.worldsmith .ws-mini-list__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--ws-font-body);
+	font-size: 0.95rem;
+}
+.worldsmith .ws-mini-list__meta {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-mini-list__more {
+	padding: 6px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* Blocks with nothing to show (e.g. Unused data) remove themselves from the flow. */
+.worldsmith .ws-block.is-block-hidden,
+.worldsmith .ws-layout-grid__cell.is-block-hidden {
+	display: none;
+}
+
+/* A height chosen while customizing: the frame keeps it and its content scrolls inside. */
+.worldsmith .ws-block.has-height:not(.is-collapsed) {
+	display: flex;
+	flex-direction: column;
+	height: var(--ws-block-h);
+}
+.worldsmith .ws-block.has-height:not(.is-collapsed) > .ws-block__body {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	scrollbar-width: thin;
+}
+.worldsmith .ws-block--plain.has-height:not(.is-collapsed) > .ws-block__scroll {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	overflow-y: auto;
+	scrollbar-width: thin;
+}
+/* Plain widgets that draw their own card fill the chosen height. */
+.worldsmith .ws-block__scroll > * {
+	flex: 1 0 auto;
+}
+
+/* Customize: the bottom-edge grip for height. */
+.worldsmith .ws-edit-vresize {
+	position: absolute;
+	left: 50%;
+	bottom: -6px;
+	z-index: 4;
+	width: 48px;
+	height: 10px;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	opacity: 0.7;
+	transform: translateX(-50%);
+	cursor: ns-resize;
+	touch-action: none;
+	transition: opacity var(--ws-dur-fast) ease, transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-edit-vresize:hover,
+.worldsmith .ws-edit-vresize:focus-visible,
+.worldsmith .ws-editable.is-vresizing .ws-edit-vresize {
+	opacity: 1;
+	transform: translateX(-50%) scaleX(1.15);
+}
+.worldsmith .ws-edit-height {
+	position: absolute;
+	left: 50%;
+	bottom: 10px;
+	z-index: 4;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+	font-size: 10.5px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	opacity: 0;
+	transform: translateX(-50%);
+	pointer-events: none;
+	transition: opacity var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-editable .ws-edit-vresize:hover ~ .ws-edit-height,
+.worldsmith .ws-editable.is-vresizing .ws-edit-height {
+	opacity: 1;
+}
+.worldsmith .ws-editable.is-vresizing {
+	outline: 2px dashed color-mix(in srgb, var(--ws-accent) 60%, transparent);
+	outline-offset: 3px;
+}

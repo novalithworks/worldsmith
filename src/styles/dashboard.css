@@ -1,0 +1,279 @@
+/* ── Dashboard ─────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-world-hero__banner {
+	overflow: hidden;
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-world-hero__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.worldsmith .ws-world-hero__body {
+	display: flex;
+	align-items: flex-start;
+	gap: 18px;
+	padding: 14px 4px 6px;
+}
+.worldsmith .ws-world-hero.has-banner .ws-world-hero__body {
+	margin-top: -40px;
+	padding: 0 22px 6px;
+}
+.worldsmith .ws-world-hero__seal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 64px;
+	height: 64px;
+	flex: none;
+	border-radius: 999px;
+	background: var(--ws-bg);
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 50%, var(--ws-border));
+	box-shadow: 0 0 0 4px var(--ws-bg);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-world-hero__seal svg {
+	width: 28px;
+	height: 28px;
+}
+.worldsmith .ws-world-hero__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-world-hero.has-banner .ws-world-hero__text {
+	padding-top: 44px;
+}
+.worldsmith .ws-world-hero__name {
+	margin: 0;
+	font-family: var(--ws-font-display);
+	font-size: clamp(1.9rem, 4cqi, 3rem);
+	font-weight: var(--h1-weight, 600);
+	line-height: 1.08;
+	letter-spacing: -0.01em;
+}
+.worldsmith .ws-world-hero__desc {
+	max-width: 68ch;
+	margin: 8px 0 0;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-body);
+	font-size: 1.04rem;
+	line-height: 1.6;
+}
+.worldsmith .ws-world-hero__actions {
+	padding-top: 4px;
+}
+.worldsmith .ws-world-hero.has-banner .ws-world-hero__actions {
+	padding-top: 48px;
+}
+
+/* Contents: set like the contents page of a book */
+.worldsmith .ws-contents__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+	gap: 14px 18px;
+}
+.worldsmith .ws-contents__sec-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin: 0 6px 6px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-contents__sec-label {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-contents__sec-count {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-contents__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.worldsmith a.ws-contents__row {
+	position: relative;
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr) auto 14px;
+	align-items: center;
+	gap: 10px;
+	min-height: 44px;
+	padding: 6px 6px;
+	border-radius: var(--ws-radius);
+	color: var(--ws-text);
+	text-decoration: none;
+	transition: background-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-contents__glyph {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+	color: var(--ws-tint);
+	transition: transform var(--ws-dur) var(--ws-ease-spring), background-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-contents__glyph svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-contents__text {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	min-width: 0;
+	gap: 0 8px;
+}
+.worldsmith .ws-contents__name {
+	grid-column: 1 / -1;
+	overflow: hidden;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.25;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-contents__bar {
+	position: relative;
+	grid-column: 2;
+	grid-row: 2;
+	max-width: 90px;
+	height: 3px;
+	margin-top: 3px;
+	overflow: hidden;
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+}
+.worldsmith .ws-contents__bar-fill {
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: var(--ws-tint);
+	opacity: 0.75;
+	transform-origin: left center;
+}
+.worldsmith .ws-contents__meta {
+	margin-top: 3px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	line-height: 1;
+	white-space: nowrap;
+}
+.worldsmith .ws-contents__bar + .ws-contents__meta {
+	grid-column: 1;
+	grid-row: 2;
+}
+.worldsmith .ws-contents__count {
+	min-width: 26px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: var(--ws-surface);
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+	transition: background-color var(--ws-dur) var(--ws-ease-out), color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-contents__go {
+	display: flex;
+	color: var(--ws-tint);
+	opacity: 0;
+	transform: translateX(-4px);
+	transition: opacity var(--ws-dur) var(--ws-ease-out), transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-contents__go svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith a.ws-contents__row.is-empty .ws-contents__name {
+	color: var(--ws-faint);
+	font-weight: 400;
+}
+.worldsmith a.ws-contents__row.is-empty .ws-contents__glyph {
+	background: transparent;
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ws-tint) 22%, transparent);
+	opacity: 0.7;
+}
+.worldsmith a.ws-contents__row:focus-visible {
+	outline: 2px solid var(--ws-accent);
+	outline-offset: -2px;
+}
+@media (hover: hover) {
+	.worldsmith a.ws-contents__row:hover {
+		background: color-mix(in srgb, var(--ws-tint) 9%, transparent);
+		text-decoration: none;
+	}
+	.worldsmith a.ws-contents__row:hover .ws-contents__glyph {
+		transform: scale(1.08);
+		background: color-mix(in srgb, var(--ws-tint) 22%, transparent);
+		opacity: 1;
+	}
+	.worldsmith a.ws-contents__row:hover .ws-contents__count {
+		background: color-mix(in srgb, var(--ws-tint) 16%, transparent);
+		color: var(--ws-tint);
+	}
+	.worldsmith a.ws-contents__row:hover .ws-contents__go {
+		opacity: 1;
+		transform: none;
+	}
+	.worldsmith a.ws-contents__row.is-empty:hover .ws-contents__name {
+		color: var(--ws-muted);
+	}
+}
+.worldsmith .ws-contents__foot {
+	margin-top: 10px;
+	padding-top: 8px;
+	border-top: 1px solid var(--ws-border);
+}
+
+/* Quick create */
+.worldsmith .ws-quick {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+	gap: 8px;
+}
+.worldsmith .ws-quick__item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 40px;
+	padding: 0 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	cursor: pointer;
+	transition: border-color var(--ws-dur), background var(--ws-dur);
+}
+.worldsmith .ws-quick__item:hover {
+	border-color: color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 6%, var(--ws-bg));
+}
+.worldsmith .ws-quick__icon {
+	color: var(--ws-tint);
+}
+.worldsmith .ws-quick__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-quick__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-quick__item--more {
+	color: var(--ws-muted);
+	border-style: dashed;
+}

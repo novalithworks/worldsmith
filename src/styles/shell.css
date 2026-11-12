@@ -1,0 +1,515 @@
+/* ── Host view & shell ─────────────────────────────────────────────────────── */
+
+.worldsmith-view.view-content {
+	padding: 0;
+	overflow: hidden;
+}
+
+.worldsmith {
+	position: relative;
+	height: 100%;
+	background: var(--ws-bg);
+	color: var(--ws-text);
+	font-family: var(--ws-font-ui);
+	container-type: inline-size;
+}
+
+.worldsmith .ws-shell {
+	display: flex;
+	height: 100%;
+	min-height: 0;
+}
+
+.worldsmith .ws-shell__side {
+	position: relative;
+	width: var(--ws-side-w, 252px);
+	flex: none;
+	min-height: 0;
+	background: var(--ws-bg-side);
+	border-right: 1px solid var(--ws-border);
+	transition: margin-left 220ms var(--ws-ease), transform 220ms var(--ws-ease);
+}
+.worldsmith .ws-shell.is-sidebar-hidden .ws-shell__side {
+	margin-left: calc(-1 * var(--ws-side-w, 252px));
+}
+
+.worldsmith .ws-shell__main {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.worldsmith .ws-shell__page {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+.worldsmith .ws-shell__scrim {
+	display: none;
+}
+
+/* Narrow pane: sidebar becomes an overlay drawer */
+.worldsmith[data-ws-size='narrow'] .ws-shell__side {
+	position: absolute;
+	inset: 0 auto 0 0;
+	z-index: 20;
+	margin-left: 0;
+	transform: translateX(-100%);
+	box-shadow: var(--shadow-l);
+}
+.worldsmith[data-ws-size='narrow'] .ws-shell.is-drawer-open .ws-shell__side {
+	transform: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-shell.is-drawer-open .ws-shell__scrim {
+	display: block;
+	position: absolute;
+	inset: 0;
+	z-index: 19;
+	background: color-mix(in srgb, var(--background-primary) 40%, transparent);
+	backdrop-filter: blur(2px);
+}
+
+/* Top bar */
+.worldsmith .ws-topbar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 42px;
+	flex: none;
+	padding: 0 12px 0 8px;
+	border-bottom: 1px solid var(--ws-border);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-topbar__title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: var(--font-ui-small, 13px);
+}
+.worldsmith .ws-topbar__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-topbar__text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-topbar__spacer {
+	flex: 1;
+}
+/* The trail before the page's name: World / Characters / … */
+.worldsmith .ws-trail__steps {
+	display: flex;
+	flex: 0 1 auto;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	overflow: hidden;
+}
+.worldsmith .ws-trail__step {
+	flex: 0 6 auto;
+	min-width: 2.5em;
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ws-muted);
+	text-decoration: none;
+}
+.worldsmith .ws-trail__step:hover {
+	color: var(--ws-text);
+	text-decoration: underline;
+}
+.worldsmith .ws-trail__sep {
+	flex: none;
+	color: var(--ws-faint);
+}
+/* The page's own name gives way last: the steps shrink six times faster. */
+.worldsmith .ws-trail__here {
+	flex: 0 1 auto;
+	min-width: 3em;
+}
+.worldsmith[data-ws-size='narrow'] .ws-trail__steps {
+	display: none;
+}
+/* Medium panes keep the world and the type; the places in between drop out. */
+.worldsmith[data-ws-size='medium'] :is(.ws-trail__step--anc, .ws-trail__step--anc + .ws-trail__sep) {
+	display: none;
+}
+
+/* Save indicator */
+.worldsmith .ws-save {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	transition: opacity 300ms var(--ws-ease);
+}
+.worldsmith .ws-save--idle {
+	opacity: 0;
+}
+.worldsmith .ws-save svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-save--saving .ws-save__icon {
+	animation: ws-spin 1s linear infinite;
+}
+.worldsmith .ws-save--error {
+	color: var(--color-red);
+	cursor: pointer;
+}
+@keyframes ws-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Page container */
+.worldsmith .ws-page {
+	max-width: var(--ws-max-width, 1180px);
+	margin: 0 auto;
+	padding: 28px clamp(16px, 4cqi, 44px) 96px;
+	animation: ws-page-in 220ms var(--ws-ease);
+}
+.worldsmith.is-full-width .ws-page {
+	max-width: none;
+}
+@keyframes ws-page-in {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+}
+.worldsmith[data-ws-size='narrow'] .ws-page {
+	padding: 18px 14px 80px;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-sidebar {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	min-height: 0;
+}
+.worldsmith .ws-sidebar__top {
+	padding: 12px 10px 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-world-switch {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	padding: 6px 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-world-switch:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-world-switch__seal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	flex: none;
+	border-radius: 999px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+	color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 9%, transparent);
+}
+.worldsmith .ws-world-switch__seal svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-world-switch__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	flex: 1;
+}
+.worldsmith .ws-world-switch__eyebrow {
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-world-switch__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	line-height: 1.25;
+}
+.worldsmith .ws-world-switch__caret {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-world-switch__caret svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-sidebar__quick {
+	display: flex;
+	gap: 6px;
+}
+.worldsmith .ws-sidebar__search {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 30px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--background-modifier-form-field, var(--ws-bg));
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: var(--font-ui-small, 13px);
+	cursor: text;
+}
+.worldsmith .ws-sidebar__search:hover {
+	border-color: var(--ws-border-strong);
+	color: var(--ws-muted);
+}
+.worldsmith .ws-sidebar__search svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-sidebar__create.ws-btn--sm {
+	width: 30px;
+	height: 30px;
+}
+
+.worldsmith .ws-sidebar__nav {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 4px 8px 16px;
+}
+.worldsmith .ws-nav-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: 30px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: var(--font-ui-small, 13px);
+	text-decoration: none;
+	cursor: pointer;
+	transition: background var(--ws-dur), color var(--ws-dur);
+}
+.worldsmith .ws-nav-item:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+	text-decoration: none;
+}
+.worldsmith .ws-nav-item.is-active {
+	background: var(--background-modifier-active-hover, var(--ws-hover));
+	color: var(--ws-text);
+	font-weight: 600;
+}
+.worldsmith .ws-nav-item__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-nav-item[class*='ws-tint--'] .ws-nav-item__icon {
+	color: var(--ws-tint);
+	opacity: 0.85;
+}
+.worldsmith .ws-nav-item__label {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-nav-item__count {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 400;
+}
+.worldsmith .ws-nav-group {
+	margin-top: 14px;
+}
+.worldsmith .ws-nav-group__head {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	width: 100%;
+	height: 22px;
+	padding: 0 8px;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.worldsmith .ws-nav-group__head:hover {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-nav-group__label {
+	flex: 1;
+	text-align: left;
+}
+.worldsmith .ws-nav-group__caret {
+	opacity: 0;
+	transition: opacity var(--ws-dur), transform var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-nav-group__head:hover .ws-nav-group__caret,
+.worldsmith .ws-nav-group.is-collapsed .ws-nav-group__caret {
+	opacity: 1;
+}
+.worldsmith .ws-nav-group.is-collapsed .ws-nav-group__caret {
+	transform: rotate(-90deg);
+}
+.worldsmith .ws-nav-group__caret svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-nav-group.is-collapsed .ws-nav-group__body {
+	display: none;
+}
+.worldsmith .ws-sidebar__foot {
+	padding: 8px;
+	border-top: 1px solid var(--ws-border);
+}
+
+/* ── Loading skeleton & fatal error ────────────────────────────────────────── */
+
+.worldsmith .ws-skeleton {
+	display: flex;
+	height: 100%;
+}
+.worldsmith .ws-skeleton__side {
+	width: 252px;
+	padding: 18px 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	background: var(--ws-bg-side);
+	border-right: 1px solid var(--ws-border);
+}
+.worldsmith .ws-skeleton__main {
+	flex: 1;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.worldsmith .ws-skeleton__row {
+	display: flex;
+	gap: 20px;
+}
+.worldsmith :is(.ws-skeleton__line, .ws-skeleton__hero, .ws-skeleton__card) {
+	border-radius: var(--ws-radius);
+	background: linear-gradient(90deg, var(--ws-hover) 0%, color-mix(in srgb, var(--ws-hover) 40%, transparent) 50%, var(--ws-hover) 100%);
+	background-size: 200% 100%;
+	animation: ws-shimmer 1.4s ease-in-out infinite;
+}
+.worldsmith .ws-skeleton__line {
+	height: 14px;
+}
+.worldsmith .ws-skeleton__line:nth-child(3n) {
+	width: 70%;
+}
+.worldsmith .ws-skeleton__hero {
+	height: 180px;
+}
+.worldsmith .ws-skeleton__card {
+	flex: 1;
+	height: 220px;
+}
+@keyframes ws-shimmer {
+	to {
+		background-position: -200% 0;
+	}
+}
+.worldsmith[data-ws-size='narrow'] .ws-skeleton__side {
+	display: none;
+}
+.worldsmith .ws-fatal {
+	padding-top: 12vh;
+}
+.worldsmith .ws-fatal__more {
+	display: flex;
+	justify-content: center;
+}
+.worldsmith .ws-fatal__details {
+	max-width: 760px;
+	max-height: 240px;
+	margin: 12px auto 0;
+	padding: 12px 14px;
+	overflow: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	color: var(--ws-muted);
+	font-family: var(--font-monospace);
+	font-size: 11.5px;
+	white-space: pre-wrap;
+	user-select: text;
+}
+
+/* Sidebar resize grip: a slim strip along the sidebar's right edge. */
+.worldsmith .ws-shell__resize {
+	touch-action: none;
+	position: absolute;
+	top: 0;
+	right: -3px;
+	bottom: 0;
+	width: 6px;
+	z-index: 5;
+	cursor: col-resize;
+}
+.worldsmith .ws-shell__resize:hover,
+.worldsmith .ws-shell__resize:focus-visible,
+.worldsmith .ws-shell.is-resizing-side .ws-shell__resize {
+	background: linear-gradient(to right, transparent 2px, var(--ws-accent) 2px, var(--ws-accent) 4px, transparent 4px);
+	outline: none;
+}
+.worldsmith .ws-shell.is-resizing-side {
+	cursor: col-resize;
+	user-select: none;
+}
+.worldsmith .ws-shell.is-resizing-side .ws-shell__side {
+	transition: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-shell__resize {
+	display: none;
+}
+/* "Hidden" is for docked sidebars; on narrow panes the sidebar is a drawer and must still open. */
+.worldsmith[data-ws-size='narrow'] .ws-shell.is-sidebar-hidden .ws-shell__side {
+	margin-left: 0;
+}
+/* View kinds: icons, with names on wide panes in the Modern Codex design. */
+.worldsmith .ws-segmented__label {
+	display: none;
+}

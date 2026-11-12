@@ -1,0 +1,52 @@
+# Builds the free edition from this repository when a release is published, checks the release
+# tag matches manifest.json, attests where the files came from (GitHub artifact attestations),
+# and attaches main.js, manifest.json and styles.css to the release.
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: The release tag must match the manifest's version
+        run: |
+          v=$(node -p "require('./manifest.json').version")
+          if [ "$v" != "${{ github.event.release.tag_name }}" ]; then
+            echo "Release tag ${{ github.event.release.tag_name }} differs from manifest.json version $v" >&2
+            exit 1
+          fi
+
+      - name: Install
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        run: npm install --no-audit --no-fund
+
+      - name: Build the free edition
+        run: node esbuild.config.mjs production
+
+      - name: Attest the release files
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            main.js
+            styles.css
+            manifest.json
+
+      - name: Attach the files to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" main.js manifest.json styles.css --clobber

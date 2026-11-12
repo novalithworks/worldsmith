@@ -1,0 +1,316 @@
+/* ── All tasks (task-list widget) ───────────────────────────────────────────────── */
+
+.worldsmith .ws-tl__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 16px 10px;
+}
+.worldsmith .ws-tl__title {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin-right: auto;
+	font-family: var(--ws-font-display);
+	font-size: 1.12rem;
+}
+.worldsmith .ws-tl__count {
+	color: var(--ws-faint);
+	font-family: var(--ws-font-ui);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-tl__search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	flex: 0 1 220px;
+	min-width: 140px;
+}
+.worldsmith .ws-tl__search > .ws-icon {
+	position: absolute;
+	left: 9px;
+	display: flex;
+	color: var(--ws-faint);
+	pointer-events: none;
+}
+.worldsmith .ws-tl__search svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-tl .ws-tl__input {
+	width: 100%;
+	height: 28px;
+	padding: 0 10px 0 28px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	font-size: 12.5px;
+}
+.worldsmith .ws-tl__tools {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-tl__views {
+	display: flex;
+	gap: 4px;
+	padding: 0 12px 10px;
+	overflow-x: auto;
+	scrollbar-width: none;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith .ws-tl .ws-tl__view {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 10px;
+	border: none;
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur) var(--ws-ease-out), color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tl__view svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-tl__view-n {
+	min-width: 18px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	line-height: 17px;
+	text-align: center;
+	transition: background-color var(--ws-dur) var(--ws-ease-out), color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tl .ws-tl__view:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-tl .ws-tl__view.is-active {
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	color: var(--ws-accent);
+	font-weight: 500;
+}
+.worldsmith .ws-tl__view.is-active .ws-tl__view-n {
+	background: var(--ws-accent);
+	color: var(--ws-on-accent);
+}
+.worldsmith .ws-tl__view.is-alert .ws-tl__view-n {
+	background: color-mix(in srgb, var(--color-red) 18%, transparent);
+	color: var(--color-red);
+}
+.worldsmith .ws-tl__body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 10px 12px 12px;
+}
+
+/* A group: a soft card with a header that folds it. */
+.worldsmith .ws-tl__group {
+	border: 1px solid color-mix(in srgb, var(--ws-border) 80%, transparent);
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+	overflow: hidden;
+}
+.worldsmith .ws-tl .ws-tl__ghead {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	min-height: 40px;
+	padding: 6px 12px 6px 8px;
+	border: none;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tl .ws-tl__ghead:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-tl__caret {
+	display: flex;
+	color: var(--ws-faint);
+	transition: transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tl__caret svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-tl__group.is-folded .ws-tl__caret {
+	transform: rotate(-90deg);
+}
+.worldsmith .ws-tl__gicon {
+	display: flex;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-tl__gicon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-tl__gname {
+	overflow: hidden;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl__gtype {
+	padding: 0 7px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	color: var(--ws-tint);
+	font-size: 11px;
+	line-height: 18px;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl__gspacer {
+	flex: 1;
+}
+.worldsmith .ws-tl__gbar {
+	position: relative;
+	width: 64px;
+	height: 4px;
+	overflow: hidden;
+	border-radius: 2px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-tl__gbar-fill {
+	position: absolute;
+	inset: 0;
+	background: var(--color-green);
+	transform-origin: left center;
+	transition: transform var(--ws-dur-slow) var(--ws-ease-out);
+}
+.worldsmith .ws-tl__gprog {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-tl__gcount {
+	min-width: 22px;
+	padding: 0 7px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	line-height: 19px;
+	text-align: center;
+}
+.worldsmith .ws-tl__rows {
+	display: flex;
+	flex-direction: column;
+}
+.worldsmith .ws-tl__group .ws-tl__rows {
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 60%, transparent);
+}
+.worldsmith .ws-tl__row {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 10px;
+	min-height: 40px;
+	padding: 6px 12px 6px 14px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-tl__row + .ws-tl__row {
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 45%, transparent);
+}
+.worldsmith .ws-tl__row:hover {
+	background: color-mix(in srgb, var(--ws-hover) 70%, transparent);
+}
+.worldsmith .ws-tl__row:focus-visible {
+	outline: 2px solid var(--ws-accent);
+	outline-offset: -2px;
+}
+.worldsmith .ws-tl__main {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+.worldsmith .ws-tl__task {
+	overflow: hidden;
+	font-size: 13.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-tl__row.is-done .ws-tl__task {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+.worldsmith .ws-tl__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-tl__world {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-tl__status {
+	color: var(--ws-tint);
+	font-weight: 600;
+}
+.worldsmith .ws-tl__side {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-tl__side .ws-due.is-empty:empty {
+	display: none;
+}
+.worldsmith .ws-tl .ws-tl__gmore,
+.worldsmith .ws-tl .ws-tl__more {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: 100%;
+	height: 32px;
+	border: none;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 60%, transparent);
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-accent);
+	font-size: 12px;
+	cursor: pointer;
+	transition: background-color var(--ws-dur-fast) ease;
+}
+.worldsmith .ws-tl .ws-tl__more {
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith .ws-tl .ws-tl__gmore:hover,
+.worldsmith .ws-tl .ws-tl__more:hover {
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+}
+.worldsmith .ws-tl__more svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-tl__search {
+	flex: 1 1 100%;
+	order: 3;
+}

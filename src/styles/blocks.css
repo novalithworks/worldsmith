@@ -1,0 +1,265 @@
+/* ── Side blocks: progress, linked note, gallery ───────────────────────────── */
+
+.worldsmith .ws-progress__top {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+.worldsmith .ws-progress__headline {
+	font-family: var(--ws-font-body);
+	font-size: 0.98rem;
+}
+.worldsmith .ws-progress__sub {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.4;
+}
+.worldsmith .ws-progress__next {
+	margin-top: 14px;
+}
+.worldsmith .ws-progress__next:empty {
+	display: none;
+}
+.worldsmith .ws-progress__next-label {
+	margin-bottom: 4px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-progress__list {
+	margin: 0 -6px;
+	padding: 0;
+	list-style: none;
+}
+.worldsmith .ws-progress__item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: 30px;
+	padding: 0 6px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 0.92rem;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-progress__item:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-progress__item-icon {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-progress__item-icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-progress__item:hover .ws-progress__item-icon {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-progress__more {
+	padding: 4px 0 0;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* Linked note */
+.worldsmith .ws-note__hint {
+	margin-bottom: 10px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+}
+.worldsmith .ws-note__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+.worldsmith .ws-note__file {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 8px;
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-note__file.is-clickable {
+	cursor: pointer;
+	transition: border-color var(--ws-dur);
+}
+.worldsmith .ws-note__file.is-clickable:hover {
+	border-color: var(--ws-border-strong);
+}
+.worldsmith .ws-note__file.is-missing {
+	border-style: dashed;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-note__file-icon {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-note__file.is-missing .ws-note__file-icon {
+	color: var(--color-orange);
+}
+.worldsmith .ws-note__file-meta {
+	min-width: 0;
+}
+.worldsmith .ws-note__file-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--ws-font-body);
+}
+.worldsmith .ws-note__file-path {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-note__preview {
+	max-height: 320px;
+	margin-top: 10px;
+	padding: 12px 14px;
+	overflow: auto;
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	font-family: var(--ws-font-body);
+	font-size: 0.92rem;
+}
+
+/* Several linked notes (0.10) */
+.worldsmith .ws-note__list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+.worldsmith .ws-note__list .ws-note__file {
+	margin-bottom: 0;
+	padding: 8px 8px 8px 10px;
+}
+.worldsmith .ws-note__item.is-previewing .ws-note__file {
+	border-color: color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+}
+.worldsmith .ws-note__file-meta {
+	flex: 1 1 auto;
+}
+.worldsmith .ws-note__file-name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-note__file-name > span:first-child {
+	overflow: hidden;
+	min-width: 0;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-note__main {
+	flex: none;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	color: var(--ws-accent);
+	font-family: var(--ws-font-ui);
+	font-size: 10.5px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+.worldsmith .ws-note__tools {
+	display: flex;
+	flex: none;
+	gap: 2px;
+	opacity: 0.55;
+	transition: opacity var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-note__file:hover .ws-note__tools,
+.worldsmith .ws-note__tools:focus-within {
+	opacity: 1;
+}
+.worldsmith .ws-note__item .ws-note__preview {
+	margin-top: 6px;
+}
+
+/* Required fields in “Next up”. */
+.worldsmith .ws-progress__item.is-required .ws-progress__item-icon {
+	color: var(--color-red);
+}
+.worldsmith .ws-progress__req {
+	margin-left: auto;
+	padding: 1px 6px;
+	border-radius: 999px;
+	background: rgba(var(--color-red-rgb), 0.12);
+	color: var(--color-red);
+	font-family: var(--ws-font-ui);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+/* Unused data */
+.worldsmith .ws-block-type--unused-data.ws-block--card {
+	border-color: rgba(var(--color-orange-rgb), 0.35);
+}
+.worldsmith .ws-unused__intro {
+	margin-bottom: 10px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+.worldsmith .ws-unused__list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-unused__item {
+	padding: 9px 10px 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-unused__head {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+.worldsmith .ws-unused__icon {
+	align-self: center;
+	color: var(--color-orange);
+}
+.worldsmith .ws-unused__icon svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-unused__label {
+	font-family: var(--ws-font-ui);
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-unused__why {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-unused__value {
+	margin: 5px 0 6px;
+	font-family: var(--ws-font-body);
+	font-size: 0.92rem;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+}
+.worldsmith .ws-unused__actions {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	margin-left: -4px;
+}
+.worldsmith .ws-unused__actions .ws-btn:first-child {
+	margin-right: auto;
+}

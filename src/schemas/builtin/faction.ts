@@ -1,0 +1,57 @@
+import { defineType, f, opts, section, tasks } from '../dsl';
+
+export const factionType = defineType(
+	{
+		id: 'faction',
+		singular: 'Faction',
+		plural: 'Factions',
+		icon: 'shield',
+		description: 'Guilds, orders, houses, companies, cults and secret societies.',
+		group: 'society',
+		color: 'red',
+		order: 70,
+		subtitle: ['factionType', 'influence'],
+		card: ['factionType', 'influence', 'standing'],
+		parentTypes: ['faction', 'nation'],
+		childTypes: ['faction'],
+		tasks: tasks(
+			'Define purpose and goals|Identity',
+			'Define leadership|Structure',
+			'Define hierarchy and ranks|Structure',
+			'Define headquarters|Structure',
+			'Add key members|Members',
+			'Define allies and enemies|Politics',
+			'Define resources|Power',
+			'Write founding history|History',
+			'Design a symbol or banner|Media|optional',
+		),
+	},
+	section('identity', 'Identity', 'shield', [
+		f.select('factionType', 'Type', opts('Guild:yellow', 'Order:blue', 'House:purple', 'Military:red', 'Cult:pink', 'Company:green', 'Criminal:gray', 'Secret society:purple', 'Political:cyan')),
+		f.long('purpose', 'Purpose', { recommended: true }),
+		f.list('goals', 'Goals', { recommended: true }),
+		f.text('motto', 'Motto'),
+		f.list('values', 'Values', { advanced: true }),
+	]),
+	section('structure', 'Structure', 'network', [
+		f.rel('leaders', 'Leaders', { via: 'leads', direction: 'reverse', targets: ['character'] }),
+		f.rel('members', 'Members', { via: 'member-of', direction: 'reverse', targets: ['character'] }),
+		f.list('ranks', 'Ranks'),
+		f.long('hierarchy', 'Hierarchy'),
+		f.rel('headquarters', 'Headquarters', { via: 'based-in', targets: ['location'], max: 1 }),
+		f.text('size', 'Size', { width: 'third' }),
+	]),
+	section('power', 'Power & politics', 'crown', [
+		f.select('influence', 'Influence', opts('Negligible:gray', 'Local:green', 'Regional:cyan', 'National:blue', 'Continental:purple', 'World-spanning:orange')),
+		f.select('standing', 'Public standing', opts('Revered:green', 'Respected:cyan', 'Neutral:gray', 'Distrusted:yellow', 'Outlawed:red', 'Unknown:purple')),
+		f.long('resources', 'Resources'),
+		f.rel('allies', 'Allies', { via: 'alliance', targets: ['faction', 'nation'] }),
+		f.rel('enemies', 'Enemies', { via: 'hostility', targets: ['faction', 'nation'] }),
+		f.rel('religion', 'Religion', { via: 'follows-religion', targets: ['religion'], advanced: true }),
+	]),
+	section('history', 'History', 'scroll-text', [
+		f.chrono('founded', 'Founded'),
+		f.rel('founder', 'Founder', { via: 'founded-by', targets: ['character'], max: 1 }),
+		f.rich('history', 'History', { recommended: true }),
+	]),
+);

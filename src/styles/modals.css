@@ -1,0 +1,376 @@
+/* ── Modals, forms & onboarding ────────────────────────────────────────────── */
+
+.worldsmith-modal .ws-form,
+.worldsmith .ws-form {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-form__row {
+	display: flex;
+	align-items: flex-end;
+	gap: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-form__row .ws-form__field {
+	flex: 1;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-form__field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-form__label {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-form__hint {
+	margin: 0;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-input {
+	width: 100%;
+	height: 36px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--background-modifier-form-field, var(--ws-bg));
+	color: var(--ws-text);
+	font-size: 14px;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-input--area {
+	height: auto;
+	padding: 8px 10px;
+	resize: vertical;
+	font-family: var(--ws-font-body);
+	line-height: 1.5;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-input:focus {
+	border-color: var(--ws-focus);
+	outline: none;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 14%, transparent);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-input.is-invalid {
+	border-color: var(--color-red);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 6px;
+}
+
+/* Icon picker button (also in modals) */
+.worldsmith-modal .ws-icon-pick {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	flex: none;
+	padding: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-accent);
+	cursor: pointer;
+}
+
+/* Confirm */
+.worldsmith-modal .ws-confirm__body {
+	margin: 0 0 12px;
+	color: var(--ws-muted);
+	line-height: 1.5;
+}
+.worldsmith-modal .ws-confirm__details {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 8px;
+	padding: 10px 12px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-orange) 10%, transparent);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-confirm__details-icon {
+	color: var(--color-orange);
+}
+.worldsmith-modal .ws-confirm__details ul {
+	margin: 0;
+	padding-left: 16px;
+}
+
+/* Create entity */
+.worldsmith-modal .ws-type-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+	gap: 6px;
+	max-height: 60vh;
+	overflow-y: auto;
+}
+.worldsmith-modal .ws-type-grid__item {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	height: 40px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-type-grid__item:hover,
+.worldsmith-modal .ws-type-grid__item:focus-visible {
+	border-color: color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 7%, transparent);
+}
+.worldsmith-modal .ws-type-grid__icon {
+	color: var(--ws-tint);
+}
+.worldsmith-modal .ws-type-grid__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-type-grid__item--new {
+	border-style: dashed;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-create-modal__type {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-tint);
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-create-modal__type .ws-link-btn {
+	margin-left: auto;
+	font-weight: 400;
+}
+
+/* Suggest modals */
+.worldsmith-modal .ws-suggest {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.worldsmith-modal .ws-suggest__text {
+	min-width: 0;
+}
+.worldsmith-modal .ws-suggest__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-suggest__meta {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal.ws-image-picker .ws-image-picker__item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.worldsmith-modal .ws-image-picker__thumb {
+	width: 52px;
+	height: 40px;
+	flex: none;
+	overflow: hidden;
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-image-picker__thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.worldsmith-modal .ws-image-picker__text {
+	min-width: 0;
+}
+.worldsmith-modal .ws-image-picker__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-image-picker__path {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal.ws-icon-picker .ws-icon-picker__item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.worldsmith-modal .ws-icon-picker__glyph svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* World form */
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner {
+	position: relative;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
+	height: 120px;
+	padding: 0;
+	overflow: hidden;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-btn:hover {
+	color: var(--ws-text);
+	border-color: var(--ws-muted);
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+:is(.worldsmith, .worldsmith-modal) .ws-world-form__banner-remove {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-bg) 85%, transparent);
+	box-shadow: none;
+	cursor: pointer;
+}
+
+/* Onboarding */
+.worldsmith .ws-onboarding {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100%;
+	padding-top: 8vh;
+}
+.worldsmith .ws-onboarding__card {
+	width: 100%;
+	max-width: 520px;
+	text-align: center;
+}
+.worldsmith .ws-onboarding__card.is-form {
+	text-align: left;
+}
+.worldsmith .ws-onboarding__seal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 76px;
+	height: 96px;
+	margin: 0 auto 22px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 50%, var(--ws-border));
+	border-radius: 999px 999px var(--ws-radius) var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+	color: var(--ws-accent);
+	animation: ws-seal-in 700ms var(--ws-ease) both;
+}
+.worldsmith .ws-onboarding__seal svg {
+	width: 32px;
+	height: 32px;
+}
+@keyframes ws-seal-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px) scale(0.96);
+	}
+}
+.worldsmith .ws-onboarding__title {
+	margin: 0;
+	font-family: var(--ws-font-display);
+	font-size: clamp(2rem, 5cqi, 2.8rem);
+	font-weight: var(--h1-weight, 600);
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+}
+.worldsmith .ws-onboarding__title--small {
+	margin-bottom: 18px;
+	font-size: 1.7rem;
+}
+.worldsmith .ws-onboarding__lede {
+	max-width: 44ch;
+	margin: 14px auto 0;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-body);
+	font-size: 1.05rem;
+	line-height: 1.6;
+}
+.worldsmith .ws-onboarding__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 28px;
+}
+.worldsmith .ws-onboarding__actions .ws-btn {
+	height: 38px;
+	padding: 0 16px;
+}
+.worldsmith .ws-onboarding__foot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	margin-top: 36px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-onboarding__foot svg {
+	width: 13px;
+	height: 13px;
+}
+
+/* Settings tab */
+.worldsmith-settings .ws-settings-backups {
+	margin-left: 18px;
+	border-left: 1px solid var(--background-modifier-border);
+	padding-left: 12px;
+}
+
+/* Diagnostics report */
+.worldsmith-modal .ws-report {
+	width: 100%;
+	min-height: 260px;
+	font-family: var(--font-monospace);
+	font-size: 11.5px;
+	line-height: 1.45;
+	white-space: pre;
+	resize: vertical;
+}
+
+/* Pop-ups opened inside a dialog are placed from its content box. */
+.worldsmith-modal .modal-content {
+	position: relative;
+}
+
+/* An inline reason a form can't be saved yet. */
+.worldsmith-modal .ws-form__msg {
+	color: var(--text-error);
+	font-size: var(--font-ui-small, 13px);
+}
+.worldsmith-modal .ws-form__msg:empty {
+	display: none;
+}

@@ -1,0 +1,3111 @@
+/*
+ * Family trees, the relationship graph and maps (0.11): canvases you can pan and zoom,
+ * with cards, dots and pins drawn in the theme's own colours.
+ */
+
+/* ── Page frame ───────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-vis {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.worldsmith .ws-vis-head .ws-vis-head__title {
+	margin: 0;
+}
+.worldsmith .ws-vis-head .ws-vis-head__name {
+	width: 100%;
+	max-width: 640px;
+	font: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+.worldsmith .ws-vis-head .ws-vis-head__desc {
+	width: 100%;
+	max-width: 640px;
+}
+.worldsmith .ws-vis__body {
+	position: relative;
+	min-width: 0;
+}
+.worldsmith .ws-vis__canvas-host {
+	position: relative;
+	height: clamp(440px, calc(100vh - 250px), 1600px);
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-bg);
+	overflow: hidden;
+	isolation: isolate;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis__canvas-host {
+	height: calc(100vh - 210px);
+	min-height: 380px;
+	border-radius: var(--ws-radius);
+}
+
+/* ── Canvas ───────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-canvas {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	cursor: grab;
+	touch-action: none;
+	user-select: none;
+	-webkit-user-select: none;
+}
+.worldsmith .ws-canvas.is-panning {
+	cursor: grabbing;
+}
+.worldsmith .ws-canvas__stage {
+	position: absolute;
+	top: 0;
+	left: 0;
+	will-change: transform;
+}
+.worldsmith .ws-canvas--dots {
+	background-color: var(--ws-bg);
+	background-image: radial-gradient(color-mix(in srgb, var(--ws-text) 16%, transparent) 1px, transparent 1.4px);
+	background-size: 22px 22px;
+}
+.worldsmith .ws-canvas--grid {
+	background-color: var(--ws-bg);
+	background-image:
+		linear-gradient(color-mix(in srgb, var(--ws-text) 7%, transparent) 1px, transparent 1px),
+		linear-gradient(90deg, color-mix(in srgb, var(--ws-text) 7%, transparent) 1px, transparent 1px);
+	background-size: 28px 28px;
+}
+.worldsmith .ws-canvas--parchment {
+	background:
+		radial-gradient(ellipse at 30% 20%, color-mix(in srgb, var(--color-yellow) 10%, transparent), transparent 60%),
+		radial-gradient(ellipse at 80% 90%, color-mix(in srgb, var(--color-orange) 9%, transparent), transparent 55%),
+		color-mix(in srgb, var(--color-yellow) 5%, var(--ws-bg));
+}
+.worldsmith .ws-canvas--plain {
+	background: var(--ws-bg);
+}
+
+.worldsmith .ws-canvas__hud {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	padding: 3px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-surface-raised) 92%, transparent);
+	box-shadow: var(--ws-lift);
+	backdrop-filter: blur(6px);
+}
+.worldsmith .ws-canvas__hud .is-hidden {
+	display: none;
+}
+.worldsmith .ws-vis-hint {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	max-width: min(420px, calc(100% - 180px));
+	padding: 8px 12px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 30%, var(--ws-border));
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 8%, var(--ws-surface-raised));
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.4;
+	pointer-events: none;
+}
+.worldsmith .ws-vis-hint .ws-icon {
+	color: var(--ws-accent);
+	flex: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-hint {
+	top: auto;
+	bottom: 12px;
+	max-width: calc(100% - 24px);
+}
+
+/* ── Start page ───────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-vis-starts {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 14px;
+}
+.worldsmith .ws-vis-start {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	height: auto;
+	padding: 20px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--ws-tint) 14%, transparent), transparent 55%),
+		var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: transform var(--ws-dur) var(--ws-ease-out), border-color var(--ws-dur), box-shadow var(--ws-dur);
+}
+.worldsmith .ws-vis-start:hover {
+	transform: translateY(-2px);
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-vis-start__mark {
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--ws-tint) 16%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-vis-start__mark svg {
+	width: 22px;
+	height: 22px;
+}
+.worldsmith .ws-vis-start__title {
+	font-family: var(--ws-font-display);
+	font-size: 17px;
+	font-weight: 600;
+}
+.worldsmith .ws-vis-start__body {
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+.worldsmith .ws-vis-start__cta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: auto;
+	padding-top: 4px;
+	color: var(--ws-tint);
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-vis-start__cta svg {
+	width: 14px;
+	height: 14px;
+	transition: transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-vis-start:hover .ws-vis-start__cta svg {
+	transform: translateX(3px);
+}
+
+/* ── Customize panels ─────────────────────────────────────────────────────── */
+
+:is(.worldsmith, .worldsmith-modal) .ws-popover.ws-vis-panel {
+	max-height: min(640px, calc(100vh - 140px));
+	padding: 4px 14px 12px;
+	overflow-y: auto;
+}
+.worldsmith .ws-vis-panel__section + .ws-vis-panel__section {
+	margin-top: 6px;
+}
+.worldsmith .ws-vis-panel__title {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	padding: 12px 0 4px;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-vis-panel__title .ws-icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-frow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px 12px;
+	padding: 8px 0;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-frow__text {
+	min-width: 90px;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-frow__control {
+	flex: 0 1 auto;
+	justify-content: flex-end;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-frow.has-segmented {
+	flex-direction: column;
+	align-items: stretch;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-frow.has-segmented .ws-frow__control {
+	justify-content: stretch;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-segmented {
+	display: flex;
+	width: 100%;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-segmented--labels .ws-segmented__item {
+	flex: 1 1 0;
+	min-width: 0;
+	padding: 0 6px;
+}
+.worldsmith :is(.ws-vis-panel, .ws-map-editor) .ws-segmented__item span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-panel__hint {
+	margin: 2px 0 6px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.4;
+}
+.worldsmith .ws-vis-panel__line {
+	display: flex;
+	justify-content: flex-end;
+	padding: 4px 0;
+}
+.worldsmith .ws-stepper {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	padding: 2px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-stepper__value {
+	min-width: 26px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	text-align: center;
+}
+.worldsmith .ws-vis-kinds {
+	padding: 8px 0;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-vis-kinds__label {
+	font-size: 13px;
+}
+.worldsmith .ws-vis-kinds__hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-vis-kinds__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 6px;
+}
+.worldsmith .ws-vis-kind {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	height: 26px;
+	padding: 0 4px 0 9px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	font-size: 12.5px;
+}
+.worldsmith .ws-vis-kind.is-missing {
+	border-style: dashed;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-vis-kind .ws-icon svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-vis-kind__x {
+	display: grid;
+	place-items: center;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-faint);
+	cursor: pointer;
+}
+.worldsmith .ws-vis-kind__x:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-vis-kind__x svg {
+	width: 12px;
+	height: 12px;
+}
+
+/* ── Spotlight card (what's selected) ─────────────────────────────────────── */
+
+.worldsmith .ws-vis-spot {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+	z-index: 3;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 300px;
+	max-width: calc(100% - 24px);
+	padding: 14px;
+	border: 1px solid var(--ws-border);
+	border-top: 3px solid var(--ws-tint, var(--ws-accent));
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-surface-raised) 96%, transparent);
+	box-shadow: var(--shadow-l);
+	backdrop-filter: blur(8px);
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-vis-spot__top {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.worldsmith .ws-vis-spot__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-vis-spot__name {
+	overflow: hidden;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-spot__meta {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-vis-spot__close {
+	align-self: flex-start;
+}
+.worldsmith .ws-vis-spot__desc {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+}
+.worldsmith .ws-vis-spot__facts {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 6px;
+}
+.worldsmith .ws-vis-spot__fact {
+	padding: 6px 4px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	text-align: center;
+}
+.worldsmith .ws-vis-spot__n {
+	font-size: 16px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-vis-spot__label {
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-vis-spot__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-vis-spot__links {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-height: 180px;
+	overflow-y: auto;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-spot {
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
+	width: auto;
+}
+
+/* ── Trees ────────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-tree__lines {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: visible;
+	pointer-events: none;
+}
+.worldsmith .ws-tree__child {
+	fill: none;
+	stroke: color-mix(in srgb, var(--ws-text) 34%, transparent);
+	stroke-width: 1.6;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+.worldsmith .ws-tree__child.is-repeat {
+	stroke-dasharray: 4 5;
+}
+.worldsmith .ws-tree__partner {
+	stroke: color-mix(in srgb, var(--color-pink) 70%, var(--ws-text));
+	stroke-width: 2;
+	stroke-linecap: round;
+}
+.worldsmith .ws-tree__ring {
+	fill: var(--ws-bg);
+	stroke: color-mix(in srgb, var(--color-pink) 80%, var(--ws-text));
+	stroke-width: 2;
+}
+
+.worldsmith .ws-tree-card {
+	position: absolute;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface-raised);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 14px -8px rgb(0 0 0 / 0.25);
+	color: var(--ws-text);
+	cursor: pointer;
+	transition: box-shadow var(--ws-dur) var(--ws-ease-out), border-color var(--ws-dur), transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tree-card.is-tinted {
+	border-color: color-mix(in srgb, var(--ws-tint) 35%, var(--ws-border));
+	background: linear-gradient(180deg, color-mix(in srgb, var(--ws-tint) 9%, var(--ws-surface-raised)), var(--ws-surface-raised) 70%);
+}
+.worldsmith .ws-tree-card.is-tinted::before {
+	content: '';
+	position: absolute;
+	top: -1px;
+	left: 14px;
+	right: 14px;
+	height: 3px;
+	border-radius: 0 0 3px 3px;
+	background: var(--ws-tint);
+	opacity: 0.85;
+}
+.worldsmith .ws-tree-card:hover {
+	border-color: var(--ws-border-strong);
+	box-shadow: var(--ws-lift);
+	transform: translateY(-1px);
+}
+.worldsmith .ws-tree-card:focus-visible {
+	outline: 2px solid var(--ws-focus);
+	outline-offset: 2px;
+}
+.worldsmith .ws-tree-card.is-selected {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 25%, transparent), var(--ws-lift);
+	z-index: 2;
+}
+.worldsmith .ws-tree-card.is-root {
+	border-width: 2px;
+	border-color: color-mix(in srgb, var(--ws-accent) 60%, var(--ws-border));
+}
+.worldsmith .ws-tree-card.is-repeat {
+	border-style: dashed;
+	background: color-mix(in srgb, var(--ws-surface) 70%, transparent);
+	opacity: 0.8;
+}
+.worldsmith .ws-tree-card.is-missing {
+	border-style: dashed;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-tree-card__text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.worldsmith .ws-tree-card__name {
+	display: -webkit-box;
+	overflow: hidden;
+	font-size: 13.5px;
+	font-weight: 600;
+	line-height: 1.25;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-tree-card__dates {
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-tree-card__meta {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-tree-card__meta svg {
+	width: 11px;
+	height: 11px;
+}
+.worldsmith .ws-tree-card__status {
+	align-self: center;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+	color: var(--ws-tint);
+	font-size: 10.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-tree-card__crown {
+	position: absolute;
+	top: -9px;
+	right: -9px;
+	width: 18px;
+	height: 18px;
+	border: 2px solid var(--ws-bg);
+	border-radius: 50%;
+	background: var(--ws-accent);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+}
+.worldsmith .ws-tree-card__crown::after {
+	content: '';
+	position: absolute;
+	inset: 4px;
+	border-radius: 50%;
+	background: var(--ws-on-accent);
+	opacity: 0.9;
+}
+
+/* Portrait cards: picture on top, centred text. */
+.worldsmith .ws-tree-card--portrait {
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 8px;
+	padding: 16px 10px 10px;
+	text-align: center;
+}
+.worldsmith .ws-tree-card--portrait .ws-tree-card__text {
+	align-items: center;
+	width: 100%;
+}
+.worldsmith .ws-tree-card--portrait .ws-tree-card__photo {
+	width: 64px;
+	height: 64px;
+	flex: none;
+	box-shadow: 0 0 0 3px var(--ws-surface-raised), 0 0 0 4px color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+}
+.worldsmith .ws-tree-card--portrait .ws-tree-card__dates {
+	max-width: 100%;
+}
+/* Compact cards: a row. */
+.worldsmith .ws-tree-card--compact .ws-tree-card__photo {
+	flex: none;
+}
+.worldsmith .ws-tree-card--compact .ws-tree-card__name {
+	-webkit-line-clamp: 1;
+}
+/* Names only: a pill. */
+.worldsmith .ws-tree-card--name {
+	gap: 8px;
+	padding: 0 14px;
+	border-radius: 999px;
+}
+.worldsmith .ws-tree-card--name.is-tinted::before {
+	display: none;
+}
+.worldsmith .ws-tree-card--name .ws-tree-card__name {
+	-webkit-line-clamp: 1;
+	font-size: 12.5px;
+}
+.worldsmith .ws-tree-card__dot {
+	flex: none;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-tree-card.is-type .ws-tree-card__mark {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--ws-tint) 16%, transparent);
+	color: var(--ws-tint);
+}
+
+/* Tools under a card: show on hover, keyboard focus, or when selected (phones). */
+.worldsmith .ws-tree-card__tools {
+	position: absolute;
+	left: 50%;
+	bottom: -17px;
+	z-index: 3;
+	display: flex;
+	gap: 1px;
+	padding: 2px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: 999px;
+	background: var(--ws-surface-raised);
+	box-shadow: var(--ws-lift);
+	opacity: 0;
+	pointer-events: none;
+	transform: translate(-50%, 4px);
+	transition: opacity var(--ws-dur-fast), transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-tree-card:hover .ws-tree-card__tools,
+.worldsmith .ws-tree-card:focus-within .ws-tree-card__tools,
+.worldsmith .ws-tree-card.is-selected .ws-tree-card__tools {
+	opacity: 1;
+	pointer-events: auto;
+	transform: translate(-50%, 0);
+}
+.worldsmith .ws-tree-card__tools .ws-btn {
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+}
+.worldsmith .ws-tree--right .ws-tree-card__tools {
+	left: auto;
+	right: -14px;
+	bottom: 50%;
+	flex-direction: column;
+	border-radius: 14px;
+	transform: translate(4px, 50%);
+}
+.worldsmith .ws-tree--right .ws-tree-card:hover .ws-tree-card__tools,
+.worldsmith .ws-tree--right .ws-tree-card:focus-within .ws-tree-card__tools,
+.worldsmith .ws-tree--right .ws-tree-card.is-selected .ws-tree-card__tools {
+	transform: translate(100%, 50%);
+}
+.worldsmith .ws-tree-card__fold {
+	position: absolute;
+	left: 50%;
+	bottom: -12px;
+	z-index: 2;
+	display: grid;
+	place-items: center;
+	min-width: 24px;
+	height: 22px;
+	padding: 0 6px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: 999px;
+	background: var(--ws-surface-raised);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+	line-height: 1;
+	transform: translateX(-50%);
+	cursor: pointer;
+}
+.worldsmith .ws-tree-card__fold.is-folded {
+	border-color: color-mix(in srgb, var(--ws-accent) 50%, var(--ws-border));
+	color: var(--ws-accent);
+}
+/* Cards that fold: the tools go to the other edge so the fold button stays clickable. */
+.worldsmith .ws-tree:not(.ws-tree--up) .ws-tree-card.has-fold .ws-tree-card__tools {
+	top: -17px;
+	right: auto;
+	bottom: auto;
+	left: 50%;
+	flex-direction: row;
+	border-radius: 999px;
+	transform: translate(-50%, -4px);
+}
+.worldsmith .ws-tree:not(.ws-tree--up) .ws-tree-card.has-fold:is(:hover, :focus-within, .is-selected) .ws-tree-card__tools {
+	transform: translate(-50%, 0);
+}
+.worldsmith .ws-tree--right .ws-tree-card__fold {
+	left: auto;
+	right: -12px;
+	bottom: 50%;
+	transform: translateY(50%);
+}
+.worldsmith .ws-tree--up .ws-tree-card__fold {
+	bottom: auto;
+	top: -12px;
+}
+.worldsmith .ws-vis-head .ws-vis-head__desc {
+	resize: none;
+	min-height: 0;
+	field-sizing: content;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-spot__desc {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-spot {
+	gap: 8px;
+	padding: 10px 12px;
+}
+
+/* ── Relationship graph ───────────────────────────────────────────────────── */
+
+.worldsmith .ws-graph-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: -4px;
+}
+.worldsmith .ws-graph-bar__types {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-graph-bar__focus {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 4px 3px 4px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 10%, var(--ws-surface));
+	font-size: 12.5px;
+	font-weight: 600;
+}
+.worldsmith .ws-graph-bar__focus-name {
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-graph-bar__focus-x {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	padding: 0;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-graph-bar__focus-x:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-graph-bar__focus-x .ws-icon svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-graph-bar__depth {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+.worldsmith .ws-graph-bar__label {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-graph-bar__types {
+	flex-wrap: nowrap;
+	flex-basis: 100%;
+	order: 3;
+	overflow-x: auto;
+	scrollbar-width: none;
+	padding-bottom: 2px;
+}
+
+.worldsmith .ws-graph__svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: visible;
+}
+.worldsmith .ws-graph__edge {
+	fill: none;
+	stroke: color-mix(in srgb, var(--ws-tint, var(--ws-text)) 55%, var(--ws-bg));
+	stroke-linecap: round;
+	stroke-opacity: 0.8;
+	vector-effect: non-scaling-stroke;
+	transition: stroke-opacity var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-graph__edge:not([class*='ws-tint--']) {
+	stroke: color-mix(in srgb, var(--ws-text) 30%, var(--ws-bg));
+}
+.worldsmith .ws-graph__edge.is-secret {
+	stroke-dasharray: 5 5;
+}
+.worldsmith .ws-graph__edge.is-ended {
+	stroke-dasharray: 1 5;
+	stroke-opacity: 0.5;
+}
+.worldsmith .ws-graph__edge.is-strained {
+	stroke-dasharray: 8 3 2 3;
+}
+.worldsmith .ws-graph__edge.is-parent {
+	stroke-dasharray: 2 4;
+	stroke-opacity: 0.55;
+}
+.worldsmith .ws-graph__edge-label {
+	fill: var(--ws-muted);
+	font-size: 10.5px;
+	paint-order: stroke;
+	stroke: var(--ws-bg);
+	stroke-width: 3px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
+.worldsmith .ws-graph__node {
+	cursor: pointer;
+	outline: none;
+	transition: opacity var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-graph__dot {
+	fill: color-mix(in srgb, var(--ws-tint, var(--ws-muted)) 22%, var(--ws-surface-raised));
+	stroke: var(--ws-tint, var(--ws-muted));
+	stroke-width: 2px;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-graph__node:not([class*='ws-tint--']) .ws-graph__dot {
+	fill: var(--ws-surface-raised);
+	stroke: color-mix(in srgb, var(--ws-text) 40%, var(--ws-bg));
+}
+.worldsmith .ws-graph__halo {
+	fill: none;
+	stroke: var(--ws-tint, var(--ws-accent));
+	stroke-width: 3px;
+	opacity: 0;
+	vector-effect: non-scaling-stroke;
+	transition: opacity var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-graph__node.is-focus .ws-graph__halo {
+	opacity: 0.35;
+	stroke-dasharray: 3 3;
+}
+.worldsmith .ws-graph__node:hover .ws-graph__halo,
+.worldsmith .ws-graph__node:focus-visible .ws-graph__halo {
+	opacity: 0.55;
+}
+.worldsmith .ws-graph__node.is-selected .ws-graph__halo {
+	opacity: 1;
+	stroke-dasharray: none;
+}
+.worldsmith .ws-graph__initials {
+	fill: var(--ws-tint, var(--ws-text));
+	font-family: var(--ws-font-display);
+	font-weight: 700;
+	pointer-events: none;
+}
+.worldsmith .ws-graph__img {
+	pointer-events: none;
+}
+.worldsmith .ws-graph__pin {
+	fill: var(--ws-accent);
+	stroke: var(--ws-bg);
+	stroke-width: 1.5px;
+}
+.worldsmith .ws-graph__label {
+	fill: var(--ws-text);
+	font-size: 12px;
+	font-weight: 600;
+	paint-order: stroke;
+	stroke: var(--ws-bg);
+	stroke-width: 3.5px;
+	stroke-linejoin: round;
+	pointer-events: none;
+	transition: opacity var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-graph__node.is-dragging {
+	cursor: grabbing;
+}
+/* Names: on hover only, never, or hidden when zoomed far out. */
+.worldsmith .ws-graph--labels-hover .ws-graph__label,
+.worldsmith .ws-graph--labels-never .ws-graph__label,
+.worldsmith .ws-graph.is-far .ws-graph__label,
+.worldsmith .ws-graph.is-far .ws-graph__edge-label {
+	opacity: 0;
+}
+.worldsmith .ws-graph--labels-hover .ws-graph__node:hover .ws-graph__label,
+.worldsmith .ws-graph--labels-hover .ws-graph__node.is-lit .ws-graph__label,
+.worldsmith .ws-graph--labels-always.is-far .ws-graph__node.is-lit .ws-graph__label,
+.worldsmith .ws-graph--labels-always.is-far .ws-graph__node:hover .ws-graph__label,
+.worldsmith .ws-graph:not(.ws-graph--labels-never) .ws-graph__node.is-selected .ws-graph__label {
+	opacity: 1;
+}
+/* Pointing at a dot lights up its neighbours; the rest fades back. */
+.worldsmith .ws-graph.is-lighting .ws-graph__node:not(.is-lit) {
+	opacity: 0.22;
+}
+.worldsmith .ws-graph.is-lighting .ws-graph__edge:not(.is-lit) {
+	stroke-opacity: 0.1;
+}
+.worldsmith .ws-graph.is-lighting .ws-graph__edge-label:not(.is-lit) {
+	opacity: 0.1;
+}
+.worldsmith .ws-graph__edge.is-lit {
+	stroke-opacity: 1;
+	stroke: var(--ws-tint, var(--ws-text));
+}
+
+.worldsmith .ws-graph__legend {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	z-index: 2;
+	max-width: 260px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-surface-raised) 92%, transparent);
+	box-shadow: var(--ws-lift);
+	backdrop-filter: blur(6px);
+	font-size: 12px;
+}
+.worldsmith .ws-graph__legend-title {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 10px;
+	color: var(--ws-muted);
+	cursor: pointer;
+	list-style: none;
+}
+.worldsmith .ws-graph__legend-title::-webkit-details-marker {
+	display: none;
+}
+.worldsmith .ws-graph__legend-title .ws-icon svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-graph__legend-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	padding: 0 4px 6px;
+	max-height: 260px;
+	overflow-y: auto;
+}
+.worldsmith .ws-graph__legend-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: auto;
+	padding: 4px 6px;
+	border: 0;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-graph__legend-item:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-graph__legend-item.is-parent {
+	cursor: default;
+}
+.worldsmith .ws-graph__swatch {
+	flex: none;
+	width: 18px;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--ws-tint, var(--ws-muted));
+}
+.worldsmith .ws-graph__legend-item.is-parent .ws-graph__swatch {
+	background: repeating-linear-gradient(90deg, var(--ws-muted) 0 2px, transparent 2px 5px);
+}
+.worldsmith .ws-graph__legend-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-graph__legend-n,
+.worldsmith .ws-graph__legend-more {
+	color: var(--ws-faint);
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-graph__legend-more {
+	padding: 2px 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-graph__legend {
+	top: 10px;
+	right: auto;
+	bottom: auto;
+	left: 10px;
+	max-width: calc(100% - 150px);
+}
+
+.worldsmith .ws-graph-spot__links {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-height: 210px;
+	overflow-y: auto;
+}
+.worldsmith .ws-graph-spot__label {
+	margin-bottom: 4px;
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-graph-spot__people {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+.worldsmith .ws-graph-spot__person {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	max-width: 100%;
+	height: 26px;
+	padding: 0 8px 0 3px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-graph-spot__person > span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-graph-spot__person:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-graph-spot__person.is-secret {
+	border-style: dashed;
+}
+.worldsmith .ws-graph-spot__person .ws-icon svg {
+	width: 12px;
+	height: 12px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-graph-spot__more {
+	align-self: center;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-graph-spot__links {
+	max-height: 120px;
+}
+
+/* ── Maps ─────────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-map-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 14px;
+}
+.worldsmith .ws-map-card {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	height: auto;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+	transition: transform var(--ws-dur) var(--ws-ease-out), box-shadow var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-map-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-map-card__text {
+	align-self: stretch;
+	padding: 10px 12px 12px;
+	min-width: 0;
+}
+.worldsmith .ws-map-card__name {
+	overflow: hidden;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 700;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-map-card__meta {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+
+.worldsmith .ws-map-thumb {
+	position: relative;
+	overflow: hidden;
+	background: var(--ws-surface-raised);
+}
+.worldsmith .ws-map-thumb__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.worldsmith .ws-map-thumb__svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.worldsmith .ws-map-thumb__region {
+	fill: color-mix(in srgb, var(--ws-tint) 30%, transparent);
+	stroke: var(--ws-tint);
+	stroke-width: 0.4;
+}
+.worldsmith .ws-map-thumb__path {
+	fill: none;
+	stroke: var(--ws-tint);
+	stroke-width: 0.6;
+	stroke-dasharray: 1.5 1;
+}
+.worldsmith .ws-map-thumb__pin {
+	position: absolute;
+	width: 7px;
+	height: 7px;
+	margin: -3.5px 0 0 -3.5px;
+	border: 1.5px solid var(--ws-bg);
+	border-radius: 50%;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-map-thumb__missing {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ws-faint);
+}
+
+/* Toolbar above the map. */
+.worldsmith .ws-map-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+.worldsmith .ws-map-tools {
+	display: inline-flex;
+	gap: 2px;
+	padding: 3px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-map-tool {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 11px;
+	border: 0;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-map-tool:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-map-tool.is-on {
+	background: color-mix(in srgb, var(--ws-accent) 16%, var(--ws-surface));
+	color: var(--ws-text);
+	font-weight: 600;
+}
+.worldsmith .ws-map-tool.is-on .ws-icon {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-map-tool .ws-icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-map-problems {
+	color: var(--color-orange);
+}
+.worldsmith[data-ws-size='narrow'] .ws-map-tools {
+	flex: 1;
+	justify-content: space-between;
+}
+.worldsmith[data-ws-size='narrow'] .ws-map-tool {
+	flex: 1;
+	justify-content: center;
+	padding: 0 4px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-map-tool__label {
+	display: none;
+}
+
+/* The canvas. */
+.worldsmith .ws-map {
+	background: color-mix(in srgb, var(--ws-text) 6%, var(--ws-bg));
+}
+.worldsmith .ws-map.is-drawing {
+	cursor: crosshair;
+}
+.worldsmith .ws-map.is-drawing.is-panning {
+	cursor: grabbing;
+}
+.worldsmith .ws-map__paper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	box-shadow: 0 0 0 1px var(--ws-border), 0 10px 40px -12px rgb(0 0 0 / 0.35);
+}
+.worldsmith .ws-map__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+	pointer-events: none;
+	user-select: none;
+}
+.worldsmith .ws-map__paper--parchment {
+	background:
+		radial-gradient(ellipse at 50% 50%, transparent 55%, color-mix(in srgb, var(--color-orange) 22%, transparent) 100%),
+		radial-gradient(ellipse at 25% 30%, color-mix(in srgb, var(--color-yellow) 14%, transparent), transparent 55%),
+		radial-gradient(ellipse at 75% 75%, color-mix(in srgb, var(--color-orange) 10%, transparent), transparent 50%),
+		color-mix(in srgb, var(--color-yellow) 9%, var(--ws-bg));
+}
+.worldsmith .ws-map__paper--sea {
+	background:
+		radial-gradient(ellipse at 50% 50%, transparent 50%, color-mix(in srgb, var(--color-blue) 30%, transparent) 100%),
+		repeating-radial-gradient(circle at 30% 40%, transparent 0 18px, color-mix(in srgb, var(--color-cyan) 10%, transparent) 18px 19px),
+		color-mix(in srgb, var(--color-blue) 16%, var(--ws-bg));
+}
+.worldsmith .ws-map__paper--night {
+	background:
+		radial-gradient(1.5px 1.5px at 20% 30%, color-mix(in srgb, var(--ws-text) 70%, transparent), transparent),
+		radial-gradient(1px 1px at 70% 20%, color-mix(in srgb, var(--ws-text) 60%, transparent), transparent),
+		radial-gradient(1px 1px at 40% 80%, color-mix(in srgb, var(--ws-text) 50%, transparent), transparent),
+		radial-gradient(1.5px 1.5px at 85% 65%, color-mix(in srgb, var(--ws-text) 60%, transparent), transparent),
+		radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--color-purple) 18%, transparent), transparent 70%),
+		color-mix(in srgb, var(--color-blue) 10%, color-mix(in srgb, black 55%, var(--ws-bg)));
+	background-size: 260px 260px, 310px 310px, 200px 200px, 370px 370px, 100% 100%, 100% 100%;
+}
+.worldsmith .ws-map__paper--plain {
+	background: var(--ws-surface);
+}
+.worldsmith .ws-map__missing {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	color: var(--ws-muted);
+	font-size: 40px;
+	text-align: center;
+}
+.worldsmith .ws-map__missing .ws-icon svg {
+	width: 80px;
+	height: 80px;
+}
+.worldsmith .ws-map__missing-title {
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-weight: 700;
+}
+.worldsmith .ws-map__missing-path {
+	font-size: 26px;
+}
+.worldsmith .ws-map__missing-actions {
+	transform: scale(2.4);
+	margin-top: 30px;
+}
+.worldsmith .ws-map__compass {
+	position: absolute;
+	pointer-events: none;
+	opacity: 0.55;
+}
+.worldsmith .ws-map__compass-ring {
+	fill: none;
+	stroke: var(--ws-text);
+	stroke-width: 1.2;
+}
+.worldsmith .ws-map__compass-ring.is-thin {
+	stroke-width: 0.5;
+	stroke-dasharray: 1 2;
+}
+.worldsmith .ws-map__compass-minor {
+	fill: color-mix(in srgb, var(--ws-text) 35%, transparent);
+}
+.worldsmith .ws-map__compass-point {
+	fill: color-mix(in srgb, var(--ws-text) 70%, transparent);
+}
+.worldsmith .ws-map__compass-north {
+	fill: var(--color-red);
+}
+.worldsmith .ws-map__compass-n {
+	fill: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.worldsmith .ws-map__svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: visible;
+	pointer-events: none;
+}
+.worldsmith .ws-map__grid-line {
+	fill: none;
+	stroke: var(--ws-text);
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-map__region {
+	fill: color-mix(in srgb, var(--ws-tint) calc(var(--ws-fill, 0.25) * 100%), transparent);
+	stroke: var(--ws-tint);
+	stroke-width: 2;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+	pointer-events: visiblePainted;
+	cursor: pointer;
+	transition: fill var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-map__region.is-dashed,
+.worldsmith .ws-map__path.is-dashed {
+	stroke-dasharray: 10 6;
+}
+.worldsmith .ws-map__region.is-dotted,
+.worldsmith .ws-map__path.is-dotted {
+	stroke-dasharray: 1 6;
+	stroke-linecap: round;
+}
+.worldsmith .ws-map__region:hover {
+	fill: color-mix(in srgb, var(--ws-tint) calc(var(--ws-fill, 0.25) * 100% + 10%), transparent);
+}
+.worldsmith .ws-map__region.is-selected {
+	stroke-width: 3;
+	filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ws-tint) 60%, transparent));
+}
+.worldsmith .ws-map__route {
+	pointer-events: visiblePainted;
+	cursor: pointer;
+}
+.worldsmith .ws-map__path {
+	fill: none;
+	stroke: var(--ws-tint);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-map__hit {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 16;
+	vector-effect: non-scaling-stroke;
+	pointer-events: stroke;
+}
+.worldsmith .ws-map__route:hover .ws-map__path,
+.worldsmith .ws-map__route.is-selected .ws-map__path {
+	filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ws-tint) 70%, transparent));
+}
+.worldsmith .ws-map.is-drawing .ws-map__region,
+.worldsmith .ws-map.is-drawing .ws-map__route,
+.worldsmith .ws-map.is-drawing .ws-map__hit,
+.worldsmith .ws-map.is-drawing .ws-map-pin {
+	pointer-events: none;
+}
+.worldsmith .ws-map__draft-line {
+	fill: none;
+	stroke: var(--ws-accent);
+	stroke-width: 2.5;
+	stroke-dasharray: 6 4;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-map__draft-line.is-measure {
+	stroke: var(--ws-text);
+	stroke-dasharray: 2 5;
+	stroke-linecap: round;
+}
+.worldsmith .ws-map__draft-fill {
+	fill: color-mix(in srgb, var(--ws-accent) 14%, transparent);
+	stroke: none;
+}
+.worldsmith .ws-map__draft-dot {
+	fill: var(--ws-bg);
+	stroke: var(--ws-accent);
+	stroke-width: 2;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-map__draft-dot.is-closer {
+	fill: var(--ws-accent);
+}
+
+/* Things that keep their size on screen while the map zooms. */
+.worldsmith .ws-map__labels,
+.worldsmith .ws-map__pins,
+.worldsmith .ws-map__handles {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+}
+.worldsmith .ws-map__anchor {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+}
+.worldsmith .ws-map__area-label,
+.worldsmith .ws-map__route-label {
+	position: absolute;
+	transform: translate(-50%, -50%) scale(var(--ws-ik, 1));
+	color: color-mix(in srgb, var(--ws-tint) 55%, var(--ws-text));
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	text-shadow: 0 0 3px var(--ws-bg), 0 0 6px var(--ws-bg), 0 0 1px var(--ws-bg);
+	pointer-events: none;
+}
+.worldsmith .ws-map__route-label {
+	font-size: 11.5px;
+	font-style: italic;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: none;
+}
+.worldsmith .ws-map__arrow {
+	position: absolute;
+	width: 0;
+	height: 0;
+	transform: rotate(var(--ws-angle)) scale(var(--ws-ik, 1));
+	pointer-events: none;
+}
+.worldsmith .ws-map__arrow::before {
+	content: '';
+	position: absolute;
+	top: calc(-4px - var(--ws-w, 3) * 1px);
+	left: calc(-6px - var(--ws-w, 3) * 2px);
+	border-top: calc(4px + var(--ws-w, 3) * 1px) solid transparent;
+	border-bottom: calc(4px + var(--ws-w, 3) * 1px) solid transparent;
+	border-left: calc(8px + var(--ws-w, 3) * 2px) solid var(--ws-tint);
+}
+.worldsmith .ws-map__measure-label {
+	position: absolute;
+	padding: 3px 8px;
+	transform: translate(12px, -50%) scale(var(--ws-ik, 1));
+	transform-origin: -12px 50%;
+	border-radius: 999px;
+	background: var(--ws-text);
+	color: var(--ws-bg);
+	font-size: 12px;
+	font-weight: 700;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.worldsmith .ws-map-pin {
+	position: absolute;
+	--ws-pin: 32px;
+	transform: scale(var(--ws-ik, 1));
+	transform-origin: 0 0;
+	cursor: pointer;
+	outline: none;
+	z-index: 1;
+}
+.worldsmith .ws-map-pin--s {
+	--ws-pin: 24px;
+}
+.worldsmith .ws-map-pin--l {
+	--ws-pin: 42px;
+}
+.worldsmith .ws-map-pin:hover,
+.worldsmith .ws-map-pin.is-selected,
+.worldsmith .ws-map-pin:focus-visible {
+	z-index: 3;
+}
+.worldsmith .ws-map-pin__head {
+	position: absolute;
+	left: calc(var(--ws-pin) / -2);
+	top: calc(var(--ws-pin) * -1.32);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--ws-pin);
+	height: var(--ws-pin);
+	border: 2px solid var(--ws-bg);
+	border-radius: 50% 50% 50% 0;
+	transform: rotate(-45deg);
+	background: var(--ws-tint);
+	box-shadow: 0 3px 8px rgb(0 0 0 / 0.35);
+	color: var(--ws-bg);
+	overflow: hidden;
+	transition: transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-map-pin__head > .ws-icon {
+	transform: rotate(45deg);
+}
+.worldsmith .ws-map-pin__head > .ws-icon svg {
+	width: calc(var(--ws-pin) * 0.5);
+	height: calc(var(--ws-pin) * 0.5);
+}
+.worldsmith .ws-map-pin__img {
+	width: 140%;
+	height: 140%;
+	object-fit: cover;
+	transform: rotate(45deg);
+	pointer-events: none;
+}
+.worldsmith .ws-map-pin:hover .ws-map-pin__head {
+	transform: rotate(-45deg) scale(1.08);
+}
+.worldsmith .ws-map-pin.is-selected .ws-map-pin__head {
+	box-shadow: 0 0 0 3px var(--ws-tint), 0 3px 10px rgb(0 0 0 / 0.4);
+}
+.worldsmith .ws-map-pin.is-dragging .ws-map-pin__head {
+	transform: rotate(-45deg) translate(3px, -3px) scale(1.12);
+	cursor: grabbing;
+}
+.worldsmith .ws-map-pin.is-gone .ws-map-pin__head {
+	background: var(--ws-faint);
+	opacity: 0.7;
+}
+.worldsmith .ws-map-pin::after {
+	content: '';
+	position: absolute;
+	left: -4px;
+	top: -2px;
+	width: 8px;
+	height: 4px;
+	border-radius: 50%;
+	background: rgb(0 0 0 / 0.3);
+	filter: blur(1px);
+}
+.worldsmith .ws-map-pin__badge {
+	position: absolute;
+	left: calc(var(--ws-pin) * 0.3);
+	top: calc(var(--ws-pin) * -1.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	border: 1.5px solid var(--ws-bg);
+	border-radius: 50%;
+	background: var(--ws-text);
+	color: var(--ws-bg);
+}
+.worldsmith .ws-map-pin__badge .ws-icon svg {
+	width: 9px;
+	height: 9px;
+}
+.worldsmith .ws-map-pin__label {
+	position: absolute;
+	top: 4px;
+	left: 0;
+	padding: 1px 7px;
+	transform: translateX(-50%);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-bg) 82%, transparent);
+	color: var(--ws-text);
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+	pointer-events: none;
+	transition: opacity var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-map--labels-hover .ws-map-pin__label,
+.worldsmith .ws-map--labels-zoom:not(.is-near) .ws-map-pin__label,
+.worldsmith .ws-map--labels-hover .ws-map__route-label,
+.worldsmith .ws-map--labels-zoom:not(.is-near) .ws-map__route-label {
+	opacity: 0;
+}
+.worldsmith .ws-map .ws-map-pin:hover .ws-map-pin__label,
+.worldsmith .ws-map .ws-map-pin.is-selected .ws-map-pin__label,
+.worldsmith .ws-map .ws-map-pin:focus-visible .ws-map-pin__label,
+.worldsmith .ws-map .ws-map__route-label.is-selected {
+	opacity: 1;
+}
+
+.worldsmith .ws-map__handle {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	margin: -7px 0 0 -7px;
+	transform: scale(var(--ws-ik, 1));
+	border: 2px solid var(--ws-accent);
+	border-radius: 50%;
+	background: var(--ws-bg);
+	box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+	cursor: move;
+	touch-action: none;
+	z-index: 4;
+}
+.worldsmith .ws-map__handle--mid {
+	width: 10px;
+	height: 10px;
+	margin: -5px 0 0 -5px;
+	border-width: 1.5px;
+	opacity: 0.55;
+	cursor: copy;
+}
+.worldsmith .ws-map__handle:hover {
+	background: var(--ws-accent);
+	opacity: 1;
+}
+
+.worldsmith .ws-map__scale {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	padding: 6px 9px;
+	border-radius: var(--ws-radius-s);
+	background: color-mix(in srgb, var(--ws-surface-raised) 85%, transparent);
+	color: var(--ws-text);
+	font-size: 11px;
+	font-weight: 600;
+	pointer-events: none;
+}
+.worldsmith .ws-map__scale.is-hidden {
+	display: none;
+}
+.worldsmith .ws-map__scale-bar {
+	height: 6px;
+	border: 1.5px solid var(--ws-text);
+	border-top: 0;
+	background: linear-gradient(90deg, var(--ws-text) 0 25%, transparent 25% 50%, var(--ws-text) 50% 75%, transparent 75%);
+	background-size: 100% 3px;
+	background-repeat: no-repeat;
+	background-position: bottom;
+}
+.worldsmith .ws-map-host.has-map-editor .ws-map__scale {
+	display: none;
+}
+
+.worldsmith .ws-map-modehint {
+	pointer-events: auto;
+	flex-wrap: wrap;
+}
+.worldsmith .ws-map-modehint__value {
+	color: var(--ws-text);
+	font-size: 14px;
+	font-weight: 700;
+}
+.worldsmith .ws-map-modehint__sub {
+	flex-basis: 100%;
+	font-size: 11.5px;
+}
+.worldsmith .ws-map-modehint__actions {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	margin-left: auto;
+}
+
+/* Details of the selected pin, area or route. */
+.worldsmith .ws-map-editor {
+	position: absolute;
+	top: 56px;
+	right: 12px;
+	bottom: 12px;
+	z-index: 4;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 320px;
+	max-width: calc(100% - 24px);
+	max-height: calc(100% - 68px);
+	height: max-content;
+	padding: 14px;
+	overflow-y: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-surface-raised) 97%, transparent);
+	box-shadow: var(--shadow-l);
+	backdrop-filter: blur(8px);
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-map-editor__top {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-map-editor__mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 32px;
+	height: 32px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-accent) 14%, var(--ws-surface));
+	color: var(--ws-accent);
+}
+.worldsmith .ws-map-editor__name {
+	flex: 1;
+	min-width: 0;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 700;
+}
+.worldsmith .ws-map-editor__link {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+.worldsmith .ws-map-editor__entity {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+	height: 30px;
+	padding: 0 10px 0 4px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.worldsmith .ws-map-editor__entity > span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-map-editor__entity.is-gone {
+	border-style: dashed;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-map-editor__gone {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-map-editor__stat {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-map-editor__body {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.worldsmith .ws-map-editor__body .ws-frow:not(.has-switch) {
+	flex-direction: column;
+	align-items: stretch;
+	padding: 6px 0;
+}
+.worldsmith .ws-map-editor__body .ws-frow:not(.has-switch) .ws-frow__control {
+	justify-content: flex-start;
+}
+.worldsmith .ws-map-icons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3px;
+}
+.worldsmith .ws-map-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 28px;
+	height: 28px;
+	padding: 0 6px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	cursor: pointer;
+}
+.worldsmith .ws-map-icon:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-map-icon.is-on {
+	border-color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+	color: var(--ws-text);
+}
+.worldsmith .ws-map-icon .ws-icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-map-editor__note .ws-map-editor__note-text {
+	width: 100%;
+	min-height: 56px;
+	padding: 8px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	font-size: 13px;
+}
+.worldsmith .ws-map-editor__actions {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding-top: 4px;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith .ws-map-editor__delete {
+	margin-left: auto;
+	color: var(--color-red);
+}
+.worldsmith[data-ws-size='narrow'] .ws-map-editor {
+	top: auto;
+	right: 8px;
+	bottom: 8px;
+	left: 8px;
+	width: auto;
+	max-width: none;
+	max-height: 58%;
+	border-radius: var(--ws-radius-l) var(--ws-radius-l) var(--ws-radius) var(--ws-radius);
+}
+
+.worldsmith .ws-map-layer-list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.worldsmith .ws-map-layer {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 34px;
+	padding: 2px 4px 2px 6px;
+	border-radius: var(--ws-radius-s);
+}
+.worldsmith .ws-map-layer:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-map-layer.is-off .ws-map-layer__name {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+.worldsmith .ws-map-layer.is-base {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-map-layer__eye {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith .ws-map-layer.is-base .ws-map-layer__eye {
+	cursor: default;
+	opacity: 0.4;
+}
+.worldsmith .ws-map-layer__name {
+	flex: 1;
+	min-width: 0;
+	font-size: 13px;
+}
+.worldsmith .ws-map-layer__n {
+	color: var(--ws-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-map-layer__color {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	border: 1.5px solid var(--ws-border);
+	border-radius: 50%;
+	background: var(--ws-tint, transparent);
+	box-shadow: none;
+	cursor: pointer;
+}
+.worldsmith .ws-map-scale-input {
+	display: flex;
+	gap: 6px;
+	width: 100%;
+}
+.worldsmith .ws-map-scale-input input[type='number'] {
+	width: 110px;
+}
+.worldsmith .ws-map-scale-input input[type='text'] {
+	flex: 1;
+	min-width: 0;
+}
+
+.worldsmith .ws-map-card__frame {
+	display: grid;
+	place-items: center;
+	align-self: stretch;
+	width: 100%;
+	height: 170px;
+	overflow: hidden;
+	border-bottom: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--ws-text) 5%, var(--ws-bg));
+}
+.worldsmith .ws-map-card__thumb.is-wide {
+	width: 100%;
+}
+.worldsmith .ws-map-card__thumb.is-tall {
+	height: 100%;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-head .ws-db-header__actions {
+	flex-wrap: wrap;
+}
+
+/* ── Widgets ──────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-vis-widget {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.worldsmith .ws-vis-widget__canvas {
+	position: relative;
+	height: 320px;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	isolation: isolate;
+}
+.worldsmith .ws-vis-widget--small .ws-vis-widget__canvas {
+	height: 220px;
+}
+.worldsmith .ws-vis-widget--large .ws-vis-widget__canvas {
+	height: 460px;
+}
+.worldsmith .ws-vis-widget__foot {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+}
+.worldsmith .ws-vis-widget__also {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-widget__link {
+	color: var(--ws-accent);
+	text-decoration: none;
+}
+.worldsmith .ws-vis-widget__link:hover {
+	text-decoration: underline;
+}
+.worldsmith .ws-vis-widget .ws-map__scale {
+	display: none;
+}
+
+/* Widgets sit inside a scrolling page: a finger swipe scrolls the page, not the canvas. */
+.worldsmith .ws-vis-widget__canvas .ws-canvas {
+	touch-action: pan-x pan-y;
+}
+
+/* ── Home pages and full-screen views (0.12) ─────────────────────────────────
+ * Maps, Trees and the Relationship graph share one look: a home page with the
+ * "start one" cards on top and everything made so far underneath, and each map,
+ * tree or graph opening as the whole page with slim floating bars. */
+
+.worldsmith .ws-vis-home {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding: 4px 0 20px;
+}
+.worldsmith .ws-vis-home__section {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+}
+.worldsmith .ws-vis-home__label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-vis-home__count {
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11px;
+	letter-spacing: 0;
+}
+.worldsmith .ws-vis-home__empty {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 18px 20px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-vis-home__empty .ws-icon {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-vis-home .ws-vis-starts {
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Cards for what's been made. */
+.worldsmith .ws-vis-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+	gap: 14px;
+}
+.worldsmith .ws-vis-card {
+	position: relative;
+	min-width: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	overflow: hidden;
+	transition: transform var(--ws-dur) var(--ws-ease-out), box-shadow var(--ws-dur) var(--ws-ease-out), border-color var(--ws-dur);
+}
+.worldsmith .ws-vis-card:hover {
+	transform: translateY(-2px);
+	border-color: color-mix(in srgb, var(--ws-tint) 40%, var(--ws-border));
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-vis-card__open {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-vis-card__open:focus-visible {
+	outline: 2px solid var(--ws-focus);
+	outline-offset: -2px;
+}
+.worldsmith .ws-vis-card__frame {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	height: 150px;
+	overflow: hidden;
+	border-bottom: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--ws-text) 4%, var(--ws-bg));
+}
+.worldsmith .ws-vis-card__text {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	width: 100%;
+	min-width: 0;
+	padding: 10px 40px 12px 12px;
+}
+.worldsmith .ws-vis-card__name-row {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	min-width: 0;
+}
+.worldsmith .ws-vis-card__icon {
+	flex: none;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-vis-card__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-vis-card__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.3;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-card__meta {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-card__more {
+	position: absolute;
+	right: 8px;
+	bottom: 10px;
+	opacity: 0;
+	transition: opacity var(--ws-dur-fast);
+}
+.worldsmith .ws-vis-card:hover .ws-vis-card__more,
+.worldsmith .ws-vis-card__more:focus-visible,
+.worldsmith[data-ws-size='narrow'] .ws-vis-card__more {
+	opacity: 1;
+}
+.worldsmith .ws-vis-card .ws-map-card__frame {
+	height: 150px;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-cards {
+	grid-template-columns: 1fr;
+}
+
+/* Tree and graph thumbnails. */
+.worldsmith .ws-tree-thumb,
+.worldsmith .ws-graph-thumb {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	height: 100%;
+}
+.worldsmith .ws-tree-thumb__svg,
+.worldsmith .ws-graph-thumb__svg {
+	width: calc(100% - 24px);
+	height: calc(100% - 20px);
+}
+.worldsmith .ws-tree-thumb__card {
+	fill: color-mix(in srgb, var(--ws-tint) 22%, var(--ws-surface-raised));
+	stroke: color-mix(in srgb, var(--ws-tint) 55%, transparent);
+	stroke-width: 3;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-tree-thumb__card.is-root {
+	stroke: var(--ws-tint);
+	stroke-width: 2;
+}
+.worldsmith .ws-tree-thumb__line {
+	stroke: color-mix(in srgb, var(--ws-text) 30%, transparent);
+	stroke-width: 1.4;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-tree-thumb__line.is-partner {
+	stroke-dasharray: 3 3;
+}
+.worldsmith .ws-graph-thumb__edge {
+	stroke: color-mix(in srgb, var(--ws-tint, var(--ws-text)) 40%, transparent);
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-graph-thumb__dot {
+	fill: color-mix(in srgb, var(--ws-tint) 75%, var(--ws-surface-raised));
+	stroke: var(--ws-surface-raised);
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
+}
+.worldsmith .ws-tree-thumb__none,
+.worldsmith .ws-graph-thumb__none {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-tree-thumb__none svg,
+.worldsmith .ws-graph-thumb__none svg {
+	width: 28px;
+	height: 28px;
+}
+
+/* The full-screen view: the page is the canvas. */
+.worldsmith .ws-shell__page.has-full-page {
+	overflow: hidden;
+}
+.worldsmith .ws-page.ws-page--full,
+.worldsmith[data-ws-size='narrow'] .ws-page.ws-page--full {
+	max-width: none;
+	height: 100%;
+	padding: 0;
+	gap: 0;
+	animation: none;
+}
+.worldsmith .ws-page--full > .ws-vis__body {
+	flex: 1;
+	min-height: 0;
+}
+.worldsmith .ws-vis-full {
+	position: relative;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
+}
+.worldsmith .ws-vis-full__host,
+.worldsmith[data-ws-size='narrow'] .ws-vis-full__host {
+	position: absolute;
+	inset: 0;
+	height: auto;
+	min-height: 0;
+	border: 0;
+	border-radius: 0;
+}
+.worldsmith .ws-vis-full__host:focus {
+	outline: none;
+}
+.worldsmith .ws-vis-full__top {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	right: 10px;
+	z-index: 5;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10px;
+	pointer-events: none;
+}
+.worldsmith .ws-vis-full__top > *,
+.worldsmith .ws-vis-full__sub > * {
+	pointer-events: auto;
+}
+.worldsmith .ws-vis-full__bar,
+.worldsmith .ws-vis-full__actions:not(:empty),
+.worldsmith .ws-vis-full .ws-map-tools,
+.worldsmith .ws-vis-full .ws-canvas__hud,
+.worldsmith .ws-vis-full__sub > * {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-surface-raised) 92%, transparent);
+	box-shadow: var(--ws-lift);
+	backdrop-filter: blur(8px);
+}
+.worldsmith .ws-vis-full__bar {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+	max-width: min(520px, 60%);
+	height: 40px;
+	padding: 0 4px 0 2px;
+}
+.worldsmith .ws-vis-full__home {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	flex: none;
+	height: 32px;
+	padding: 0 8px 0 4px;
+	border: 0;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-vis-full__home:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-vis-full__home svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith .ws-vis-full__sep {
+	flex: none;
+	width: 1px;
+	height: 20px;
+	background: var(--ws-border);
+}
+.worldsmith .ws-vis-full__mark {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	margin-left: 4px;
+	border-radius: 7px;
+	background: color-mix(in srgb, var(--ws-tint) 16%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-vis-full__mark svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-vis-full .ws-vis-full__name {
+	flex: 1;
+	min-width: 60px;
+	height: 30px;
+	padding: 0 6px;
+	overflow: hidden;
+	border-color: transparent;
+	background: transparent;
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-size: 15px;
+	font-weight: 700;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-vis-full .ws-vis-full__name:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-vis-full .ws-vis-full__name:focus {
+	background: var(--ws-bg);
+	border-color: var(--ws-focus);
+}
+.worldsmith .ws-vis-full__actions {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	flex: none;
+	padding: 3px;
+}
+.worldsmith .ws-vis-full__actions:empty {
+	display: none;
+}
+.worldsmith .ws-vis-full__sub {
+	position: absolute;
+	top: 58px;
+	left: 10px;
+	right: 10px;
+	z-index: 4;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	pointer-events: none;
+}
+.worldsmith .ws-vis-full__sub:empty {
+	display: none;
+}
+.worldsmith .ws-vis-full__sub > .ws-btn {
+	height: 30px;
+}
+
+/* Floating pieces inside the canvas move out of the bars' way. */
+.worldsmith .ws-vis-full .ws-canvas__hud {
+	top: auto;
+	right: 12px;
+	bottom: 12px;
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-vis-full .ws-vis-hint {
+	top: auto;
+	right: auto;
+	bottom: 14px;
+	left: 50%;
+	max-width: min(520px, calc(100% - 220px));
+	transform: translateX(-50%);
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-vis-full .ws-vis-spot {
+	bottom: 12px;
+	left: 12px;
+	max-height: calc(100% - 120px);
+	overflow-y: auto;
+	box-shadow: var(--shadow-l);
+}
+.worldsmith .ws-vis-full .ws-vis-full__host > .ws-empty {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	height: max-content;
+}
+.worldsmith .ws-vis-full .ws-graph__legend {
+	right: 12px;
+	bottom: 58px;
+}
+.worldsmith .ws-vis-full .ws-map-editor {
+	top: 60px;
+	right: 12px;
+	bottom: auto;
+	max-height: calc(100% - 124px);
+}
+.worldsmith .ws-vis-full .ws-map__scale {
+	left: 70px;
+	bottom: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full__bar {
+	max-width: none;
+	flex: 1;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full__home-label,
+.worldsmith[data-ws-size='narrow'] .ws-vis-full__actions .ws-btn__label {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-vis-hint {
+	bottom: 66px;
+	max-width: calc(100% - 24px);
+	width: max-content;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map-editor {
+	top: auto;
+	bottom: 8px;
+	max-height: 58%;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-canvas__hud {
+	bottom: auto;
+	top: 104px;
+	flex-direction: column;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-graph__legend {
+	top: auto;
+	left: auto;
+	right: 12px;
+	bottom: 12px;
+	max-width: calc(100% - 80px);
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map__scale {
+	left: 12px;
+	bottom: 66px;
+}
+
+/* Map tools: a column down the left, like a map app. */
+.worldsmith .ws-vis-full .ws-map-bar {
+	position: absolute;
+	top: 60px;
+	left: 10px;
+	z-index: 4;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0;
+	pointer-events: none;
+}
+.worldsmith .ws-vis-full .ws-map-bar > * {
+	pointer-events: auto;
+}
+.worldsmith .ws-vis-full .ws-map-tools {
+	flex-direction: column;
+	align-items: stretch;
+	padding: 4px;
+}
+.worldsmith .ws-vis-full .ws-map-tool {
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	padding: 0;
+}
+.worldsmith .ws-vis-full .ws-map-tool .ws-icon svg {
+	width: 18px;
+	height: 18px;
+}
+.worldsmith .ws-vis-full .ws-map-tool__label {
+	display: none;
+}
+.worldsmith .ws-vis-full .ws-map-tools--history .ws-btn {
+	width: 38px;
+	height: 32px;
+}
+.worldsmith .ws-map-host .ws-map__draft-line.is-scale {
+	stroke: var(--ws-accent);
+	stroke-dasharray: 2 6;
+	stroke-width: 3;
+	stroke-linecap: round;
+}
+.worldsmith .ws-map-modehint__esc {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith .ws-map-scale-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 10px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-map-scale-chip svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-map-scale-pop .ws-map-scale-input {
+	display: flex;
+	gap: 6px;
+	margin: 4px 0 2px;
+}
+.worldsmith .ws-map-scale-now {
+	color: var(--ws-text);
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map-bar {
+	top: auto;
+	bottom: 10px;
+	left: 10px;
+	right: 64px;
+	flex-direction: row;
+	gap: 6px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map-tools {
+	flex: none;
+	flex-direction: row;
+	justify-content: flex-start;
+	padding: 3px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map-tool {
+	flex: none;
+	width: 36px;
+	height: 36px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full .ws-map-tools--history {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full.has-map-editor .ws-map-bar {
+	display: none;
+}
+
+/* With the tools down the left, the line under the title starts after them. */
+.worldsmith .ws-vis-full.has-map-bar > .ws-vis-full__sub {
+	left: 66px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-vis-full.has-map-bar > .ws-vis-full__sub {
+	left: 10px;
+}
+
+/* The relationship graph's filters sit under the title. */
+.worldsmith .ws-vis-full .ws-graph-bar {
+	margin: 0;
+}
+.worldsmith .ws-vis-full .ws-graph-bar__lead {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 4px;
+	border: 1px solid var(--ws-border);
+}
+.worldsmith .ws-vis-full .ws-graph-bar__lead.is-single {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	backdrop-filter: none;
+}
+.worldsmith .ws-vis-full .ws-graph-bar__lead > .ws-btn:only-child {
+	border: 1px solid var(--ws-border);
+	background: color-mix(in srgb, var(--ws-surface-raised) 92%, transparent);
+	box-shadow: var(--ws-lift);
+}
+.worldsmith .ws-graph-types__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	max-height: 320px;
+	overflow-y: auto;
+	margin: 0 -4px;
+}
+.worldsmith .ws-graph-type {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	border-radius: var(--ws-radius-s);
+}
+.worldsmith .ws-graph-type:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-graph-type__toggle {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 9px;
+	min-width: 0;
+	height: 32px;
+	padding: 0 6px;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-graph-type.is-on .ws-graph-type__toggle {
+	color: var(--ws-text);
+}
+.worldsmith .ws-graph-type__check {
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 18px;
+	height: 18px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: 5px;
+	color: transparent;
+}
+.worldsmith .ws-graph-type.is-on .ws-graph-type__check {
+	border-color: var(--ws-tint);
+	background: var(--ws-tint);
+	color: var(--ws-surface-raised);
+}
+.worldsmith .ws-graph-type__check svg {
+	width: 12px;
+	height: 12px;
+	stroke-width: 3;
+}
+.worldsmith .ws-graph-type__icon {
+	color: var(--ws-tint);
+}
+.worldsmith .ws-graph-type__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-graph-type__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-graph-type__n {
+	color: var(--ws-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-graph-type__only {
+	flex: none;
+	height: 24px;
+	padding: 0 8px;
+	border: 0;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-accent);
+	font-size: 12px;
+	opacity: 0;
+	cursor: pointer;
+}
+.worldsmith .ws-graph-type:hover .ws-graph-type__only,
+.worldsmith .ws-graph-type__only:focus-visible,
+.worldsmith[data-ws-size='narrow'] .ws-graph-type__only {
+	opacity: 1;
+}
+.worldsmith .ws-vis-panel__about {
+	width: 100%;
+	min-height: 54px;
+}
+
+/* Ctrl/⌘ + hover: a window onto an entry and its note (0.12.3). */
+.worldsmith .ws-peek {
+	position: fixed;
+	z-index: 40;
+	display: flex;
+	flex-direction: column;
+	min-width: 300px;
+	min-height: 220px;
+	max-width: calc(100vw - 16px);
+	max-height: calc(100vh - 16px);
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-top: 3px solid var(--ws-tint, var(--ws-accent));
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface-raised);
+	box-shadow: var(--shadow-l);
+	color: var(--ws-text);
+	animation: ws-pop-in var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith .ws-peek.is-pinned {
+	box-shadow: var(--shadow-l), 0 0 0 1px color-mix(in srgb, var(--ws-tint, var(--ws-accent)) 35%, transparent);
+}
+.worldsmith .ws-peek.is-flash {
+	box-shadow: var(--shadow-l), 0 0 0 3px color-mix(in srgb, var(--ws-tint, var(--ws-accent)) 60%, transparent);
+}
+.worldsmith .ws-peek.is-moving,
+.worldsmith .ws-peek.is-resizing {
+	user-select: none;
+}
+/* It pops in once; moving or pinning it later doesn't replay that. */
+.worldsmith .ws-peek.is-shown {
+	animation: none;
+}
+.worldsmith .ws-peek__head {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 8px 10px 12px;
+	border-bottom: 1px solid var(--ws-border);
+	cursor: grab;
+	touch-action: none;
+}
+.worldsmith .ws-peek.is-moving .ws-peek__head {
+	cursor: grabbing;
+}
+.worldsmith .ws-peek__titles {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-peek__name {
+	overflow: hidden;
+	font-family: var(--ws-font-display, inherit);
+	font-size: 15px;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-peek__sub {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-peek__actions {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 2px;
+}
+.worldsmith .ws-peek__actions .ws-btn.is-on {
+	background: color-mix(in srgb, var(--ws-tint, var(--ws-accent)) 18%, transparent);
+	color: var(--ws-tint, var(--ws-accent));
+}
+/* Read top to bottom: it scrolls down, never sideways. */
+.worldsmith .ws-peek__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 12px;
+	min-height: 0;
+	padding: 14px 16px 22px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-peek__body > * {
+	flex: none;
+	min-width: 0;
+	max-width: 100%;
+}
+.worldsmith .ws-peek__desc {
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+.worldsmith .ws-peek__facts {
+	display: grid;
+	gap: 4px;
+	padding: 8px 10px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-peek__fact {
+	display: flex;
+	gap: 10px;
+	font-size: 12px;
+}
+.worldsmith .ws-peek__fact-label {
+	flex: none;
+	min-width: 90px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-peek__fact-value {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-peek__note {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-peek__note-head {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding-top: 10px;
+	border-top: 1px solid var(--ws-border);
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-peek__note-head svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-peek__note-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-peek__status {
+	flex: none;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-peek__status.is-warning {
+	color: var(--color-orange);
+}
+.worldsmith .ws-peek__note-body {
+	font-size: 14px;
+	line-height: 1.6;
+}
+.worldsmith .ws-peek__note-body > :first-child {
+	margin-top: 0;
+}
+/* Wide things (images, tables, code) fit the window instead of stretching it. */
+.worldsmith .ws-peek__note-body :is(img, video, iframe, svg) {
+	max-width: 100%;
+	height: auto;
+}
+.worldsmith .ws-peek__note-body :is(pre, table) {
+	max-width: 100%;
+	overflow-x: auto;
+}
+.worldsmith .ws-peek__note-body pre {
+	white-space: pre-wrap;
+}
+.worldsmith .ws-peek__note-more,
+.worldsmith .ws-peek__empty {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-peek__editor {
+	width: 100%;
+	min-height: 260px;
+	padding: 10px 12px;
+	resize: vertical;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	color: var(--ws-text);
+	font-family: var(--font-text, inherit);
+	font-size: 14px;
+	line-height: 1.6;
+}
+.worldsmith .ws-peek__editor:focus {
+	border-color: var(--ws-accent);
+	outline: none;
+}
+.worldsmith .ws-peek.is-editing .ws-peek__editor {
+	min-height: max(260px, calc(100% - 20px));
+}
+.worldsmith .ws-peek__conflict {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 10px 12px;
+	border: 1px solid color-mix(in srgb, var(--color-orange) 50%, transparent);
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-orange) 10%, transparent);
+	font-size: 13px;
+}
+.worldsmith .ws-peek__conflict-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-peek__conflict-hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-peek__own {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 8px 10px;
+	border-left: 3px solid var(--ws-tint, var(--ws-accent));
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-hover);
+	font-size: 13px;
+}
+.worldsmith .ws-peek__own-title {
+	font-weight: 600;
+}
+.worldsmith .ws-peek__own-note {
+	color: var(--ws-muted);
+	white-space: pre-wrap;
+}
+.worldsmith .ws-peek__gone {
+	color: var(--color-orange);
+	font-size: 12px;
+}
+.worldsmith .ws-peek__grip {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	color: var(--ws-faint);
+	cursor: nwse-resize;
+	touch-action: none;
+}
+.worldsmith .ws-peek__grip svg {
+	width: 12px;
+	height: 12px;
+	transform: rotate(45deg);
+}
+.worldsmith .ws-vis-full .ws-graph-bar__types {
+	flex: none;
+	min-width: 0;
+}
+.worldsmith .ws-vis-card__frame {
+	position: relative;
+}
+.worldsmith .ws-vis-card__frame > .ws-tree-thumb,
+.worldsmith .ws-vis-card__frame > .ws-graph-thumb {
+	position: absolute;
+	inset: 0;
+}
+
+/* Touch screens have no right-click: don't promise one. */
+@media (pointer: coarse) {
+	.worldsmith .ws-map-modehint__esc {
+		display: none;
+	}
+}
+
+/* ── The note's own editor in the window (0.12.4) ─────────────────────────────────────── */
+.worldsmith .ws-peek.has-editor .ws-peek__body {
+	gap: 0;
+	padding: 0;
+	overflow: hidden;
+}
+.worldsmith .ws-peek__own--bar {
+	padding: 8px 16px;
+	border-bottom: 1px solid var(--ws-border);
+	color: var(--ws-muted);
+	font-size: var(--font-ui-small);
+}
+.worldsmith .ws-peek__body > .ws-peek__leaf {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.worldsmith .ws-peek__leaf > .workspace-split,
+.worldsmith .ws-peek__leaf > .workspace-split > .workspace-leaf,
+.worldsmith .ws-peek__leaf > .workspace-leaf,
+.worldsmith .ws-peek__leaf .popover,
+.worldsmith .ws-peek__leaf .workspace-leaf-content {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	width: 100%;
+	max-width: none;
+	max-height: none;
+	inset: auto;
+	margin: 0;
+	border: none;
+	box-shadow: none;
+	transform: none;
+	background: var(--background-primary);
+}
+/* Our top bar already names the note. */
+.worldsmith .ws-peek__leaf .view-header,
+.worldsmith .ws-peek__leaf .popover-titlebar {
+	display: none;
+}
+.worldsmith .ws-peek__leaf .view-content {
+	flex: 1;
+	min-height: 0;
+	overflow-x: hidden;
+}
+.worldsmith .ws-peek__leaf .cm-scroller,
+.worldsmith .ws-peek__leaf .markdown-preview-view {
+	overflow-x: hidden;
+	overscroll-behavior: contain;
+}
+.worldsmith .ws-peek__leaf :is(img, video, iframe) {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Resize from any edge or corner (invisible strips just inside the border). */
+.worldsmith .ws-peek__edge {
+	position: absolute;
+	z-index: 3;
+}
+.worldsmith .ws-peek__edge--n,
+.worldsmith .ws-peek__edge--s {
+	left: 10px;
+	right: 10px;
+	height: 6px;
+	cursor: ns-resize;
+}
+.worldsmith .ws-peek__edge--n { top: 0; }
+.worldsmith .ws-peek__edge--s { bottom: 0; }
+.worldsmith .ws-peek__edge--e,
+.worldsmith .ws-peek__edge--w {
+	top: 10px;
+	bottom: 10px;
+	width: 6px;
+	cursor: ew-resize;
+}
+.worldsmith .ws-peek__edge--e { right: 0; }
+.worldsmith .ws-peek__edge--w { left: 0; }
+.worldsmith .ws-peek__edge--ne,
+.worldsmith .ws-peek__edge--se,
+.worldsmith .ws-peek__edge--sw,
+.worldsmith .ws-peek__edge--nw {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-peek__edge--ne { top: 0; right: 0; cursor: nesw-resize; }
+.worldsmith .ws-peek__edge--sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.worldsmith .ws-peek__edge--nw { top: 0; left: 0; cursor: nwse-resize; }
+.worldsmith .ws-peek__edge--se { right: 0; bottom: 0; cursor: nwse-resize; }
+.worldsmith .ws-peek__grip { z-index: 4; }
+.worldsmith .ws-peek-origin {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+/* The layer the note windows float in, over the whole app (0.12.5). */
+.worldsmith.ws-peek-layer {
+	position: fixed;
+	inset: 0;
+	z-index: var(--layer-popover, 30);
+	height: auto;
+	background: none;
+	pointer-events: none;
+	container-type: normal;
+}
+.worldsmith.ws-peek-layer > .ws-peek {
+	pointer-events: auto;
+}

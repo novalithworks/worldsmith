@@ -1,0 +1,2088 @@
+/* ── Studios (Milestone 9): new type, Layout Studio, Import & export ──────────────── */
+
+/* Shared bits used inside dialogs too */
+.worldsmith-modal .ws-segmented--sm .ws-segmented__item {
+	width: auto;
+	height: 24px;
+	padding: 0 10px;
+	font-size: 12px;
+}
+.worldsmith-modal .ws-rlist__glyph {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith-modal .ws-rlist__glyph svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* ── New entity type ──────────────────────────────────────────────────────────── */
+
+.worldsmith-modal.ws-newtype-modal {
+	width: min(860px, 94vw);
+	max-width: 94vw;
+}
+.worldsmith-modal .ws-newtype__grid {
+	display: grid;
+	grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+	gap: 22px;
+	align-items: start;
+}
+.worldsmith-modal .ws-newtype__h {
+	margin-bottom: 8px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith-modal .ws-newtype__pick {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith-modal .ws-newtype__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	max-height: min(460px, 56vh);
+	margin: 0 -4px;
+	padding: 2px 4px;
+	overflow-y: auto;
+}
+.worldsmith-modal .ws-newtype__item {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	min-height: 46px;
+	padding: 6px 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	text-align: left;
+	cursor: pointer;
+	transition: background var(--ws-dur-fast) var(--ws-ease);
+}
+.worldsmith-modal .ws-newtype__item:hover {
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-newtype__item.is-active {
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	box-shadow: inset 2px 0 0 var(--ws-tint);
+}
+.worldsmith-modal .ws-newtype__item.is-blank {
+	--ws-tint: var(--ws-accent);
+}
+.worldsmith-modal .ws-newtype__glyph {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--ws-tint) 14%, transparent);
+	color: var(--ws-tint);
+	transition: transform var(--ws-dur) var(--ws-ease-spring);
+}
+.worldsmith-modal .ws-newtype__item:hover .ws-newtype__glyph {
+	transform: scale(1.06);
+}
+.worldsmith-modal .ws-newtype__item.is-blank .ws-newtype__glyph {
+	border: 1px dashed color-mix(in srgb, var(--ws-tint) 50%, transparent);
+	background: transparent;
+}
+.worldsmith-modal .ws-newtype__glyph svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith-modal .ws-newtype__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.worldsmith-modal .ws-newtype__name {
+	overflow: hidden;
+	font-size: 13.5px;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-newtype__desc {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-newtype__import {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: auto;
+	margin-top: 8px;
+	padding: 8px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-newtype__import:hover {
+	border-color: var(--ws-border-strong);
+	color: var(--ws-text);
+}
+.worldsmith-modal .ws-newtype__import svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-newtype__form {
+	min-width: 0;
+}
+.worldsmith-modal .ws-newtype__preview {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 4px;
+	padding: 12px 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+}
+.worldsmith-modal .ws-newtype__sec {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	align-items: start;
+	gap: 8px;
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-newtype__sec > .ws-icon {
+	display: flex;
+	padding-top: 1px;
+	color: var(--ws-faint);
+}
+.worldsmith-modal .ws-newtype__sec svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-newtype__sec-name {
+	font-weight: 500;
+}
+.worldsmith-modal .ws-newtype__sec-fields {
+	color: var(--ws-muted);
+	line-height: 1.45;
+}
+@media (max-width: 640px) {
+	.worldsmith-modal .ws-newtype__grid {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 14px;
+	}
+	.worldsmith-modal .ws-newtype__list {
+		flex-direction: row;
+		max-height: none;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scroll-snap-type: x proximity;
+	}
+	.worldsmith-modal .ws-newtype__item {
+		flex: 0 0 168px;
+		scroll-snap-align: start;
+	}
+}
+
+/* ── Import dialogs: types, worlds ─────────────────────────────────────────────── */
+
+.worldsmith-modal.ws-pack-modal {
+	width: min(600px, 94vw);
+}
+.worldsmith-modal .ws-pack__list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-height: 52vh;
+	margin: 12px 0;
+	overflow-y: auto;
+}
+.worldsmith-modal .ws-pack__row,
+.worldsmith-modal .ws-pack__world {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	transition: opacity var(--ws-dur) var(--ws-ease);
+}
+.worldsmith-modal .ws-pack__row.is-skip {
+	opacity: 0.55;
+}
+.worldsmith-modal .ws-pack__world {
+	margin: 4px 0 12px;
+}
+.worldsmith-modal .ws-pack__text,
+.worldsmith-modal .ws-pack__world > div:last-child {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith-modal .ws-pack__name {
+	font-weight: 600;
+}
+.worldsmith-modal .ws-pack__meta {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-pack__note {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin-bottom: 4px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-pack__note svg {
+	width: 14px;
+	height: 14px;
+	margin-top: 2px;
+}
+
+/* ── Spreadsheet import ────────────────────────────────────────────────────────── */
+
+.worldsmith-modal.ws-csv-modal {
+	width: min(820px, 94vw);
+	max-width: 94vw;
+}
+.worldsmith-modal .ws-csv > div {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+.worldsmith-modal .ws-csv__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith-modal .ws-csv__file {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-csv__file svg {
+	width: 16px;
+	height: 16px;
+	color: var(--color-green);
+}
+.worldsmith-modal .ws-csv__fname {
+	overflow: hidden;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-csv__fmeta {
+	color: var(--ws-muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-csv__into {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-csv__scroll {
+	max-height: min(56vh, 560px);
+	margin: 0 -6px;
+	padding: 0 6px;
+	overflow-y: auto;
+}
+.worldsmith-modal .ws-csv__sec {
+	padding: 14px 0;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith-modal .ws-csv__sec:last-child {
+	border-bottom: none;
+}
+.worldsmith-modal .ws-csv__h {
+	margin-bottom: 4px;
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-csv__map {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 4px;
+	margin-top: 10px;
+}
+.worldsmith-modal .ws-csv__col {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	padding: 6px 8px;
+	border-radius: var(--ws-radius);
+	transition: background var(--ws-dur-fast) var(--ws-ease);
+}
+.worldsmith-modal .ws-csv__col:hover {
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-csv__col.is-off .ws-csv__src {
+	opacity: 0.55;
+}
+.worldsmith-modal .ws-csv__src {
+	min-width: 0;
+}
+.worldsmith-modal .ws-csv__src-name {
+	overflow: hidden;
+	font-size: 13px;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-csv__src-sample {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-csv__arrow {
+	display: flex;
+	color: var(--ws-faint);
+}
+.worldsmith-modal .ws-csv__arrow svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-csv__col.is-off .ws-csv__arrow {
+	opacity: 0.4;
+}
+.worldsmith-modal .ws-csv__target {
+	width: 100%;
+	min-width: 0;
+}
+.worldsmith-modal .ws-csv__warn {
+	margin-top: 8px;
+	padding: 8px 10px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-orange) 12%, transparent);
+	color: var(--ws-text);
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-csv__opt {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	margin: 6px 0 10px;
+}
+.worldsmith-modal .ws-csv__opt-label {
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-csv__check {
+	display: flex;
+	align-items: flex-start;
+	gap: 9px;
+	margin-top: 8px;
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-csv__check input {
+	margin: 2px 0 0;
+}
+.worldsmith-modal .ws-csv__pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 8px 0 10px;
+}
+.worldsmith-modal .ws-csv__pill {
+	--ws-pill: var(--ws-muted);
+	padding: 2px 10px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-pill) 14%, transparent);
+	color: var(--ws-text);
+	font-size: 12px;
+	font-weight: 500;
+}
+.worldsmith-modal .ws-csv__pill.is-new { --ws-pill: var(--color-green); }
+.worldsmith-modal .ws-csv__pill.is-update { --ws-pill: var(--color-blue); }
+.worldsmith-modal .ws-csv__pill.is-problem { --ws-pill: var(--color-orange); }
+.worldsmith-modal .ws-csv__rows {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	overflow: hidden;
+}
+.worldsmith-modal .ws-csv__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 7px 10px;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith-modal .ws-csv__row:first-child {
+	border-top: none;
+}
+.worldsmith-modal .ws-csv__badge {
+	--ws-pill: var(--ws-muted);
+	flex: none;
+	width: 56px;
+	padding: 1px 0;
+	border-radius: var(--ws-radius-s);
+	background: color-mix(in srgb, var(--ws-pill) 14%, transparent);
+	color: var(--ws-pill);
+	font-size: 11px;
+	font-weight: 600;
+	text-align: center;
+}
+.worldsmith-modal .ws-csv__row.is-create .ws-csv__badge { --ws-pill: var(--color-green); }
+.worldsmith-modal .ws-csv__row.is-update .ws-csv__badge { --ws-pill: var(--color-blue); }
+.worldsmith-modal .ws-csv__row.is-skip {
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-csv__row-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith-modal .ws-csv__row-name {
+	overflow: hidden;
+	font-size: 13px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith-modal .ws-csv__row-meta {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith-modal .ws-csv__row.has-problem .ws-csv__row-meta {
+	color: var(--color-orange);
+}
+.worldsmith-modal .ws-csv__more {
+	padding: 7px 10px;
+	border-top: 1px solid var(--ws-border);
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-csv__foot {
+	padding-top: 12px;
+	border-top: 1px solid var(--ws-border);
+}
+@media (max-width: 560px) {
+	.worldsmith-modal .ws-csv__col {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 4px;
+	}
+	.worldsmith-modal .ws-csv__arrow {
+		display: none;
+	}
+}
+
+/* ── Import & export page ──────────────────────────────────────────────────────── */
+
+.worldsmith .ws-page--transfer {
+	max-width: 1120px;
+	margin: 0 auto;
+}
+.worldsmith .ws-xfer__where {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin: -4px 0 18px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-xfer__where > .ws-icon {
+	display: flex;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-xfer__where svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-xfer__where code {
+	padding: 1px 6px;
+	border-radius: var(--ws-radius-s);
+	background: var(--ws-surface);
+	font-size: 12px;
+}
+.worldsmith .ws-xfer {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--ws-gap);
+	align-items: start;
+}
+.worldsmith[data-ws-size='narrow'] .ws-xfer,
+.worldsmith[data-ws-size='medium'] .ws-xfer {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith .ws-xcard {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	overflow: hidden;
+	scroll-margin-top: 16px;
+	transition:
+		border-color var(--ws-dur) var(--ws-ease),
+		box-shadow var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-xcard:hover {
+	border-color: color-mix(in srgb, var(--ws-tint) 30%, var(--ws-border));
+}
+.worldsmith .ws-xcard__head {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 18px 20px 14px;
+	background: radial-gradient(120% 180% at 0% 0%, color-mix(in srgb, var(--ws-tint) 13%, transparent), transparent 60%);
+}
+.worldsmith .ws-xcard__glyph {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--ws-tint) 17%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-xcard__glyph svg {
+	width: 19px;
+	height: 19px;
+}
+.worldsmith .ws-xcard__title {
+	margin: 0;
+	font-family: var(--ws-font-display);
+	font-size: 17px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+.worldsmith .ws-xcard__desc {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+}
+.worldsmith .ws-xcard__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 4px 20px 18px;
+}
+.worldsmith .ws-xact {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	transition: border-color var(--ws-dur-fast) var(--ws-ease);
+}
+.worldsmith .ws-xact:hover {
+	border-color: var(--ws-border-strong);
+}
+.worldsmith .ws-xact--export-csv {
+	grid-template-columns: 30px minmax(0, 1fr) minmax(0, 160px) auto;
+}
+.worldsmith .ws-xact__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 9px;
+	background: var(--ws-surface);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-xact__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-xact__text {
+	min-width: 0;
+}
+.worldsmith .ws-xact__title {
+	font-size: 13.5px;
+	font-weight: 500;
+}
+.worldsmith .ws-xact__hint {
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.45;
+}
+.worldsmith .ws-xact__sel {
+	width: 100%;
+	min-width: 0;
+}
+.worldsmith[data-ws-size='narrow'] .ws-xact,
+.worldsmith[data-ws-size='narrow'] .ws-xact--export-csv {
+	grid-template-columns: 30px minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-xact__sel,
+.worldsmith[data-ws-size='narrow'] .ws-xact__btn {
+	grid-column: 2;
+	justify-self: start;
+}
+.worldsmith[data-ws-size='narrow'] .ws-xact__sel {
+	justify-self: stretch;
+}
+.worldsmith .ws-xcard__note,
+.worldsmith .ws-xcard__note-plain {
+	display: flex;
+	align-items: flex-start;
+	gap: 7px;
+	color: var(--ws-faint);
+	font-size: 12px;
+	line-height: 1.45;
+}
+.worldsmith .ws-xcard__note svg {
+	width: 13px;
+	height: 13px;
+	margin-top: 2px;
+}
+.worldsmith .ws-xtypes__tools {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-bottom: -4px;
+}
+.worldsmith .ws-xtypes__label {
+	flex: 1;
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-xtypes__link {
+	height: 22px;
+	padding: 0 8px;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-xtypes__link:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+.worldsmith .ws-xtypes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	max-height: 196px;
+	padding: 2px 2px 10px;
+	overflow-y: auto;
+	mask-image: linear-gradient(to bottom, #000 calc(100% - 14px), transparent);
+}
+.worldsmith .ws-xchip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-bg);
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	cursor: pointer;
+	transition:
+		background var(--ws-dur-fast) var(--ws-ease),
+		border-color var(--ws-dur-fast) var(--ws-ease),
+		color var(--ws-dur-fast) var(--ws-ease);
+}
+.worldsmith .ws-xchip:hover {
+	border-color: var(--ws-border-strong);
+	color: var(--ws-text);
+}
+.worldsmith .ws-xchip svg {
+	width: 13px;
+	height: 13px;
+	color: var(--ws-tint);
+}
+.worldsmith .ws-xchip.is-on {
+	border-color: color-mix(in srgb, var(--ws-tint) 55%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 13%, var(--ws-bg));
+	color: var(--ws-text);
+}
+.worldsmith .ws-xchip.is-empty:not(.is-on) {
+	opacity: 0.6;
+}
+.worldsmith .ws-xchip__n {
+	color: var(--ws-faint);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-xtypes__export,
+.worldsmith .ws-xnotes__go {
+	align-self: flex-start;
+}
+.worldsmith .ws-xfield {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.worldsmith .ws-xfield__label {
+	flex: none;
+	color: var(--ws-muted);
+	font-size: 12.5px;
+}
+.worldsmith .ws-xfield .ws-input {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-xopts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 18px;
+}
+.worldsmith .ws-xcheck {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith .ws-xcheck input {
+	margin: 0;
+}
+
+/* ── Layout Studio ─────────────────────────────────────────────────────────────── */
+
+.worldsmith .ws-ls__sec {
+	margin-bottom: 20px;
+}
+.worldsmith .ws-ls__h {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: 600;
+}
+.worldsmith .ws-ls__h-hint {
+	color: var(--ws-faint);
+	font-size: 12px;
+	font-weight: 400;
+}
+.worldsmith .ws-ls__h-n {
+	padding: 0 7px;
+	border-radius: 999px;
+	background: var(--ws-surface);
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 500;
+}
+.worldsmith .ws-ls__presets {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	gap: 10px;
+}
+.worldsmith .ws-ls__preset {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 10px;
+	height: auto;
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font: inherit;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition:
+		border-color var(--ws-dur) var(--ws-ease),
+		box-shadow var(--ws-dur) var(--ws-ease),
+		transform var(--ws-dur) var(--ws-ease-out);
+}
+.worldsmith button.ws-ls__preset:hover {
+	border-color: var(--ws-border-strong);
+	box-shadow: var(--ws-lift);
+	transform: translateY(-1px);
+}
+.worldsmith .ws-ls__preset.is-active {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 1px var(--ws-accent);
+}
+.worldsmith .ws-ls__preset--copy {
+	cursor: default;
+}
+.worldsmith .ws-ls__preset-text {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+.worldsmith .ws-ls__preset-name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-ls__preset-name > .ws-icon {
+	display: flex;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-ls__preset-name svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-ls__badge {
+	margin-left: auto;
+	padding: 0 7px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ws-accent) 15%, transparent);
+	color: var(--ws-accent);
+	font-size: 10.5px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+.worldsmith .ws-ls__preset-desc {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-weight: 400;
+	line-height: 1.45;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+.worldsmith .ws-ls__copy-mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 92px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	color: var(--ws-faint);
+}
+.worldsmith .ws-ls__copy-mark svg {
+	width: 22px;
+	height: 22px;
+}
+.worldsmith .ws-ls__copy {
+	width: 100%;
+	margin-top: 4px;
+}
+/* Presets people made */
+.worldsmith .ws-ls__choices .ws-ls__h--mine {
+	margin-top: 24px;
+}
+.worldsmith .ws-ls__preset-wrap {
+	position: relative;
+	display: flex;
+}
+.worldsmith .ws-ls__preset-wrap > .ws-ls__preset {
+	flex: 1 1 auto;
+	width: 100%;
+	min-width: 0;
+}
+.worldsmith .ws-ls__preset-wrap .ws-ls__preset-name {
+	padding-right: 26px;
+}
+.worldsmith .ws-ls__preset-label {
+	overflow: hidden;
+	min-width: 0;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-ls__preset-wrap > .ws-ls__preset-menu {
+	position: absolute;
+	right: 8px;
+	top: 107px;
+	opacity: 0.7;
+	transition: opacity var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-ls__preset-wrap:hover .ws-ls__preset-menu,
+.worldsmith .ws-ls__preset-menu:focus-visible {
+	opacity: 1;
+}
+.worldsmith .ws-ls__preset--add {
+	border-style: dashed;
+	background: transparent;
+	color: var(--ws-muted);
+}
+.worldsmith button.ws-ls__preset--add:hover {
+	color: var(--ws-text);
+}
+.worldsmith .ws-ls__add-mark {
+	color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 6%, transparent);
+	border-color: color-mix(in srgb, var(--ws-accent) 35%, transparent);
+}
+.worldsmith .ws-preset-form__desc {
+	width: 100%;
+	resize: vertical;
+}
+
+/* Small miniatures on the cards */
+.worldsmith .ws-lt__mini--small {
+	grid-auto-rows: 9px;
+	gap: 3px;
+	height: 92px;
+	padding: 7px;
+	overflow: hidden;
+	align-content: start;
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell {
+	min-height: 0;
+	padding: 0;
+	border-radius: 3px;
+	background: color-mix(in srgb, var(--ws-text) 7%, transparent);
+	border-color: transparent;
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell .ws-lt__icon {
+	display: none;
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell--hero {
+	min-height: 0;
+	background: color-mix(in srgb, var(--ws-tint) 30%, transparent);
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell--image-spotlight,
+.worldsmith .ws-lt__mini--small .ws-lt__cell--gallery {
+	background: color-mix(in srgb, var(--ws-tint) 18%, transparent);
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell--properties.ws-lt__cell--properties.ws-lt__cell--properties {
+	min-height: 0;
+	grid-row-end: span 2;
+}
+.worldsmith .ws-lt__mini--small .ws-lt__cell--image-spotlight.ws-lt__cell--image-spotlight.ws-lt__cell--image-spotlight {
+	grid-row-end: span 2;
+}
+/* Preview */
+.worldsmith .ws-ls__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+.worldsmith .ws-ls__bar-label {
+	flex: 1 1 200px;
+	min-width: 0;
+}
+.worldsmith .ws-ls__bar-label .ws-ls__h {
+	margin: 0;
+}
+.worldsmith .ws-ls__tools,
+.worldsmith .ws-ls__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-ls__sample {
+	max-width: 220px;
+}
+.worldsmith .ws-ls__device .ws-segmented__item {
+	width: 32px;
+	padding: 0;
+}
+.worldsmith .ws-ls__frame {
+	position: relative;
+	padding: 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background:
+		radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ws-text) 9%, transparent) 1px, transparent 0) 0 0 / 16px 16px,
+		var(--ws-surface);
+}
+.worldsmith .ws-ls__viewport {
+	position: relative;
+	max-height: 760px;
+	overflow: hidden auto;
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+	box-shadow: var(--ws-lift);
+	transition: height var(--ws-dur-slow) var(--ws-ease-out);
+}
+.worldsmith .ws-ls__frame.is-phone .ws-ls__viewport {
+	width: 390px;
+	max-width: 100%;
+	margin: 0 auto;
+	border-radius: 22px;
+}
+.worldsmith .ws-ls__canvas {
+	padding: 20px;
+	transform-origin: 0 0;
+	pointer-events: none;
+	user-select: none;
+}
+/* The canvas is its own size context (see layoutStudioPage), not a full-height shell. */
+.worldsmith .ws-ls__canvas.worldsmith {
+	display: block;
+	height: auto;
+	min-height: 0;
+	background: var(--ws-bg);
+}
+.worldsmith .ws-ls__frame.is-phone .ws-ls__canvas {
+	padding: 14px 12px;
+}
+.worldsmith .ws-ls__nosample {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.worldsmith .ws-ls__own-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 8px;
+	margin: 10px 0;
+}
+.worldsmith .ws-ls__own .ws-lt__own {
+	background: var(--ws-surface);
+}
+.worldsmith .ws-ls__own-when {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-ls__presets {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-ls__preset-desc {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-ls__preset--copy .ws-ls__copy-mark {
+	display: none;
+}
+.worldsmith[data-ws-size='narrow'] .ws-ls__frame {
+	padding: 8px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-ls__sample {
+	max-width: 100%;
+}
+
+/* Layout Studio redraws its preview in place: no scroll anchoring, so the page never jumps. */
+.worldsmith .ws-shell__page.has-layout-studio,
+.worldsmith .ws-page--layout-studio {
+	overflow-anchor: none;
+}
+
+/* ── 0.19: world archives (Export, Import, Verify) ───────────────────────────── */
+
+.worldsmith-modal.ws-arch-modal {
+	display: flex;
+	flex-direction: column;
+	width: min(640px, calc(100vw - 24px));
+	max-height: min(88vh, calc(100vh - 32px));
+}
+/* Long previews scroll inside the dialog; its title stays put. */
+.worldsmith-modal.ws-arch-modal .modal-content {
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+.worldsmith-modal .ws-arch {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-arch__lead,
+.worldsmith-modal .ws-arch-loading {
+	margin: 0;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-arch-counts {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+	gap: 8px;
+}
+.worldsmith-modal .ws-arch-count {
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith-modal .ws-arch-count__n {
+	font-size: 20px;
+	font-weight: 650;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.2;
+}
+.worldsmith-modal .ws-arch-count__label {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-section {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith-modal .ws-arch-section__title {
+	font-weight: 650;
+}
+.worldsmith-modal .ws-arch-section__hint,
+.worldsmith-modal .ws-arch-where,
+.worldsmith-modal .ws-arch-total {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-always {
+	margin: 0;
+	padding-left: 18px;
+	color: var(--ws-text);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-arch-choice {
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-arch-choice__label {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-arch-choice__label input {
+	flex: none;
+	margin-top: 3px;
+}
+.worldsmith-modal .ws-arch-choice__title {
+	font-weight: 600;
+}
+.worldsmith-modal .ws-arch-choice__sub {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-fold {
+	margin-top: 6px;
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-fold summary {
+	color: var(--text-accent);
+	cursor: pointer;
+}
+.worldsmith-modal .ws-arch-fold__list {
+	max-height: 180px;
+	margin: 6px 0 0;
+	padding: 0 0 0 4px;
+	overflow-y: auto;
+	list-style: none;
+}
+.worldsmith-modal .ws-arch-fold__list li {
+	padding: 3px 0;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith-modal .ws-arch-fold__main {
+	overflow-wrap: anywhere;
+}
+.worldsmith-modal .ws-arch-fold__sub {
+	color: var(--ws-faint);
+}
+.worldsmith-modal .ws-arch-callout,
+.worldsmith .ws-arch-callout {
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr);
+	gap: 10px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-left-width: 3px;
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.ws-arch-callout.is-ok {
+	border-left-color: var(--color-green);
+}
+.ws-arch-callout.is-warn {
+	border-left-color: var(--color-orange);
+}
+.ws-arch-callout.is-error {
+	border-left-color: var(--color-red);
+}
+.ws-arch-callout.is-info {
+	border-left-color: var(--interactive-accent);
+}
+.ws-arch-callout__icon {
+	margin-top: 2px;
+}
+.ws-arch-callout.is-ok .ws-arch-callout__icon {
+	color: var(--color-green);
+}
+.ws-arch-callout.is-warn .ws-arch-callout__icon {
+	color: var(--color-orange);
+}
+.ws-arch-callout.is-error .ws-arch-callout__icon {
+	color: var(--color-red);
+}
+.ws-arch-callout.is-info .ws-arch-callout__icon {
+	color: var(--interactive-accent);
+}
+.ws-arch-callout__title {
+	font-weight: 650;
+}
+.ws-arch-callout__body {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-size: 13px;
+	overflow-wrap: anywhere;
+}
+.ws-arch-callout__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+	font-size: 13px;
+}
+.worldsmith .ws-arch-alerts {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-arch-alerts:empty {
+	display: none;
+}
+.worldsmith-modal .ws-arch-facts {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	gap: 4px 14px;
+	font-size: 13px;
+}
+.worldsmith-modal .ws-arch-fact {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
+}
+.worldsmith-modal .ws-arch-fact__k {
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-arch-fact__v {
+	overflow-wrap: anywhere;
+}
+.worldsmith-modal .ws-arch-problems {
+	margin: 0;
+	padding-left: 18px;
+	color: var(--ws-text);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-arch-checks {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.worldsmith-modal .ws-arch-check {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	gap: 8px;
+	font-size: 13px;
+}
+.worldsmith-modal .ws-arch-check.is-ok .ws-arch-check__icon {
+	color: var(--color-green);
+}
+.worldsmith-modal .ws-arch-check.is-bad .ws-arch-check__icon {
+	color: var(--color-red);
+}
+.worldsmith-modal .ws-arch-check__detail {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-progress {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 8px 0;
+}
+.worldsmith-modal .ws-arch-progress__title {
+	font-weight: 650;
+}
+.worldsmith-modal .ws-arch-progress__label,
+.worldsmith-modal .ws-arch-progress__count {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-arch-progress__track {
+	position: relative;
+	height: 6px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-arch-progress__bar {
+	height: 100%;
+	border-radius: inherit;
+	background: var(--interactive-accent);
+	transition: width var(--ws-dur) var(--ws-ease);
+}
+.worldsmith-modal .ws-arch-progress__bar.is-indeterminate.is-indeterminate.is-indeterminate {
+	width: 30%;
+	animation: ws-arch-slide 1.2s var(--ws-ease) infinite;
+}
+@keyframes ws-arch-slide {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(340%);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.worldsmith-modal .ws-arch-progress__bar.is-indeterminate.is-indeterminate.is-indeterminate {
+		animation: none;
+		width: 100%;
+		opacity: 0.4;
+	}
+}
+.worldsmith .ws-xcard__note--link .ws-xtypes__link {
+	padding: 0;
+}
+
+/* ── 0.20: Backups & recovery ───────────────────────────────────────────────── */
+
+.worldsmith .ws-page--backups {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+.worldsmith .ws-bk-alerts {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.worldsmith .ws-bk-alerts:empty {
+	display: none;
+}
+.worldsmith .ws-bk-card {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 18px 20px;
+}
+.worldsmith .ws-arch-fold {
+	margin-top: 6px;
+	font-size: 12px;
+}
+.worldsmith .ws-arch-fold summary {
+	color: var(--text-accent);
+	cursor: pointer;
+}
+.worldsmith .ws-arch-fold__list {
+	max-height: 180px;
+	margin: 6px 0 0;
+	padding: 0 0 0 4px;
+	overflow-y: auto;
+	list-style: none;
+}
+.worldsmith .ws-arch-fold__list li {
+	padding: 3px 0;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith .ws-arch-fold__main {
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-arch-fold__sub {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-bk-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.worldsmith .ws-bk-summary__title {
+	font-size: 17px;
+	font-weight: 650;
+}
+.worldsmith .ws-bk-summary__sub {
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-bk-opts {
+	display: flex;
+	flex-direction: column;
+	border-top: 1px solid var(--ws-border);
+}
+.worldsmith .ws-bk-opt {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith .ws-bk-opt__text {
+	min-width: 0;
+}
+.worldsmith .ws-bk-opt__title {
+	font-weight: 600;
+}
+.worldsmith .ws-bk-opt__hint {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-bk-opt__control {
+	display: flex;
+	flex: none;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+}
+.worldsmith .ws-bk-keep {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-bk-keep input {
+	width: 64px;
+}
+.worldsmith .ws-bk-h2 {
+	margin: 4px 0 0;
+	font-size: 16px;
+}
+.worldsmith .ws-bk-empty {
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-bk-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-bk-row {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr) auto auto;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-bk-row.is-legacy {
+	grid-template-columns: 32px minmax(0, 1fr) auto;
+}
+.worldsmith .ws-bk-row__icon {
+	display: grid;
+	width: 32px;
+	height: 32px;
+	place-items: center;
+	border-radius: 8px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+}
+.worldsmith .ws-bk-row__title {
+	font-weight: 600;
+}
+.worldsmith .ws-bk-row__sub,
+.worldsmith .ws-bk-row__what {
+	overflow: hidden;
+	color: var(--ws-muted);
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.worldsmith .ws-bk-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.worldsmith .ws-bk-chip.is-ok {
+	color: var(--color-green);
+}
+.worldsmith .ws-bk-chip.is-failed {
+	color: var(--color-red);
+}
+.worldsmith .ws-bk-chip .ws-icon {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-bk-row__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 4px;
+}
+@media (max-width: 720px) {
+	.worldsmith .ws-bk-row {
+		grid-template-columns: 32px minmax(0, 1fr);
+	}
+	.worldsmith .ws-bk-chip,
+	.worldsmith .ws-bk-row__actions {
+		grid-column: 2;
+		justify-self: start;
+	}
+	.worldsmith .ws-bk-opt {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.worldsmith .ws-bk-opt__control {
+		justify-content: flex-start;
+	}
+}
+.worldsmith-modal .ws-bk-choice {
+	display: grid;
+	grid-template-columns: 22px minmax(0, 1fr);
+	gap: 12px;
+	width: 100%;
+	height: auto;
+	padding: 12px 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font: inherit;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-bk-choice:hover {
+	border-color: var(--ws-border-strong);
+	background: var(--ws-hover);
+}
+.worldsmith-modal .ws-bk-choice__title {
+	font-weight: 650;
+}
+.worldsmith-modal .ws-bk-choice__body {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-bk-changes {
+	margin: 0;
+	padding-left: 18px;
+	font-size: 13px;
+}
+.worldsmith-modal .ws-bk-changes li {
+	padding: 2px 0;
+}
+.worldsmith-modal .ws-bk-changes .is-warn {
+	color: var(--color-orange);
+}
+
+/* ── 0.20.1: deleting worlds ─────────────────────────────────────────────────── */
+
+.worldsmith-modal .ws-wdel__world,
+.worldsmith-modal .ws-wdel__row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+}
+.worldsmith-modal .ws-wdel__row {
+	flex-wrap: wrap;
+}
+.worldsmith-modal .ws-wdel__mark {
+	display: grid;
+	flex: none;
+	width: 40px;
+	height: 40px;
+	place-items: center;
+	border-radius: 10px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-wdel__mark--sm {
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+}
+.worldsmith-modal .ws-wdel__who {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith-modal .ws-wdel__name {
+	overflow: hidden;
+	font-weight: 650;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.worldsmith-modal .ws-wdel__meta {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith-modal .ws-wdel__points {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 13px;
+}
+.worldsmith-modal .ws-wdel__points li {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	gap: 10px;
+	color: var(--ws-text);
+}
+.worldsmith-modal .ws-wdel__point-icon {
+	margin-top: 1px;
+	color: var(--ws-muted);
+}
+.worldsmith-modal .ws-wdel__confirm {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.worldsmith-modal .ws-wdel__label {
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-wdel__label strong {
+	color: var(--ws-text);
+	font-weight: 650;
+}
+.worldsmith-modal .ws-wdel__input {
+	width: 100%;
+}
+.worldsmith-modal .ws-wdel__go:not(:disabled),
+.worldsmith-modal .ws-wdel__forever-go {
+	background: var(--color-red);
+	color: #fff;
+}
+.worldsmith-modal .ws-wdel__go:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+.worldsmith-modal .ws-wdel__list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith-modal .ws-wdel__row-actions {
+	display: flex;
+	gap: 4px;
+}
+.worldsmith-modal .ws-wdel__sure {
+	display: flex;
+	flex-basis: 100%;
+	flex-direction: column;
+	gap: 8px;
+	padding-top: 10px;
+	border-top: 1px solid var(--ws-border);
+	font-size: 13px;
+}
+.worldsmith-modal .ws-wdel__sure-text {
+	color: var(--color-red);
+	font-weight: 600;
+}
+.worldsmith-modal .ws-wdel__also {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	color: var(--ws-muted);
+	cursor: pointer;
+}
+.worldsmith-modal .ws-wdel__also input {
+	flex: none;
+	margin-top: 2px;
+}
+.worldsmith-modal .ws-wdel__sure-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 6px;
+}
+.worldsmith-modal .ws-wdel__empty {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-onboarding__deleted:empty {
+	display: none;
+}
+.worldsmith .ws-onboarding__deleted {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+}
+.worldsmith .ws-onboarding__deleted-link,
+.worldsmith .ws-onboarding__help {
+	height: auto;
+	padding: 0;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: var(--text-accent);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-onboarding__deleted-link:hover,
+.worldsmith .ws-onboarding__help:hover {
+	text-decoration: underline;
+}
+
+/* ── 0.21: first steps (welcome paths, getting-started guide, Help) ──────────── */
+
+.worldsmith .ws-onboarding__paths {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+	margin: 18px 0 6px;
+}
+.worldsmith .ws-onboarding__path {
+	display: grid;
+	grid-template-columns: 36px minmax(0, 1fr);
+	align-items: center;
+	gap: 14px;
+	width: 100%;
+	height: auto;
+	padding: 14px 16px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-lg, 12px);
+	background: var(--ws-surface);
+	box-shadow: none;
+	color: var(--ws-text);
+	font: inherit;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: border-color var(--ws-dur) var(--ws-ease), background var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-onboarding__path:hover {
+	border-color: var(--ws-border-strong);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-onboarding__path:focus-visible {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 2px;
+}
+.worldsmith .ws-onboarding__path.ws-onboarding__new {
+	border-color: color-mix(in srgb, var(--interactive-accent) 45%, var(--ws-border));
+}
+.worldsmith .ws-onboarding__path-icon {
+	display: grid;
+	width: 36px;
+	height: 36px;
+	place-items: center;
+	border-radius: 10px;
+	background: var(--ws-hover);
+	color: var(--interactive-accent);
+}
+.worldsmith .ws-onboarding__path-text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+.worldsmith .ws-onboarding__path-title {
+	font-weight: 650;
+}
+.worldsmith .ws-onboarding__path-body {
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.4;
+}
+.worldsmith .ws-onboarding__helprow {
+	display: flex;
+	justify-content: center;
+	margin-top: 8px;
+}
+.worldsmith .ws-onboarding__guideopt {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 4px 0 10px;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.worldsmith .ws-guide {
+	margin: 0 0 18px;
+	padding: 16px 18px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-lg, 12px);
+	background: var(--ws-surface);
+}
+.worldsmith .ws-guide__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+.worldsmith .ws-guide__heading {
+	flex: 1;
+	min-width: 180px;
+}
+.worldsmith .ws-guide__title {
+	font-size: 16px;
+	font-weight: 650;
+}
+.worldsmith .ws-guide__sub {
+	color: var(--ws-muted);
+	font-size: 12px;
+}
+.worldsmith .ws-guide__bar {
+	flex: 0 1 160px;
+	height: 6px;
+	overflow: hidden;
+	border-radius: 999px;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-guide__fill {
+	height: 100%;
+	border-radius: inherit;
+	background: var(--interactive-accent);
+	transition: width var(--ws-dur) var(--ws-ease);
+}
+.worldsmith .ws-guide__steps {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 6px 12px;
+	margin: 12px 0 0;
+	padding: 0;
+	list-style: none;
+}
+.worldsmith .ws-guide__step {
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-guide__step.is-open {
+	grid-column: 1 / -1;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-guide__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	padding: 7px 8px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: none;
+	box-shadow: none;
+	color: var(--ws-text);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-guide__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-guide__row:focus-visible {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 1px;
+}
+.worldsmith .ws-guide__mark {
+	display: grid;
+	flex: none;
+	width: 26px;
+	height: 26px;
+	place-items: center;
+	border: 1px solid var(--ws-border);
+	border-radius: 50%;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-guide__mark .ws-icon {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-guide__step.is-done .ws-guide__mark {
+	border-color: var(--color-green);
+	background: color-mix(in srgb, var(--color-green) 15%, transparent);
+	color: var(--color-green);
+}
+.worldsmith .ws-guide__step-title {
+	flex: 1;
+	min-width: 0;
+	font-weight: 600;
+}
+.worldsmith .ws-guide__step.is-done .ws-guide__step-title {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-guide__done {
+	color: var(--color-green);
+	font-size: 12px;
+}
+.worldsmith .ws-guide__body {
+	padding: 0 10px 10px 44px;
+}
+.worldsmith .ws-guide__text {
+	max-width: 70ch;
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+.worldsmith .ws-guide__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 8px;
+}
+.worldsmith .ws-empty .ws-db-empty-adopt {
+	margin-top: 6px;
+}
+
+.worldsmith .ws-page--help {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 860px;
+}
+.worldsmith .ws-help-guide {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 12px 16px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-surface);
+	font-size: 13px;
+}
+.worldsmith .ws-help-toc {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-help-toc__link {
+	height: auto;
+	padding: 4px 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-help-toc__link:hover {
+	border-color: var(--ws-border-strong);
+	color: var(--ws-text);
+}
+.worldsmith .ws-help-sec {
+	padding: 16px 18px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-lg, 12px);
+	background: var(--ws-surface);
+	scroll-margin-top: 12px;
+}
+.worldsmith .ws-help-sec__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--interactive-accent);
+}
+.worldsmith .ws-help-sec__head h2 {
+	margin: 0;
+	color: var(--ws-text);
+	font-size: 16px;
+}
+.worldsmith .ws-help-sec p {
+	max-width: 72ch;
+	margin: 8px 0 0;
+	color: var(--ws-text);
+	font-size: 14px;
+	line-height: 1.55;
+}
+.worldsmith .ws-help-sec__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 12px;
+}
+.worldsmith .ws-help-terms {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	gap: 8px 18px;
+	margin: 12px 0 0;
+	font-size: 14px;
+}
+.worldsmith .ws-help-terms dt {
+	font-weight: 650;
+}
+.worldsmith .ws-help-terms dd {
+	margin: 0;
+	color: var(--ws-muted);
+	line-height: 1.5;
+}
+@media (max-width: 560px) {
+	.worldsmith .ws-help-terms {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2px;
+	}
+	.worldsmith .ws-help-terms dd {
+		margin-bottom: 8px;
+	}
+	.worldsmith .ws-guide__body {
+		padding-left: 10px;
+	}
+}
+
+/* Import & export (0.30.5): Native notes across the full width, its two actions side by side;
+   the backups link flows inside its sentence. */
+.worldsmith .ws-xfer > .ws-xcard--wide {
+	grid-column: 1 / -1;
+}
+.worldsmith .ws-xcard--wide .ws-xcard__body {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+	gap: 10px;
+	align-items: start;
+}
+.worldsmith .ws-xcard--wide .ws-xcard__body > :not(.ws-xact) {
+	grid-column: 1 / -1;
+}
+.worldsmith .ws-xcard__sentence {
+	min-width: 0;
+}
+.worldsmith .ws-xcard__sentence .ws-xfer__backups {
+	display: inline;
+	height: auto;
+	padding: 0;
+	border: none;
+	background: none;
+	box-shadow: none;
+	font: inherit;
+	white-space: nowrap;
+	vertical-align: baseline;
+}

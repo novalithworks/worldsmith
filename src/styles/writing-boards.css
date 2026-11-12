@@ -1,0 +1,1264 @@
+/*
+ * Writing Studio, story planning (WS4): the Story board (Corkboard, Outline, Kanban,
+ * Timeline, Table), the Plot tab and the planning dialogs.
+ *
+ * Index cards are sheets of the studio's paper (warm paper in the Codex look, the theme's
+ * raised surface in Classic), so they read the same on every board. Colours come from the
+ * theme and the studio tokens (writing.css); plot threads and statuses use ws-tint--*.
+ */
+
+/* ── The board page ─────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-board__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 14px;
+}
+.worldsmith .ws-wr-board__views {
+	flex-wrap: nowrap;
+	max-width: 100%;
+}
+.worldsmith :is(.ws-wr-board__views, .ws-wr-plot__structures) .ws-segmented__item {
+	gap: 6px;
+	width: auto;
+	height: 28px;
+	padding: 0 11px;
+	font-size: 13px;
+	white-space: nowrap;
+}
+.worldsmith :is(.ws-wr-board__views, .ws-wr-plot__structures) .ws-segmented__item.is-active {
+	background: color-mix(in srgb, var(--ws-accent) 16%, transparent);
+	font-weight: 600;
+}
+.worldsmith .ws-wr-board__view svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-wr-board__filter {
+	gap: 6px;
+	max-width: 100%;
+}
+.worldsmith .ws-wr-board__filter.is-active {
+	border-color: var(--ws-accent);
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-board__filter .ws-btn__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-board.is-drag-on,
+.worldsmith .ws-wr-board .is-drag-on {
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+/* ── The index card ─────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-ix {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+	padding: 12px 14px 10px;
+	border: 1px solid var(--ws-wr-edge);
+	border-radius: var(--ws-radius);
+	background: var(--ws-wr-paper);
+	color: var(--ws-wr-ink);
+	box-shadow: var(--ws-wr-shadow);
+	cursor: grab;
+	touch-action: manipulation;
+	transition:
+		transform 120ms ease,
+		box-shadow 120ms ease,
+		opacity 120ms ease;
+}
+.worldsmith .ws-wr-ix:hover {
+	transform: translateY(-1px);
+}
+.worldsmith .ws-wr-ix:focus-visible,
+.worldsmith .ws-wr-ix.is-selected {
+	outline: 2px solid var(--ws-wr-paper-accent);
+	outline-offset: 2px;
+}
+.worldsmith .ws-wr-ix.is-dragging {
+	opacity: 0.35;
+}
+.worldsmith .ws-wr-ix--strip {
+	padding-top: 15px;
+}
+.worldsmith .ws-wr-ix__strip {
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 4px;
+	border-radius: var(--ws-radius) var(--ws-radius) 0 0;
+	background: var(--ws-tint);
+	opacity: 0.85;
+}
+.worldsmith .ws-wr-ix__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 20px;
+}
+.worldsmith .ws-wr-ix__no {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ws-wr-ink-faint);
+}
+.worldsmith .ws-wr-ix__badge {
+	flex: none;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 5px;
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--ws-wr-ink) 9%, transparent);
+	color: var(--ws-wr-ink-muted);
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 20px;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-ix__status {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	color: var(--ws-wr-ink-muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-ix--mini .ws-wr-ix__status {
+	margin-left: auto;
+}
+.worldsmith .ws-wr-ix__status.is-unknown {
+	font-style: italic;
+}
+.worldsmith .ws-wr-ix__more {
+	flex: none;
+	margin: -4px -6px -4px auto;
+	padding: 2px;
+	opacity: 0;
+	color: var(--ws-wr-ink-muted);
+}
+.worldsmith .ws-wr-ix__status + .ws-wr-ix__more {
+	margin-left: 0;
+}
+.worldsmith .ws-wr-ix:hover .ws-wr-ix__more,
+.worldsmith .ws-wr-ix:focus-within .ws-wr-ix__more,
+.worldsmith .ws-wr-ix.is-selected .ws-wr-ix__more {
+	opacity: 1;
+}
+@media (hover: none) {
+	.worldsmith .ws-wr-ix__more {
+		opacity: 1;
+	}
+}
+.worldsmith .ws-wr-ix__title {
+	font-family: var(--ws-wr-serif);
+	font-size: 16.5px;
+	font-weight: 500;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-wr-ix--compact .ws-wr-ix__title {
+	font-size: 15px;
+}
+.worldsmith .ws-wr-ix--mini {
+	gap: 4px;
+	padding: 8px 10px 7px;
+}
+.worldsmith .ws-wr-ix--mini .ws-wr-ix__title {
+	font-size: 13.5px;
+}
+.worldsmith .ws-wr-ix__syn {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+	color: var(--ws-wr-ink-muted);
+	font-size: 13px;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+.worldsmith .ws-wr-ix__syn.is-empty {
+	color: var(--ws-wr-ink-faint);
+	font-style: italic;
+}
+.worldsmith .ws-wr-ix__foot {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	margin-top: 2px;
+	color: var(--ws-wr-ink-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-ix--mini .ws-wr-ix__foot:empty {
+	display: none;
+}
+.worldsmith .ws-wr-ix__threads {
+	display: inline-flex;
+	gap: 3px;
+	margin-left: auto;
+}
+.worldsmith .ws-wr-ix__threads .ws-wr-dot {
+	width: 7px;
+	height: 7px;
+}
+
+/* The copy that follows the pointer while dragging (inside the page, fixed). */
+.worldsmith .ws-wr-ghost {
+	position: fixed;
+	z-index: var(--layer-popover, 30);
+	margin: 0;
+	pointer-events: none;
+	opacity: 0.94;
+	box-shadow: 0 18px 38px -12px rgb(0 0 0 / 0.55);
+	transition: none;
+	cursor: grabbing;
+}
+.worldsmith .ws-wr-ghost.is-dragging {
+	opacity: 0.94;
+}
+
+/* ── Corkboard ──────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-cork__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+	gap: 18px;
+	align-items: start;
+	padding: 18px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+}
+.worldsmith .ws-wr-cork__part {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	padding: 4px 2px 0;
+	border-bottom: 1px solid var(--ws-border);
+}
+.worldsmith .ws-wr-cork__part:not(:first-child) {
+	margin-top: 10px;
+}
+.worldsmith .ws-wr-cork__parttitle {
+	height: auto;
+	padding: 0 0 6px;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-family: var(--ws-wr-serif);
+	font-size: 20px;
+	font-style: italic;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-cork__col {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+	padding: 4px;
+	border-radius: var(--ws-radius);
+	transition: background 120ms ease;
+}
+.worldsmith .ws-wr-cork__col.is-drop-into {
+	background: color-mix(in srgb, var(--ws-accent) 9%, transparent);
+	outline: 1px dashed color-mix(in srgb, var(--ws-accent) 55%, transparent);
+}
+.worldsmith .ws-wr-cork__head {
+	padding: 0 2px 6px;
+	border-bottom: 1px solid var(--ws-border-strong);
+}
+.worldsmith .ws-wr-cork__label {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-wr-cork__title {
+	display: block;
+	width: 100%;
+	height: auto;
+	padding: 2px 0 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-family: var(--ws-wr-serif);
+	font-size: 18px;
+	line-height: 1.25;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith div.ws-wr-cork__title {
+	cursor: default;
+	color: var(--ws-muted);
+	font-style: italic;
+}
+.worldsmith .ws-wr-cork__cards {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-height: 24px;
+}
+.worldsmith .ws-wr-cork__hint {
+	padding: 14px 8px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+	color: var(--ws-faint);
+	font-size: 12.5px;
+	text-align: center;
+}
+.worldsmith .ws-wr-cork__drop {
+	height: 3px;
+	margin: -7px 6px;
+	border-radius: 3px;
+	background: var(--ws-accent);
+	pointer-events: none;
+}
+.worldsmith .ws-wr-cork__add,
+.worldsmith .ws-wr-kb__more {
+	height: 40px;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 13px;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-kb__more {
+	width: 100%;
+	margin-top: 8px;
+	height: 34px;
+}
+.worldsmith .ws-wr-cork__add:hover,
+.worldsmith .ws-wr-kb__more:hover {
+	border-color: var(--ws-accent);
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-cork__more {
+	grid-column: 1 / -1;
+	padding: 18px;
+	color: var(--ws-faint);
+	text-align: center;
+}
+
+/* ── Outline ────────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-ol {
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	overflow: hidden;
+}
+.worldsmith .ws-wr-ol__wrap {
+	position: relative;
+}
+.worldsmith .ws-wr-ol__row {
+	display: grid;
+	grid-template-columns: minmax(180px, 1.25fr) minmax(0, 2fr) minmax(0, 1fr) minmax(110px, auto) 64px;
+	align-items: center;
+	gap: 0 14px;
+	min-height: 38px;
+	padding: 4px 14px 4px 8px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+	outline: none;
+}
+.worldsmith .ws-wr-ol__row:last-child {
+	border-bottom: 0;
+}
+.worldsmith .ws-wr-ol__row--head {
+	min-height: 34px;
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+}
+.worldsmith .ws-wr-ol__row--part {
+	background: color-mix(in srgb, var(--ws-text) 4%, transparent);
+}
+.worldsmith .ws-wr-ol__row[data-id]:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-ol__row[data-id]:focus-visible {
+	box-shadow: inset 0 0 0 2px var(--ws-focus, var(--ws-accent));
+}
+.worldsmith .ws-wr-ol__row.is-dragging {
+	opacity: 0.4;
+}
+.worldsmith .ws-wr-ol__row.is-drop-into {
+	background: color-mix(in srgb, var(--ws-accent) 12%, transparent);
+}
+.worldsmith .ws-wr-ol__row.ws-wr-ghost {
+	background: var(--ws-bg);
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith .ws-wr-ol__title {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	cursor: grab;
+}
+.worldsmith .ws-wr-ol__chev {
+	flex: none;
+	padding: 2px;
+}
+.worldsmith .ws-wr-ol__grip {
+	display: inline-flex;
+	flex: none;
+	width: 22px;
+	justify-content: center;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-wr-ol__grip svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-wr-ol__num {
+	color: var(--ws-accent);
+	font-family: var(--ws-wr-serif);
+	font-size: 13px;
+}
+.worldsmith .ws-wr-ol__name {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--ws-wr-serif);
+	font-size: 15px;
+}
+.worldsmith .ws-wr-ol__row--part .ws-wr-ol__name {
+	font-size: 16px;
+	font-style: italic;
+}
+.worldsmith .ws-wr-ol__row--chapter .ws-wr-ol__name {
+	font-size: 16.5px;
+}
+.worldsmith .ws-wr-ol__syn {
+	min-width: 0;
+	padding: 4px 6px;
+	border-radius: var(--ws-radius-s, 4px);
+	color: var(--ws-text);
+	font-size: 13px;
+	line-height: 1.4;
+	overflow-wrap: anywhere;
+	cursor: text;
+}
+.worldsmith .ws-wr-ol__syn:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-ol__syn.is-empty {
+	color: var(--ws-faint);
+	font-style: italic;
+}
+.worldsmith .ws-wr-ol__synedit,
+.worldsmith .ws-wr-tbl__edit {
+	display: block;
+	width: 100%;
+	min-height: 34px;
+	padding: 5px 8px;
+	border: 1px solid var(--ws-accent);
+	border-radius: var(--ws-radius-s, 4px);
+	background: var(--background-modifier-form-field, var(--ws-bg));
+	color: var(--ws-text);
+	font: inherit;
+	font-size: 13px;
+	line-height: 1.4;
+	resize: none;
+}
+.worldsmith .ws-wr-ol__threads,
+.worldsmith .ws-wr-ol__status {
+	min-width: 0;
+}
+.worldsmith .ws-wr-ol__cellbtn,
+.worldsmith .ws-wr-tbl__cell {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 4px 6px;
+	max-width: 100%;
+	height: auto;
+	min-height: 26px;
+	padding: 2px 6px;
+	border: 1px solid transparent;
+	border-radius: var(--ws-radius-s, 4px);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12.5px;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-ol__cellbtn:hover,
+.worldsmith .ws-wr-tbl__cell:hover {
+	border-color: var(--ws-border);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-ol__cellbtn .ws-wr-chip,
+.worldsmith .ws-wr-tbl__cell .ws-wr-chip {
+	height: 22px;
+	padding: 0 8px;
+	font-size: 12px;
+	cursor: inherit;
+}
+.worldsmith .ws-wr-ol__words {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-ol__row--head > div {
+	text-align: left;
+}
+.worldsmith .ws-wr-ol__row--head .ws-wr-ol__words {
+	text-align: right;
+}
+.worldsmith .ws-wr-ol__filtered {
+	margin: 8px;
+}
+
+/* ── Kanban ─────────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-kb__cols {
+	display: flex;
+	gap: 12px;
+	align-items: stretch;
+	overflow-x: auto;
+	padding-bottom: 8px;
+	scroll-snap-type: x proximity;
+}
+.worldsmith .ws-wr-kb__col {
+	display: flex;
+	flex: 1 0 210px;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 210px;
+	max-width: 320px;
+	min-height: 320px;
+	padding: 10px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+	scroll-snap-align: start;
+	transition: background 120ms ease;
+}
+.worldsmith .ws-wr-kb__col.is-drop-into {
+	border-color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 10%, transparent);
+}
+.worldsmith .ws-wr-kb__col.is-other {
+	border-style: dashed;
+}
+.worldsmith .ws-wr-kb__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0 2px;
+	font-weight: 600;
+}
+.worldsmith .ws-wr-kb__label {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-kb__n {
+	color: var(--ws-muted);
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-kb__cards {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.worldsmith .ws-wr-kb__empty {
+	padding: 16px 8px;
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius);
+	color: var(--ws-faint);
+	font-size: 12.5px;
+	text-align: center;
+}
+.worldsmith .ws-wr-kb__empty:empty {
+	display: none;
+}
+.worldsmith .ws-wr-kb__note {
+	color: var(--ws-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+.worldsmith .ws-wr-kb__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 10px;
+	font-size: 12.5px;
+}
+
+/* ── Timeline ───────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-tl__scroll {
+	overflow-x: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+}
+.worldsmith .ws-wr-tl__grid {
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	min-width: 100%;
+}
+.worldsmith .ws-wr-tl__row {
+	display: grid;
+	grid-template-columns: 150px repeat(var(--ws-wr-tl-cols, 1), minmax(170px, 1fr));
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-wr-tl__row:last-child {
+	border-bottom: 0;
+}
+.worldsmith .ws-wr-tl__row--head {
+	position: relative;
+}
+.worldsmith .ws-wr-tl__lane {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 12px;
+	border-right: 1px solid var(--ws-border);
+	background: var(--ws-wr-desk);
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-wr-tl__when {
+	padding: 10px 10px 8px;
+	border-left: 1px dotted color-mix(in srgb, var(--ws-border) 80%, transparent);
+	color: var(--ws-text);
+	font-family: var(--ws-wr-serif);
+	font-size: 14px;
+	line-height: 1.25;
+}
+.worldsmith .ws-wr-tl__cell {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-height: 58px;
+	padding: 8px;
+	border-left: 1px dotted color-mix(in srgb, var(--ws-border) 80%, transparent);
+}
+.worldsmith .ws-wr-tl__when.is-drop-into,
+.worldsmith .ws-wr-tl__cell.is-drop-into {
+	background: color-mix(in srgb, var(--ws-accent) 10%, transparent);
+}
+.worldsmith .ws-wr-tl__empty {
+	border: 1px dashed var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith .ws-wr-tl__empty .ws-icon svg {
+	width: 26px;
+	height: 26px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-wr-tl__tray {
+	margin-top: 16px;
+	padding: 12px;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+	transition: background 120ms ease;
+}
+.worldsmith .ws-wr-tl__tray.is-drop-into {
+	border-color: var(--ws-accent);
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+}
+.worldsmith .ws-wr-tl__trayhead {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 12px;
+	margin-bottom: 10px;
+	font-size: 12.5px;
+}
+.worldsmith .ws-wr-tl__traylist {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+	gap: 10px;
+}
+
+/* ── Table ──────────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-tbl__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 10px;
+}
+.worldsmith .ws-wr-tbl__search {
+	flex: 1 1 200px;
+	max-width: 320px;
+}
+.worldsmith .ws-wr-tbl__count {
+	margin-left: auto;
+	font-size: 12.5px;
+}
+.worldsmith .ws-wr-tbl__wrap {
+	overflow-x: auto;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+}
+.worldsmith .ws-wr-tbl__table {
+	width: 100%;
+	min-width: 920px;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+.worldsmith .ws-wr-tbl__table th,
+.worldsmith .ws-wr-tbl__table td {
+	padding: 5px 8px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+	text-align: left;
+	vertical-align: top;
+}
+.worldsmith .ws-wr-tbl__table tr:last-child td {
+	border-bottom: 0;
+}
+.worldsmith .ws-wr-tbl__table th {
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+	color: var(--ws-muted);
+	font-size: var(--ws-caps-size, 10.5px);
+	font-weight: 600;
+	letter-spacing: var(--ws-caps-track, 0.12em);
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-tbl__sort {
+	height: auto;
+	padding: 2px 4px;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: inherit;
+	font: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-tbl__sort.is-active {
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-tbl__row:hover td {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-tbl__c-order,
+.worldsmith .ws-wr-tbl__c-words {
+	width: 1%;
+	color: var(--ws-muted);
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith td.ws-wr-tbl__c-order,
+.worldsmith td.ws-wr-tbl__c-words {
+	padding-top: 9px;
+}
+.worldsmith .ws-wr-tbl__c-title {
+	min-width: 170px;
+}
+.worldsmith .ws-wr-tbl__c-title .ws-wr-tbl__cell {
+	font-family: var(--ws-wr-serif);
+	font-size: 14.5px;
+}
+.worldsmith .ws-wr-tbl__c-status .ws-wr-tbl__cell,
+.worldsmith .ws-wr-tbl__c-date .ws-wr-tbl__cell {
+	flex-wrap: nowrap;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-tbl__c-chapter {
+	min-width: 110px;
+}
+.worldsmith td.ws-wr-tbl__c-chapter {
+	padding-top: 9px;
+	color: var(--ws-muted);
+}
+.worldsmith .ws-wr-tbl__c-synopsis {
+	min-width: 220px;
+}
+.worldsmith .ws-wr-tbl__syn {
+	padding: 4px 6px;
+	border-radius: var(--ws-radius-s, 4px);
+	line-height: 1.4;
+	overflow-wrap: anywhere;
+	cursor: text;
+}
+.worldsmith .ws-wr-tbl__syn:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-wr-tbl__syn.is-empty {
+	color: var(--ws-faint);
+	font-style: italic;
+}
+.worldsmith .ws-wr-tbl__cell.is-hidden {
+	display: none;
+}
+.worldsmith .ws-wr-tbl__none.ws-wr-tbl__none.ws-wr-tbl__none, .worldsmith .ws-wr-tbl__more.ws-wr-tbl__more.ws-wr-tbl__more {
+
+	padding: 18px;
+	color: var(--ws-muted);
+	text-align: center;
+}
+
+/* ── Plot ───────────────────────────────────────────────────────────────── */
+.worldsmith .ws-wr-plot__structures {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+	margin-bottom: 14px;
+}
+.worldsmith .ws-wr-plot__groups {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+	gap: 14px;
+	align-items: start;
+}
+.worldsmith .ws-wr-plot__group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: color-mix(in srgb, var(--ws-text) 3%, transparent);
+}
+.worldsmith .ws-wr-plot__gname {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-wr-beat {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 9px 10px 9px 12px;
+	border: 1px solid var(--ws-border);
+	border-left: 3px solid var(--ws-accent);
+	border-radius: var(--ws-radius);
+	background: var(--ws-bg);
+}
+.worldsmith .ws-wr-beat.is-open {
+	border-style: dashed;
+	border-left-style: solid;
+	border-left-color: var(--ws-border-strong);
+}
+.worldsmith .ws-wr-beat__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith .ws-wr-beat__name {
+	flex: 1;
+	min-width: 0;
+	font-weight: 600;
+}
+.worldsmith .ws-wr-beat__pos {
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-wr-beat__more {
+	padding: 2px;
+}
+.worldsmith .ws-wr-beat__desc {
+	color: var(--ws-muted);
+	font-size: 12.5px;
+	line-height: 1.4;
+}
+.worldsmith .ws-wr-beat__scenes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.worldsmith .ws-wr-beat__scene {
+	display: inline-flex;
+	align-items: center;
+	max-width: 100%;
+	border-radius: 999px;
+	background: var(--ws-surface);
+}
+.worldsmith .ws-wr-beat__open {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	min-width: 0;
+	height: 24px;
+	padding: 0 4px 0 9px;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-beat__open span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wr-beat__open svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-wr-beat__unlink {
+	padding: 3px 6px 3px 2px;
+}
+.worldsmith .ws-wr-beat__unlink svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-wr-beat__add {
+	height: 24px;
+	padding: 0 9px;
+	border: 1px dashed var(--ws-border-strong);
+	border-radius: 999px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-muted);
+	font-size: 12px;
+	font-style: italic;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-beat__add:hover {
+	border-color: var(--ws-accent);
+	color: var(--ws-text);
+}
+.worldsmith .ws-wr-plot__beatfoot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+}
+.worldsmith .ws-wr-plot__threads,
+.worldsmith .ws-wr-plot__tpls {
+	margin-top: 22px;
+}
+.worldsmith .ws-wr-plot__threads .ws-wr-panel__head,
+.worldsmith .ws-wr-plot__tpls .ws-wr-panel__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+.worldsmith .ws-wr-plot__gridwrap {
+	overflow-x: auto;
+	margin-top: 8px;
+}
+.worldsmith .ws-wr-plot__grid {
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	min-width: 100%;
+}
+.worldsmith .ws-wr-plot__row {
+	display: grid;
+	grid-template-columns: 210px repeat(var(--ws-wr-plot-cols, 1), minmax(70px, 1fr));
+	align-items: center;
+	min-height: 40px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-wr-plot__row:last-child {
+	border-bottom: 0;
+}
+.worldsmith .ws-wr-plot__thread {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	align-self: stretch;
+	padding: 6px 10px 6px 2px;
+	background: var(--ws-bg);
+}
+.worldsmith .ws-wr-plot__tname {
+	min-width: 0;
+	font-size: 13px;
+	line-height: 1.3;
+}
+.worldsmith .ws-wr-plot__tname .ws-wr-muted {
+	font-size: 11.5px;
+}
+.worldsmith .ws-wr-plot__col {
+	text-align: center;
+}
+.worldsmith .ws-wr-plot__cell {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 4px;
+	padding: 6px 4px;
+	border-left: 1px dotted color-mix(in srgb, var(--ws-border) 80%, transparent);
+}
+.worldsmith .ws-wr-plot__pill {
+	width: 22px;
+	height: 9px;
+	padding: 0;
+	border: 0;
+	border-radius: 5px;
+	background: var(--ws-tint);
+	box-shadow: none;
+	cursor: pointer;
+}
+.worldsmith .ws-wr-plot__pill:hover,
+.worldsmith .ws-wr-plot__pill:focus-visible {
+	transform: scaleY(1.3);
+}
+.worldsmith .ws-wr-plot__tpl {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	border-top: 1px solid color-mix(in srgb, var(--ws-border) 70%, transparent);
+}
+.worldsmith .ws-wr-plot__tpl:first-of-type {
+	border-top: 0;
+}
+.worldsmith .ws-wr-plot__tpltext {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-wr-plot__tplname {
+	font-weight: 600;
+}
+
+/* ── Inspector (plot threads and date) ──────────────────────────────────── */
+.worldsmith .ws-wr-insp__addthread {
+	color: var(--ws-muted);
+	border-style: dashed;
+}
+.worldsmith .ws-wr-insp__nostatus {
+	margin-top: 6px;
+	font-size: 12px;
+}
+
+/* ── Dialogs: statuses, plot threads, date ──────────────────────────────── */
+.worldsmith-modal .ws-wr-listedit {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 12px;
+}
+.worldsmith-modal .ws-wr-listedit__row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 6px 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius);
+}
+.worldsmith-modal .ws-wr-listedit__name {
+	flex: 1 1 140px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-wr-listedit__text {
+	display: flex;
+	flex: 1 1 200px;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+.worldsmith-modal .ws-wr-listedit__text .ws-wr-listedit__name {
+	flex: none;
+}
+.worldsmith-modal .ws-wr-listedit__desc {
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-wr-listedit__done,
+.worldsmith-modal .ws-wr-listedit__def {
+	font-size: 12.5px;
+}
+.worldsmith-modal .ws-wr-listedit__count {
+	font-size: 12px;
+}
+.worldsmith-modal .ws-wr-listedit__tools {
+	display: flex;
+	gap: 2px;
+	margin-left: auto;
+}
+.worldsmith-modal .ws-wr-listedit__add {
+	margin-top: 4px;
+}
+.worldsmith-modal .ws-wr-listedit__gone {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 14px;
+}
+.worldsmith-modal .ws-wr-listedit__gone:empty {
+	display: none;
+}
+.worldsmith-modal .ws-wr-listedit__goneRow {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px 10px;
+	font-size: 13px;
+}
+.worldsmith-modal .ws-wr-listedit__goneName {
+	font-weight: 600;
+	text-decoration: line-through;
+}
+.worldsmith-modal .ws-wr-swatch {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	border: 1px solid var(--ws-border);
+	border-radius: 50%;
+	background: transparent;
+	box-shadow: none;
+	cursor: pointer;
+}
+.worldsmith-modal .ws-wr-swatch .ws-wr-dot {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith-modal .ws-wr-when__date {
+	min-width: 0;
+}
+
+/* ── Narrow panes and phones ────────────────────────────────────────────── */
+@container ws-wr (max-width: 760px) {
+	.worldsmith .ws-wr-ol__row {
+		grid-template-columns: minmax(0, 1fr) auto 52px;
+		gap: 2px 10px;
+	}
+	.worldsmith .ws-wr-ol__row--head .ws-wr-ol__syn,
+	.worldsmith .ws-wr-ol__row--head .ws-wr-ol__threads {
+		display: none;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__title {
+		grid-column: 1;
+		grid-row: 1;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__status {
+		grid-column: 2;
+		grid-row: 1;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__words {
+		grid-column: 3;
+		grid-row: 1;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__syn {
+		grid-column: 1 / -1;
+		grid-row: 2;
+		margin-left: 22px;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__threads {
+		grid-column: 1 / -1;
+		grid-row: 3;
+		margin-left: 22px;
+	}
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__syn:empty,
+	.worldsmith .ws-wr-ol__row > .ws-wr-ol__threads:empty {
+		display: none;
+	}
+}
+@container ws-wr (max-width: 640px) {
+	.worldsmith .ws-wr-tab {
+		padding: 0 6px;
+		gap: 4px;
+		font-size: 12.5px;
+	}
+	.worldsmith .ws-wr-tab svg {
+		display: none;
+	}
+	.worldsmith .ws-wr-board__viewlabel {
+		display: none;
+	}
+	.worldsmith .ws-wr-board__views {
+		flex: 1;
+	}
+	.worldsmith .ws-wr-board__view {
+		flex: 1;
+		justify-content: center;
+	}
+	.worldsmith .ws-wr-cork__grid {
+		padding: 10px;
+		gap: 14px;
+	}
+	.worldsmith .ws-wr-kb__col {
+		flex-basis: 78%;
+		min-width: 78%;
+	}
+	.worldsmith .ws-wr-tl__row {
+		grid-template-columns: 96px repeat(var(--ws-wr-tl-cols, 1), minmax(150px, 1fr));
+	}
+	.worldsmith .ws-wr-tl__lane {
+		padding: 8px;
+		font-size: 12px;
+	}
+	.worldsmith .ws-wr-plot__row {
+		grid-template-columns: 130px repeat(var(--ws-wr-plot-cols, 1), minmax(56px, 1fr));
+	}
+}
+
+/* ── Classic look ───────────────────────────────────────────────────────── */
+body.ws-look-classic .worldsmith .ws-wr-ix {
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+body.ws-look-classic .worldsmith .ws-wr-cork__grid,
+body.ws-look-classic .worldsmith .ws-wr-kb__col,
+body.ws-look-classic .worldsmith .ws-wr-tl__scroll,
+body.ws-look-classic .worldsmith .ws-wr-plot__group {
+	background: var(--background-secondary);
+}
+body.ws-look-classic .worldsmith .ws-wr-tl__lane {
+	background: var(--background-secondary);
+}
+body.ws-look-classic .worldsmith .ws-wr-cork__part .ws-wr-cork__parttitle,
+body.ws-look-classic .worldsmith .ws-wr-cork__title {
+	font-family: var(--ws-font-display, inherit);
+}
+
+/* ── Codex look ─────────────────────────────────────────────────────────── */
+body.ws-look-codex .worldsmith .ws-wr-cork__grid {
+	background: color-mix(in srgb, #000 16%, var(--ws-wr-desk));
+	border-color: color-mix(in srgb, var(--ws-border) 60%, transparent);
+}
+body.ws-look-codex.theme-light .worldsmith .ws-wr-cork__grid {
+	background: color-mix(in srgb, var(--ws-text) 6%, var(--ws-wr-desk));
+}
+body.ws-look-codex .worldsmith .ws-wr-ix--full::before {
+	/* The pin. */
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: 50%;
+	width: 11px;
+	height: 11px;
+	margin-left: -5.5px;
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 35%, #e7c08e, #9a6a3a 70%);
+	box-shadow: 0 2px 3px rgb(0 0 0 / 0.35);
+}
+body.ws-look-codex .worldsmith .ws-wr-tl__lane {
+	background: var(--ws-wr-desk);
+}
+
+/* On the kanban the column already says the status: the card's pill would only crowd the chapter. */
+.worldsmith .ws-wr-kb .ws-wr-ix__status {
+	display: none;
+}

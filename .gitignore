@@ -1,0 +1,8 @@
+node_modules/
+main.js
+styles.css
+*.map
+.DS_Store
+tests/.tmp/
+harness/out/
+release/

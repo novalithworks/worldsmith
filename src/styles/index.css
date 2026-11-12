@@ -1,0 +1,41 @@
+/*
+ * Worldsmith styles. All selectors are scoped to .worldsmith (the app view),
+ * .worldsmith-modal (Worldsmith dialogs) or .worldsmith-settings. Colors and fonts come
+ * from the active Obsidian theme.
+ */
+@import './codex-font.css';
+@import './tokens.css';
+@import './base.css';
+@import './shell.css';
+@import './layout.css';
+@import './hero.css';
+@import './fields.css';
+@import './blocks.css';
+@import './database.css';
+@import './dashboard.css';
+@import './modals.css';
+@import './studio.css';
+@import './relations.css';
+@import './tasks.css';
+@import './media.css';
+@import './props.css';
+@import './widgets.css';
+@import './dashboards.css';
+@import './views.css';
+@import './picker.css';
+@import './tasklist.css';
+@import './relstudio.css';
+@import './studios.css';
+@import './time.css';
+@import './visual.css';
+@import './writing.css';
+@import './writing-editor.css';
+@import './writing-boards.css';
+@import './writing-atelier.css';
+@import './notes.css';
+@import './motion.css';
+@import './palette.css';
+@import './codex.css';
+@import './features.css';
+/* Native notes' base look (0.30.1: here rather than added at run time). */
+@import '../notes-css/native-note.css';

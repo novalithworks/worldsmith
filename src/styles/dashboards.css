@@ -1,0 +1,1104 @@
+/* ── Milestone 7: dashboards and dashboard widgets ─────────────────────────────── */
+
+/* Settings dialog rows can be rebuilt as choices change; they still sit in the grid. */
+.worldsmith-modal .ws-bs__rows {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-columns: subgrid;
+	row-gap: var(--ws-field-gap);
+}
+
+/* ── Page ──────────────────────────────────────────────────────────────────── */
+.worldsmith .ws-page--dashboard {
+	position: relative;
+}
+.worldsmith .ws-page--dashboard.is-editing {
+	max-width: max(var(--ws-max-width, 1180px), 1180px);
+}
+.worldsmith .ws-page--dashboard.is-editing .ws-dash-edit {
+	grid-template-columns: minmax(0, 1fr) 270px;
+}
+.worldsmith .ws-dash-edit .ws-widget-drawer {
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 150px);
+}
+.worldsmith[data-ws-size='narrow'] .ws-page--dashboard.is-editing .ws-dash-edit,
+.worldsmith[data-ws-size='medium'] .ws-page--dashboard.is-editing .ws-dash-edit {
+	grid-template-columns: minmax(0, 1fr);
+}
+.worldsmith[data-ws-size='narrow'] .ws-dash-edit .ws-widget-drawer,
+.worldsmith[data-ws-size='medium'] .ws-dash-edit .ws-widget-drawer {
+	max-height: none;
+}
+
+/* Home without a world banner: Customize sits in a slim toolbar above the widgets. */
+.worldsmith .ws-dash-tools {
+	display: flex;
+	justify-content: flex-end;
+	margin: -8px 0 10px;
+}
+
+.worldsmith .ws-dash-head {
+	margin-bottom: calc(var(--ws-gap) + 4px);
+}
+.worldsmith .ws-dash-empty {
+	padding: 48px 0;
+	border: 1.5px dashed var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.worldsmith .ws-nav-group__headrow {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+.worldsmith .ws-nav-group__headrow .ws-nav-group__head {
+	flex: 1;
+}
+.worldsmith .ws-nav-group__add {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	margin-right: 4px;
+	padding: 0;
+	border: none;
+	border-radius: var(--ws-radius-s);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-faint);
+	opacity: 0;
+	cursor: pointer;
+	transition: opacity var(--ws-dur), background var(--ws-dur), color var(--ws-dur);
+}
+.worldsmith .ws-nav-group__add svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-nav-group__headrow:hover .ws-nav-group__add,
+.worldsmith .ws-nav-group__add:focus-visible {
+	opacity: 1;
+}
+.worldsmith .ws-nav-group__add:hover {
+	background: var(--ws-hover);
+	color: var(--ws-text);
+}
+/* Touch screens have no hover: keep the button visible. */
+@media (hover: none) {
+	.worldsmith .ws-nav-group__add {
+		opacity: 1;
+	}
+}
+.worldsmith .ws-nav-item--ghost {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-nav-item--ghost .ws-nav-item__icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ── Number tiles (entry-stat) ─────────────────────────────────────────────── */
+.worldsmith .ws-stats--single {
+	display: block;
+	height: 100%;
+}
+.worldsmith .ws-stats--single .ws-stat {
+	height: 100%;
+}
+.worldsmith button.ws-stat {
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: var(--ws-text);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+	transition: border-color var(--ws-dur), background var(--ws-dur);
+}
+.worldsmith button.ws-stat:hover {
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 5%, var(--ws-surface));
+}
+.worldsmith .ws-stats--single .ws-stat::before {
+	content: '';
+	position: absolute;
+	top: -1px;
+	left: 16px;
+	width: 26px;
+	height: 2px;
+	border-radius: 0 0 2px 2px;
+	background: var(--ws-tint);
+	opacity: 0.85;
+}
+
+/* ── Entry list ────────────────────────────────────────────────────────────── */
+.worldsmith .ws-elist .ws-mini-list__row {
+	gap: 11px;
+}
+.worldsmith .ws-elist__status {
+	flex: none;
+	font-size: 11.5px;
+}
+.worldsmith .ws-elist__cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+	gap: 14px;
+}
+.worldsmith .ws-elist__wall {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+	gap: 14px 10px;
+}
+.worldsmith .ws-elist__face {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	padding: 8px 4px 6px;
+	border-radius: var(--ws-radius);
+	text-align: center;
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-elist__face:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-elist__face-name {
+	max-width: 100%;
+	overflow: hidden;
+	font-family: var(--ws-font-body);
+	font-size: 0.9rem;
+	line-height: 1.25;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-elist__face-sub {
+	max-width: 100%;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-elist__foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 10px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-elist__foot .ws-link {
+	color: var(--ws-muted);
+	text-decoration: none;
+}
+.worldsmith .ws-elist__foot .ws-link:hover {
+	color: var(--ws-accent);
+}
+.worldsmith .ws-elist--table .ws-roster__wrap {
+	margin: 0 -2px;
+}
+
+/* ── Chart ─────────────────────────────────────────────────────────────────── */
+.worldsmith .ws-echart__bars {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+.worldsmith .ws-echart__row {
+	display: grid;
+	grid-template-columns: minmax(80px, 34%) minmax(0, 1fr) 30px;
+	align-items: center;
+	gap: 10px;
+	font-size: 12.5px;
+}
+.worldsmith .ws-echart__name {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	min-width: 0;
+	overflow: hidden;
+	color: var(--ws-text);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-echart__row.is-none .ws-echart__name {
+	color: var(--ws-faint);
+	font-style: italic;
+}
+.worldsmith .ws-echart__dot {
+	flex: none;
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-echart__track {
+	height: 10px;
+	border-radius: 0 4px 4px 0;
+	background: color-mix(in srgb, var(--ws-text) 5%, transparent);
+}
+.worldsmith .ws-echart__fill {
+	min-width: 3px;
+	height: 100%;
+	border-radius: 0 4px 4px 0;
+	background: var(--ws-accent);
+	transition: width 260ms var(--ws-ease);
+}
+.worldsmith .ws-echart__row.is-none .ws-echart__fill {
+	background: var(--ws-border-strong);
+}
+.worldsmith .ws-echart__row:hover .ws-echart__fill {
+	background: var(--ws-accent-hover);
+}
+.worldsmith .ws-echart__num {
+	color: var(--ws-muted);
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith .ws-echart__foot {
+	margin-top: 12px;
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-echart__donut {
+	position: relative;
+	display: grid;
+	grid-template-columns: 148px minmax(0, 1fr);
+	align-items: center;
+	gap: 22px;
+}
+.worldsmith .ws-echart__svg {
+	width: 148px;
+	height: 148px;
+}
+.worldsmith .ws-echart__seg {
+	fill: none;
+	stroke: var(--ws-tint);
+	stroke-width: 16;
+	transition: stroke-width var(--ws-dur);
+}
+.worldsmith .ws-echart__seg.is-hot,
+.worldsmith .ws-echart__seg:hover {
+	stroke-width: 19;
+}
+.worldsmith .ws-echart__center {
+	position: absolute;
+	top: 50%;
+	left: 74px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+}
+.worldsmith .ws-echart__total {
+	font-family: var(--ws-font-display);
+	font-size: 1.6rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+.worldsmith .ws-echart__total-label {
+	margin-top: 2px;
+	color: var(--ws-faint);
+	font-size: 11px;
+}
+.worldsmith .ws-echart__legend {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+.worldsmith .ws-echart__key {
+	display: grid;
+	grid-template-columns: 10px minmax(0, 1fr) auto 36px;
+	align-items: center;
+	gap: 8px;
+	padding: 2px 4px;
+	border-radius: var(--ws-radius-s);
+	font-size: 12.5px;
+}
+.worldsmith .ws-echart__key:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-echart__swatch {
+	width: 10px;
+	height: 10px;
+	border-radius: 3px;
+	background: var(--ws-tint);
+}
+.worldsmith .ws-echart__key-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-echart__key-num {
+	font-variant-numeric: tabular-nums;
+}
+.worldsmith .ws-echart__key-pct {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+.worldsmith[data-ws-size='narrow'] .ws-echart__donut {
+	grid-template-columns: 120px minmax(0, 1fr);
+	gap: 14px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-echart__svg {
+	width: 120px;
+	height: 120px;
+}
+.worldsmith[data-ws-size='narrow'] .ws-echart__center {
+	left: 60px;
+}
+
+/* ── Entry card ────────────────────────────────────────────────────────────── */
+.worldsmith .ws-feature {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid var(--ws-border);
+	border-radius: var(--ws-radius-l);
+	background: var(--ws-surface);
+	cursor: pointer;
+	transition: border-color var(--ws-dur);
+}
+.worldsmith .ws-feature:hover {
+	border-color: color-mix(in srgb, var(--ws-tint) 40%, var(--ws-border));
+}
+.worldsmith .ws-feature__card {
+	position: relative;
+}
+.worldsmith .ws-feature.is-empty {
+	padding: 18px 0;
+	border-style: dashed;
+	background: transparent;
+	cursor: default;
+}
+.worldsmith .ws-feature__banner {
+	height: 132px;
+	overflow: hidden;
+	background: var(--ws-hover);
+}
+.worldsmith .ws-feature__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.worldsmith .ws-feature__body {
+	display: flex;
+	align-items: flex-start;
+	gap: 18px;
+	padding: 18px 20px 20px;
+}
+.worldsmith .ws-feature__banner + .ws-feature__body {
+	padding-top: 0;
+}
+.worldsmith .ws-feature__banner + .ws-feature__body .ws-feature__portrait {
+	margin-top: -46px;
+	box-shadow: 0 0 0 4px var(--ws-surface);
+}
+.worldsmith .ws-feature__banner + .ws-feature__body .ws-feature__text {
+	padding-top: 12px;
+}
+.worldsmith .ws-feature__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-feature__eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	color: var(--ws-tint);
+	font-size: 11.5px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-feature__eyebrow svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-feature__name {
+	margin-top: 3px;
+	font-family: var(--ws-font-display);
+	font-size: 1.65rem;
+	font-weight: var(--h1-weight, 600);
+	line-height: 1.12;
+}
+.worldsmith .ws-feature__sub {
+	margin-top: 3px;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-body);
+	font-style: italic;
+}
+.worldsmith .ws-feature__summary {
+	margin-top: 10px;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 0.97rem;
+	line-height: 1.6;
+}
+.worldsmith .ws-feature__facts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 22px;
+	margin-top: 14px;
+}
+.worldsmith .ws-feature__facts:empty {
+	display: none;
+}
+.worldsmith .ws-feature__fact-label {
+	color: var(--ws-faint);
+	font-size: 10.5px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-feature__fact-value {
+	margin-top: 1px;
+	font-size: 13px;
+}
+.worldsmith .ws-feature__tools {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-feature:hover .ws-feature__tools,
+.worldsmith .ws-feature__tools:focus-within {
+	opacity: 1;
+}
+.worldsmith .ws-feature__tools .ws-btn {
+	background: color-mix(in srgb, var(--background-primary) 80%, transparent);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}
+@media (hover: none) {
+	.worldsmith .ws-feature__tools {
+		opacity: 1;
+	}
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────────── */
+.worldsmith .ws-links__list {
+	display: flex;
+	flex-direction: column;
+	margin: 0 -6px;
+}
+.worldsmith .ws-links__row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-links__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-links__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 28px;
+	height: 28px;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith .ws-links__icon svg {
+	width: 15px;
+	height: 15px;
+}
+.worldsmith .ws-links__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-links__label {
+	overflow: hidden;
+	font-size: 13.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-links__sub {
+	overflow: hidden;
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-links__row.is-missing .ws-links__label {
+	color: var(--ws-faint);
+	text-decoration: line-through;
+}
+.worldsmith .ws-links__out {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-links__out svg {
+	width: 13px;
+	height: 13px;
+}
+.worldsmith .ws-links__more {
+	opacity: 0;
+}
+.worldsmith .ws-links__row:hover .ws-links__more,
+.worldsmith .ws-links__more:focus-visible {
+	opacity: 1;
+}
+/* No hover on touch screens: keep the options button visible. */
+@media (hover: none) {
+	.worldsmith .ws-links__more {
+		opacity: 1;
+	}
+}
+
+/* ── Spotlight ─────────────────────────────────────────────────────────────── */
+.worldsmith .ws-spotlight__card {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	margin: -4px -6px 0;
+	padding: 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-spotlight__card:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-spotlight__text {
+	flex: 1;
+	min-width: 0;
+	padding-top: 2px;
+}
+.worldsmith .ws-spotlight__eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	color: var(--ws-tint);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-spotlight__eyebrow svg {
+	width: 12px;
+	height: 12px;
+}
+.worldsmith .ws-spotlight__name {
+	margin-top: 2px;
+	font-family: var(--ws-font-display);
+	font-size: 1.3rem;
+	line-height: 1.15;
+}
+.worldsmith .ws-spotlight__sub {
+	margin-top: 2px;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-body);
+	font-size: 0.9rem;
+	font-style: italic;
+}
+.worldsmith .ws-spotlight__summary {
+	display: -webkit-box;
+	margin-top: 8px;
+	overflow: hidden;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 0.92rem;
+	line-height: 1.55;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+}
+.worldsmith .ws-spotlight__foot {
+	margin-top: 10px;
+	padding-top: 9px;
+	border-top: 1px solid var(--ws-border);
+	color: var(--ws-faint);
+	font-size: 11.5px;
+}
+
+/* ── From the archives (quote) ─────────────────────────────────────────────── */
+.worldsmith .ws-archive {
+	position: relative;
+	padding: 22px 56px 18px 26px;
+	border: 1px solid var(--ws-border);
+	border-left: 3px solid color-mix(in srgb, var(--ws-tint) 70%, transparent);
+	border-radius: var(--ws-radius-l);
+	background: linear-gradient(120deg, color-mix(in srgb, var(--ws-tint) 6%, var(--ws-surface)), var(--ws-surface) 60%);
+}
+.worldsmith .ws-archive.is-empty {
+	padding: 10px 0;
+	border-left-width: 1px;
+	border-style: dashed;
+	background: transparent;
+}
+.worldsmith .ws-archive__mark {
+	position: absolute;
+	top: 16px;
+	right: 18px;
+	color: color-mix(in srgb, var(--ws-tint) 40%, transparent);
+}
+.worldsmith .ws-archive__mark svg {
+	width: 26px;
+	height: 26px;
+}
+.worldsmith .ws-archive__text {
+	margin: 0;
+	padding: 0;
+	border: none;
+	color: var(--ws-text);
+	font-family: var(--ws-font-body);
+	font-size: 1.12rem;
+	font-style: italic;
+	line-height: 1.6;
+}
+.worldsmith .ws-archive__by {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+	padding: 3px 8px 3px 3px;
+	border-radius: 999px;
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-archive__by:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-archive__name {
+	font-size: 13px;
+	font-weight: 600;
+}
+.worldsmith .ws-archive__src {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-archive__next {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	opacity: 0;
+	transition: opacity var(--ws-dur);
+}
+.worldsmith .ws-archive:hover .ws-archive__next,
+.worldsmith .ws-archive__next:focus-visible {
+	opacity: 1;
+}
+@media (hover: none) {
+	.worldsmith .ws-archive__next {
+		opacity: 1;
+	}
+}
+
+/* ── Image wall ────────────────────────────────────────────────────────────── */
+.worldsmith .ws-wall__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: 10px;
+}
+.worldsmith .ws-wall__tile {
+	position: relative;
+	aspect-ratio: 3 / 4;
+	overflow: hidden;
+	border-radius: var(--ws-radius);
+	background: var(--ws-hover);
+	cursor: pointer;
+}
+.worldsmith .ws-wall__grid.is-mixed .ws-wall__tile {
+	aspect-ratio: 1;
+}
+.worldsmith .ws-wall__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 400ms var(--ws-ease);
+}
+.worldsmith .ws-wall__tile:hover .ws-wall__img {
+	transform: scale(1.04);
+}
+.worldsmith .ws-wall__cap {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 22px 9px 7px;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+	color: #fff;
+}
+.worldsmith .ws-wall__name {
+	overflow: hidden;
+	font-size: 12.5px;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wall__type {
+	overflow: hidden;
+	color: rgba(255, 255, 255, 0.72);
+	font-size: 10.5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-wall__more {
+	margin-top: 8px;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+
+/* ── New connections ───────────────────────────────────────────────────────── */
+.worldsmith .ws-newlinks {
+	display: flex;
+	flex-direction: column;
+	margin: 0 -6px;
+}
+.worldsmith .ws-newlinks__row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 7px 6px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+	transition: background var(--ws-dur);
+}
+.worldsmith .ws-newlinks__row:hover {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-newlinks__end {
+	display: flex;
+	align-items: center;
+	flex: 0 1 auto;
+	gap: 7px;
+	min-width: 0;
+}
+.worldsmith .ws-newlinks__name {
+	overflow: hidden;
+	font-size: 13px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-newlinks__label {
+	flex: none;
+	padding: 1px 8px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	color: var(--ws-muted);
+	font-size: 11px;
+	white-space: nowrap;
+}
+.worldsmith .ws-newlinks__label.is-secret {
+	border-style: dashed;
+}
+.worldsmith .ws-newlinks__when {
+	flex: none;
+	margin-left: auto;
+	padding-left: 6px;
+	color: var(--ws-faint);
+	font-size: 11px;
+	white-space: nowrap;
+}
+
+/* ── Search box ────────────────────────────────────────────────────────────── */
+.worldsmith .ws-searchbox {
+	position: relative;
+}
+.worldsmith .ws-searchbox__field {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 46px;
+	padding: 0 16px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	background: var(--ws-surface);
+	transition: border-color var(--ws-dur), box-shadow var(--ws-dur);
+}
+.worldsmith .ws-searchbox__field:focus-within {
+	border-color: var(--ws-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-accent) 18%, transparent);
+}
+.worldsmith .ws-searchbox__icon {
+	color: var(--ws-faint);
+}
+.worldsmith .ws-searchbox__icon svg {
+	width: 17px;
+	height: 17px;
+}
+.worldsmith .ws-searchbox__input,
+.worldsmith .ws-searchbox__input:focus,
+.worldsmith .ws-searchbox__input:hover {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	padding: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	font-size: 15px;
+}
+.worldsmith .ws-searchbox__hint {
+	color: var(--ws-faint);
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+.worldsmith[data-ws-size='narrow'] .ws-searchbox__hint {
+	display: none;
+}
+.worldsmith .ws-searchbox__results {
+	display: none;
+	position: absolute;
+	z-index: 5;
+	top: calc(100% + 6px);
+	right: 0;
+	left: 0;
+	padding: 6px;
+	border: 1px solid var(--ws-border-strong);
+	border-radius: var(--ws-radius-l);
+	background: var(--background-primary);
+	box-shadow: var(--shadow-l);
+}
+.worldsmith .ws-searchbox.has-results .ws-searchbox__results {
+	display: block;
+}
+.worldsmith .ws-searchbox__hit {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 7px 8px;
+	border-radius: var(--ws-radius);
+	cursor: pointer;
+}
+.worldsmith .ws-searchbox__hit:hover,
+.worldsmith .ws-searchbox__hit.is-active {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-searchbox__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.worldsmith .ws-searchbox__type,
+.worldsmith .ws-searchbox__none {
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-searchbox__none {
+	padding: 8px;
+}
+
+/* ── Needs attention ───────────────────────────────────────────────────────── */
+.worldsmith .ws-health {
+	display: flex;
+	flex-direction: column;
+	margin: 0 -6px;
+}
+.worldsmith .ws-health__head {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+	padding: 7px 6px;
+	border: none;
+	border-radius: var(--ws-radius);
+	background: transparent;
+	box-shadow: none;
+	color: var(--ws-text);
+	font-size: 13px;
+	text-align: left;
+	cursor: pointer;
+}
+.worldsmith .ws-health__head:hover:not(:disabled) {
+	background: var(--ws-hover);
+}
+.worldsmith .ws-health__head:disabled {
+	color: var(--ws-faint);
+	cursor: default;
+	opacity: 1;
+}
+.worldsmith .ws-health__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	flex: none;
+	border-radius: var(--ws-radius);
+	background: color-mix(in srgb, var(--color-orange) 12%, transparent);
+	color: var(--color-orange);
+}
+.worldsmith .ws-health__row.is-clear .ws-health__icon {
+	background: color-mix(in srgb, var(--color-green) 10%, transparent);
+	color: var(--color-green);
+}
+.worldsmith .ws-health__icon svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-health__label {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-health__count {
+	min-width: 26px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	color: var(--ws-muted);
+	font-size: 11.5px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+.worldsmith .ws-health__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding: 2px 6px 10px 42px;
+}
+.worldsmith .ws-health__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 9px 2px 3px;
+	border: 1px solid var(--ws-border);
+	border-radius: 999px;
+	font-size: 12px;
+	cursor: pointer;
+}
+.worldsmith .ws-health__chip:hover {
+	border-color: var(--ws-border-strong);
+	background: var(--ws-hover);
+}
+.worldsmith .ws-health__more {
+	align-self: center;
+	color: var(--ws-faint);
+	font-size: 12px;
+}
+.worldsmith .ws-health__ok {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 0;
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-health__ok svg {
+	color: var(--color-green);
+}
+
+/* ── New dashboard dialog ──────────────────────────────────────────────────── */
+.worldsmith-modal.ws-dash-modal {
+	width: min(680px, 94vw);
+}
+.worldsmith-modal .ws-icon-pick[class*='ws-tint--'] {
+	border-color: color-mix(in srgb, var(--ws-tint) 45%, var(--ws-border));
+	background: color-mix(in srgb, var(--ws-tint) 12%, transparent);
+	color: var(--ws-tint);
+}
+.worldsmith-modal .ws-dash-tpls {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	gap: 10px;
+	margin-top: 4px;
+}
+.worldsmith-modal .ws-dash-tpl {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 8px;
+	height: auto;
+	padding: 11px 12px 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-l, 12px);
+	background: var(--background-primary);
+	box-shadow: none;
+	color: var(--text-normal);
+	font: inherit;
+	text-align: left;
+	white-space: normal;
+	cursor: pointer;
+	transition: border-color 140ms, box-shadow 140ms;
+}
+.worldsmith-modal .ws-dash-tpl:hover {
+	border-color: var(--background-modifier-border-hover);
+}
+.worldsmith-modal .ws-dash-tpl.is-active {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 25%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl__head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.worldsmith-modal .ws-dash-tpl__icon {
+	display: flex;
+	color: var(--ws-tint);
+}
+.worldsmith-modal .ws-dash-tpl__icon svg {
+	width: 16px;
+	height: 16px;
+}
+.worldsmith-modal .ws-dash-tpl__name {
+	font-size: 13.5px;
+	font-weight: 600;
+}
+.worldsmith-modal .ws-dash-tpl__mini {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	grid-auto-rows: 9px;
+	gap: 3px;
+	height: 62px;
+	overflow: hidden;
+	padding: 6px;
+	border-radius: var(--radius-m, 8px);
+	background: color-mix(in srgb, var(--text-normal) 4%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl__mini.is-blank {
+	border: 1.5px dashed var(--background-modifier-border);
+	background: transparent;
+}
+.worldsmith-modal .ws-dash-tpl__cell {
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--text-normal) 13%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl.is-active .ws-dash-tpl__cell {
+	background: color-mix(in srgb, var(--ws-tint, var(--interactive-accent)) 32%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl__cell:is(.is-entry-stat, .is-world-hero, .is-image-wall) {
+	background: color-mix(in srgb, var(--text-normal) 20%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl.is-active .ws-dash-tpl__cell:is(.is-entry-stat, .is-world-hero, .is-image-wall) {
+	background: color-mix(in srgb, var(--ws-tint, var(--interactive-accent)) 55%, transparent);
+}
+.worldsmith-modal .ws-dash-tpl__blurb {
+	color: var(--text-muted);
+	font-size: 12px;
+	line-height: 1.45;
+}
+/* Too narrow for the time: the names matter more. */
+.worldsmith .ws-newlinks {
+	container-type: inline-size;
+}
+@container (max-width: 420px) {
+	.worldsmith .ws-newlinks__when {
+		display: none;
+	}
+}

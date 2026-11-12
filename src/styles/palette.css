@@ -1,0 +1,117 @@
+/*
+ * Modern Codex colors: bronze, amber, charcoal and parchment.
+ *
+ * Worldsmith's styles read the Obsidian theme's variables, so the palette simply redefines
+ * those variables inside Worldsmith's own roots (the pane, its dialogs and floating
+ * windows). Obsidian's own chrome is untouched. "Match my Obsidian theme" removes the
+ * body class and everything falls back to the theme.
+ */
+body.ws-palette-bronze.theme-dark :is(.worldsmith-view, .worldsmith, .worldsmith-modal) {
+	--background-primary: #17181b;
+	--background-primary-alt: #1b1c20;
+	--background-secondary: #1e1f23;
+	--background-secondary-alt: #25262b;
+	--background-modifier-border: #34343b;
+	--background-modifier-border-hover: #4a4840;
+	--background-modifier-border-focus: #bb915e;
+	--background-modifier-hover: rgb(235 229 217 / 0.06);
+	--background-modifier-active-hover: rgb(187 145 94 / 0.16);
+	--background-modifier-form-field: #1b1c20;
+	--background-modifier-error: #c75f52;
+	--background-modifier-success: #8aa86c;
+	--text-normal: #ebe5d9;
+	--text-muted: #a8a094;
+	--text-faint: #6f6a62;
+	--text-accent: #d4a774;
+	--text-accent-hover: #e3ba89;
+	--text-on-accent: #17181b;
+	--text-error: #d9776a;
+	--text-success: #9dbb7e;
+	--text-warning: #e2aa4c;
+	--text-selection: rgb(187 145 94 / 0.3);
+	--text-highlight-bg: rgb(226 170 76 / 0.28);
+	--interactive-normal: #25262b;
+	--interactive-hover: #2d2e34;
+	--interactive-accent: #bb915e;
+	--interactive-accent-hover: #cba06c;
+	--color-accent: #bb915e;
+	--icon-color: #a8a094;
+	--icon-color-hover: #ebe5d9;
+	--icon-color-active: #d4a774;
+	--color-red: #d06a5c;
+	--color-red-rgb: 208, 106, 92;
+	--color-orange: #d58d52;
+	--color-orange-rgb: 213, 141, 82;
+	--color-yellow: #dbb25e;
+	--color-yellow-rgb: 219, 178, 94;
+	--color-green: #8fae70;
+	--color-green-rgb: 143, 174, 112;
+	--color-cyan: #6eaaa4;
+	--color-cyan-rgb: 110, 170, 164;
+	--color-blue: #7393bd;
+	--color-blue-rgb: 115, 147, 189;
+	--color-purple: #a084bb;
+	--color-purple-rgb: 160, 132, 187;
+	--color-pink: #c77d99;
+	--color-pink-rgb: 199, 125, 153;
+	--ws-amber: #e2aa4c;
+}
+body.ws-palette-bronze.theme-light :is(.worldsmith-view, .worldsmith, .worldsmith-modal) {
+	--background-primary: #f7f3eb;
+	--background-primary-alt: #f2ede3;
+	--background-secondary: #eee8dc;
+	--background-secondary-alt: #e5ddcd;
+	--background-modifier-border: #ddd3c2;
+	--background-modifier-border-hover: #c6b8a2;
+	--background-modifier-border-focus: #8f6236;
+	--background-modifier-hover: rgb(36 34 30 / 0.055);
+	--background-modifier-active-hover: rgb(143 98 54 / 0.13);
+	--background-modifier-form-field: #fcfaf5;
+	--background-modifier-error: #a3402f;
+	--background-modifier-success: #5b7a3a;
+	--text-normal: #24221e;
+	--text-muted: #6c655a;
+	--text-faint: #9d9588;
+	--text-accent: #8a5f33;
+	--text-accent-hover: #6f4a24;
+	--text-on-accent: #fcfaf5;
+	--text-error: #a3402f;
+	--text-success: #5b7a3a;
+	--text-warning: #a66c10;
+	--text-selection: rgb(143 98 54 / 0.22);
+	--text-highlight-bg: rgb(226 170 76 / 0.3);
+	--interactive-normal: #fcfaf5;
+	--interactive-hover: #f2ede3;
+	--interactive-accent: #8f6236;
+	--interactive-accent-hover: #7b5229;
+	--color-accent: #8f6236;
+	--icon-color: #6c655a;
+	--icon-color-hover: #24221e;
+	--icon-color-active: #8a5f33;
+	--color-red: #a8432f;
+	--color-red-rgb: 168, 67, 47;
+	--color-orange: #b5652a;
+	--color-orange-rgb: 181, 101, 42;
+	--color-yellow: #9c7417;
+	--color-yellow-rgb: 156, 116, 23;
+	--color-green: #5b7a3a;
+	--color-green-rgb: 91, 122, 58;
+	--color-cyan: #387a75;
+	--color-cyan-rgb: 56, 122, 117;
+	--color-blue: #3f6390;
+	--color-blue-rgb: 63, 99, 144;
+	--color-purple: #775690;
+	--color-purple-rgb: 119, 86, 144;
+	--color-pink: #a14e6e;
+	--color-pink-rgb: 161, 78, 110;
+	--ws-amber: #a66c10;
+}
+body.ws-palette-bronze :is(.worldsmith-view, .worldsmith:not(.ws-peek-layer)) {
+	background: var(--background-primary);
+	color: var(--text-normal);
+}
+body.ws-palette-bronze .worldsmith-modal:not(.ws-lightbox-modal) {
+	background: var(--background-primary);
+	color: var(--text-normal);
+	border-color: var(--background-modifier-border);
+}

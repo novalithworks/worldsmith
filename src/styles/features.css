@@ -1,0 +1,375 @@
+/*
+ * World features (0.29): a page of switches, in the Codex dress (serif titles, bronze accents),
+ * and the page that stands in for a part that's switched off.
+ */
+
+.worldsmith .ws-features {
+	max-width: 1060px;
+	margin: 0 auto;
+	padding: 28px clamp(16px, 4cqi, 44px) 48px;
+}
+.worldsmith .ws-features__head {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: end;
+	gap: 4px 20px;
+	margin-bottom: 26px;
+	padding-bottom: 18px;
+	border-bottom: 1px solid color-mix(in srgb, var(--ws-accent) 40%, transparent);
+}
+.worldsmith .ws-features__kicker {
+	grid-column: 1;
+	color: var(--ws-accent);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-features__title {
+	grid-column: 1;
+	margin: 2px 0 0;
+	font-family: var(--ws-font-display);
+	font-size: clamp(30px, 3.6cqi, 40px);
+	font-weight: 400;
+	line-height: 1.1;
+}
+.worldsmith .ws-features__sub {
+	grid-column: 1;
+	max-width: 60ch;
+	margin: 4px 0 0;
+	color: var(--ws-muted);
+	font-family: var(--ws-font-display);
+	font-size: 17px;
+	font-style: italic;
+	line-height: 1.4;
+}
+.worldsmith .ws-features__tools {
+	grid-column: 2;
+	grid-row: 1 / 4;
+	align-self: end;
+}
+.worldsmith .ws-features__group {
+	margin-bottom: 26px;
+}
+.worldsmith .ws-features__gtitle {
+	margin: 0 0 10px;
+	color: var(--ws-text);
+	font-family: var(--ws-font-display);
+	font-size: 20px;
+	font-style: italic;
+	font-weight: 500;
+}
+.worldsmith .ws-features__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+	gap: 12px;
+}
+.worldsmith .ws-feature-card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 16px 16px 12px;
+	border: 1px solid var(--ws-border);
+	border-radius: 8px;
+	background: var(--background-primary-alt, var(--ws-surface));
+	transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+.worldsmith .ws-feature-card:hover {
+	border-color: color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+}
+.worldsmith .ws-feature-card.is-off {
+	background: transparent;
+	border-style: dashed;
+}
+.worldsmith .ws-feature-card__top {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.worldsmith .ws-feature-card__icon {
+	display: grid;
+	flex: none;
+	width: 40px;
+	height: 40px;
+	place-items: center;
+	border-radius: 999px 999px 8px 8px;
+	background: color-mix(in srgb, var(--ws-accent) 16%, transparent);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-feature-card.is-off .ws-feature-card__icon {
+	background: var(--ws-hover);
+	color: var(--ws-faint);
+}
+.worldsmith .ws-feature-card__icon svg {
+	width: 20px;
+	height: 20px;
+}
+.worldsmith .ws-feature-card__text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-feature-card__name {
+	font-family: var(--ws-font-display);
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 1.15;
+}
+.worldsmith .ws-feature-card.is-off .ws-feature-card__name {
+	color: var(--ws-muted);
+}
+.worldsmith .ws-feature-card__holds {
+	color: var(--ws-muted);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.worldsmith .ws-feature-card__desc {
+	flex: 1;
+	margin: 0;
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+.worldsmith .ws-feature-card__foot {
+	display: flex;
+	align-items: center;
+	min-height: 26px;
+	padding-top: 8px;
+	border-top: 1px solid var(--ws-border);
+	font-size: 12.5px;
+}
+.worldsmith .ws-feature-card__open {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: auto;
+	padding: 2px 0;
+	border: none;
+	background: none;
+	box-shadow: none;
+	color: var(--ws-accent);
+	font-size: 12.5px;
+	cursor: pointer;
+}
+.worldsmith .ws-feature-card__open:hover {
+	text-decoration: underline;
+}
+.worldsmith .ws-feature-card__open svg {
+	width: 14px;
+	height: 14px;
+}
+.worldsmith .ws-feature-card__kept {
+	color: var(--ws-faint);
+	font-style: italic;
+}
+
+/* The switch: a real checkbox under a bronze track. */
+.worldsmith .ws-fswitch {
+	position: relative;
+	display: inline-flex;
+	flex: none;
+	cursor: pointer;
+}
+.worldsmith .ws-fswitch__input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+.worldsmith .ws-fswitch__track {
+	position: relative;
+	width: 42px;
+	height: 24px;
+	border-radius: 999px;
+	background: var(--ws-hover);
+	box-shadow: inset 0 0 0 1px var(--ws-border);
+	transition: background 0.18s ease;
+}
+.worldsmith .ws-fswitch__track::after {
+	content: '';
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--ws-faint);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+	transition: transform 0.18s ease, background 0.18s ease;
+}
+.worldsmith .ws-fswitch__input:checked + .ws-fswitch__track {
+	background: var(--ws-accent);
+	box-shadow: none;
+}
+.worldsmith .ws-fswitch__input:checked + .ws-fswitch__track::after {
+	background: #fff;
+	transform: translateX(18px);
+}
+.worldsmith .ws-fswitch__input:focus-visible + .ws-fswitch__track {
+	outline: 2px solid var(--ws-focus, var(--interactive-accent));
+	outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+	.worldsmith .ws-fswitch__track,
+	.worldsmith .ws-fswitch__track::after,
+	.worldsmith .ws-feature-card {
+		transition: none;
+	}
+}
+@media (pointer: coarse) {
+	.worldsmith .ws-fswitch__track {
+		width: 48px;
+		height: 28px;
+	}
+	.worldsmith .ws-fswitch__track::after {
+		width: 22px;
+		height: 22px;
+	}
+	.worldsmith .ws-fswitch__input:checked + .ws-fswitch__track::after {
+		transform: translateX(20px);
+	}
+}
+.worldsmith .ws-features__foot {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+	padding: 12px 14px;
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--ws-accent) 8%, transparent);
+	color: var(--ws-muted);
+	font-size: 13px;
+}
+.worldsmith .ws-features__foot svg {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	color: var(--ws-accent);
+}
+@container (max-width: 640px) {
+	.worldsmith .ws-features__head {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.worldsmith .ws-features__tools {
+		grid-column: 1;
+		grid-row: auto;
+		margin-top: 8px;
+	}
+}
+
+/* A page whose part is switched off. */
+.worldsmith .ws-feature-off {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 520px;
+	margin: 12vh auto 0;
+	padding: 0 20px;
+	text-align: center;
+}
+.worldsmith .ws-feature-off__icon {
+	display: grid;
+	width: 64px;
+	height: 76px;
+	place-items: center;
+	margin-bottom: 18px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 50%, transparent);
+	border-radius: 999px 999px 10px 10px;
+	color: var(--ws-faint);
+}
+.worldsmith .ws-feature-off__icon svg {
+	width: 28px;
+	height: 28px;
+}
+.worldsmith .ws-feature-off__title {
+	margin: 0 0 8px;
+	font-family: var(--ws-font-display);
+	font-size: 30px;
+	font-weight: 400;
+}
+.worldsmith .ws-feature-off__body {
+	margin: 0 0 20px;
+	color: var(--ws-muted);
+	font-size: 14px;
+	line-height: 1.55;
+}
+.worldsmith .ws-feature-off__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+}
+
+/* Editions (0.30): what Pro adds, said once and clearly. */
+.worldsmith .ws-pro-badge {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 1px 7px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 60%, transparent);
+	border-radius: 999px;
+	color: var(--ws-accent);
+	font-family: var(--ws-font-ui);
+	font-size: 10px;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	vertical-align: 3px;
+}
+.worldsmith .ws-features__pro {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 0 0 26px;
+	padding: 16px 18px;
+	border: 1px solid color-mix(in srgb, var(--ws-accent) 45%, var(--ws-border));
+	border-radius: 10px;
+	background: linear-gradient(120deg, color-mix(in srgb, var(--ws-accent) 14%, transparent), transparent 70%);
+}
+.worldsmith .ws-features__pro-icon {
+	display: grid;
+	flex: none;
+	width: 44px;
+	height: 52px;
+	place-items: center;
+	border-radius: 999px 999px 8px 8px;
+	background: color-mix(in srgb, var(--ws-accent) 20%, transparent);
+	color: var(--ws-accent);
+}
+.worldsmith .ws-features__pro-text {
+	flex: 1;
+	min-width: 0;
+}
+.worldsmith .ws-features__pro-title {
+	font-family: var(--ws-font-display);
+	font-size: 22px;
+	font-weight: 500;
+}
+.worldsmith .ws-features__pro-body {
+	color: var(--ws-muted);
+	font-size: 13px;
+	line-height: 1.5;
+}
+@container (max-width: 640px) {
+	.worldsmith .ws-features__pro {
+		flex-wrap: wrap;
+	}
+}
+.worldsmith .ws-feature-card.is-locked {
+	border-style: solid;
+	opacity: 0.92;
+}
+.worldsmith .ws-feature-card.is-locked .ws-fswitch {
+	cursor: not-allowed;
+	opacity: 0.45;
+}
+.worldsmith .ws-feature-card.is-locked .ws-fswitch__input {
+	cursor: not-allowed;
+}
+.worldsmith .ws-feature-off.is-pro .ws-feature-off__icon {
+	color: var(--ws-accent);
+}

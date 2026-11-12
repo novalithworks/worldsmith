@@ -1,0 +1,26 @@
+WORLDSMITH PRO: HOW TO INSTALL
+==============================
+
+Thank you for buying Worldsmith Pro!
+
+1. Unzip this file. You'll get a folder called "worldsmith-pro" with three files inside:
+   main.js, manifest.json and styles.css.
+
+2. Put the "worldsmith-pro" folder into your vault's plugins folder:
+       <your vault>/.obsidian/plugins/worldsmith-pro/
+   (".obsidian" is hidden on some computers. In Obsidian, go to Settings > Community plugins
+   and click the folder icon next to "Installed plugins" to open the plugins folder.)
+
+3. In Obsidian: Settings > Community plugins. Click the refresh icon, then switch on
+   "Worldsmith Pro".
+
+That's it. Your worlds are kept in your vault, so everything you made with the free edition is
+already there. If the free "Worldsmith" plugin is also switched on, Pro switches it off for you;
+you can uninstall the free one.
+
+UPDATES
+Worldsmith Pro doesn't update itself. When a new version comes out, download it again and
+replace the three files in the "worldsmith-pro" folder, then restart Obsidian.
+
+Questions or problems? Get in touch through the Buy Me a Coffee page where you bought it:
+https://buymeacoffee.com/novalith
